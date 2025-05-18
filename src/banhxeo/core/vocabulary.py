@@ -1,14 +1,12 @@
 import json
-import pickle
 from collections import defaultdict
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
-from pydantic import BaseModel, field_validator
-from tqdm import tqdm
+from pydantic import BaseModel, computed_field, field_validator
 
 from banhxeo.core.tokenizer import Tokenizer
-from banhxeo.dataset.raw import RawTextDataset
+from banhxeo.utils import progress_bar
 from banhxeo.utils.logging import DEFAULT_LOGGER
 
 
@@ -16,8 +14,11 @@ class VocabConfig(BaseModel):
     min_freq: int = 1
     pad_tok: str = "<PAD>"  # Special token shouldn't be empty
     unk_tok: str = "<UNK>"
-    sos_tok: str = "<SOS>"
-    eos_tok: str = "<EOS>"
+    bos_tok: str = "<BOS>"  # begin of sentence
+    sep_tok: str = "<SEP>"  # end of sentence or sequence seperate
+    mask_tok: Optional[str] = None  # "<MASK>"  or BERT
+    cls_tok: Optional[str] = None  # "<CLS>"
+    resv_tok: Optional[str] = None  # "<RESERVED>"
 
     @field_validator("min_freq", mode="before")
     @classmethod
@@ -26,8 +27,40 @@ class VocabConfig(BaseModel):
             raise ValueError("Min frequencies cannot be 0")
         return value
 
+    @computed_field  # Cache
+    @property
     def special_tokens(self) -> list[str]:
-        return [self.pad_tok, self.unk_tok, self.sos_tok, self.eos_tok]
+        """Following are list of all of the special tokens with
+        their corresponding ids:
+        - "[CLS]": 0 (Optional)
+        - "[SEP]": 1
+        - "[BOS]": 2
+        - "[MASK]": 3 (Optional)
+        - "[PAD]": 4
+        - "[RESERVED]": 5 (Optional)
+        - "[UNK]": 6
+        - An id (starting at 7) will be assigned to each character.
+        """
+        result = []
+        if self.cls_tok:
+            result.append(self.cls_tok)
+        result = result + [
+            self.sep_tok,
+            self.bos_tok,
+        ]
+        if self.mask_tok:
+            result.append(self.mask_tok)
+        result.append(self.pad_tok)
+        if self.resv_tok:
+            result.append(self.resv_tok)
+        result.append(self.unk_tok)
+        return result
+
+    def special_token_idx(self, token) -> int:
+        """Responsiblity from the caller, if token isn't in special token list, this method will raise ValueError"""
+
+        idx = self.special_tokens.index(token)
+        return idx
 
 
 DEFAULT_VOCAB_CONFIG = VocabConfig()
@@ -39,48 +72,62 @@ class Vocabulary:
     def __init__(self, vocab_config: Optional[VocabConfig]):
         self.vocab_config = vocab_config if vocab_config else DEFAULT_VOCAB_CONFIG
 
-        self._vocab = None
-
-        self.idx_to_token = []
-        self.token_to_idx = {}
-
-        self.pad_idx: int = -1
-        self.unk_idx: int = -1
-        self.sos_idx: int = -1
-        self.eos_idx: int = -1
+        self.tokenizer = None
+        self._idx_to_token = []
+        self._token_to_idx = {}
 
     @classmethod
-    def load(cls, path: str):
-        """Loading pre-trained vocabulary from file
+    def load(cls, path: Union[Path, str], tokenizer: Tokenizer):
+        """Loading pre-trained vocabulary from file"""
+        if isinstance(path, str):
+            path = Path(path)
 
-        Args:
-            path (_type_): _description_
-        """
-        # TODO:
+        if not path.is_file():
+            raise ValueError(f"Current json path={path.name} is not a valid path")
+
+        with open(path, "r") as file:
+            d = json.load(file)
+            vocab = cls(VocabConfig.model_validate(d["config"]))
+            vocab._token_to_idx = d["token_to_idx"]
+            vocab._idx_to_token = d["idx_to_token"]
+
+            if tokenizer.__class__.__name__ != d["tokenizer"]:
+                raise ValueError(
+                    f"Current tokenizer {tokenizer.__class__.__name__} isn't match with tokenizer {d['tokenizer']}"
+                )
+            vocab.tokenizer = tokenizer
+
+        return vocab
 
     @classmethod
     def build(
         cls,
-        corpus: RawTextDataset,
+        corpus: List[str],  # Expect a list of string
         tokenizer: Tokenizer,
-        vocab_config: Optional[VocabConfig] = None,
+        **kwargs,
     ):
-        vocab = cls(vocab_config)
+        vocab = cls(
+            VocabConfig(
+                min_freq=kwargs.get("min_freq", 1),
+                pad_tok=kwargs.get("pad_tok", "<PAD>"),
+                unk_tok=kwargs.get("unk_tok", "<UNK>"),
+                sep_tok=kwargs.get("sep_tok", "<SEP>"),
+                bos_tok=kwargs.get("bos_tok", "<BOS>"),
+                mask_tok=kwargs.get("mask_tok"),
+                cls_tok=kwargs.get("cls_tok"),
+                resv_tok=kwargs.get("resv_tok"),
+            )
+        )
 
-        for token in vocab.vocab_config.special_tokens():
-            if token and token not in vocab.token_to_idx:
-                idx = len(vocab.idx_to_token)
-                vocab.idx_to_token.append(token)
-                vocab.token_to_idx[token] = idx
-
-        vocab.pad_idx = vocab.token_to_idx.get(vocab.vocab_config.pad_tok, -1)
-        vocab.unk_idx = vocab.token_to_idx.get(vocab.vocab_config.unk_tok, -1)
-        vocab.sos_idx = vocab.token_to_idx.get(vocab.vocab_config.sos_tok, -1)
-        vocab.eos_idx = vocab.token_to_idx.get(vocab.vocab_config.eos_tok, -1)
+        for token in vocab.vocab_config.special_tokens:
+            if token and token not in vocab._token_to_idx:
+                idx = len(vocab._idx_to_token)
+                vocab._idx_to_token.append(token)
+                vocab._token_to_idx[token] = idx
 
         token_counts = defaultdict(int)
         print("Tokenizing corpus and counting frequencies...")
-        for idx, text_sample in tqdm(
+        for idx, text_sample in progress_bar(
             enumerate(corpus), unit=" sentence", unit_scale=True, total=len(corpus)
         ):
             try:
@@ -99,115 +146,114 @@ class Vocabulary:
 
         min_freq = vocab.vocab_config.min_freq
         for token, count in sorted_tokens:
-            if count >= min_freq and token not in vocab.token_to_idx:
-                idx = len(vocab.idx_to_token)
-                vocab.idx_to_token.append(token)
-                vocab.token_to_idx[token] = idx
-
-        vocab._vocab = {
-            "token_to_idx": vocab.token_to_idx,
-            "idx_to_token": vocab.idx_to_token,
-        }
+            if count >= min_freq and token not in vocab._token_to_idx:
+                idx = len(vocab._idx_to_token)
+                vocab._idx_to_token.append(token)
+                vocab._token_to_idx[token] = idx
 
         DEFAULT_LOGGER.info(
-            f"Vocabulary built: {vocab.vocab_size()} unique tokens (including special) from {len(corpus)} sentences."
+            f"Vocabulary built: {vocab.vocab_size} unique tokens (including special) from {len(corpus)} sentences."
         )
+
+        vocab.tokenizer = tokenizer
 
         return vocab
 
     # [[ Private method ]]
-    def __token_to_id(self, token: str) -> int:
-        if self._vocab is None or "token_to_idx" not in self._vocab:
+    def _convert_token_to_id(self, token: str) -> int:
+        if len(self._token_to_idx) == 0:
+            raise ValueError("Vocabulary not built yet.")
+        return self._token_to_idx.get(token, self.unk_id)
+
+    def _convert_id_to_token(self, idx: int) -> str:
+        if len(self._idx_to_token) == 0:
             raise ValueError("Vocabulary not built yet.")
 
-        return self._vocab["token_to_idx"].get(token, self.unk_idx)
-
-    def __id_to_token(self, idx: int) -> str:
-        if self._vocab is None or "idx_to_token" not in self._vocab:
-            raise ValueError("Vocabulary not built yet.")
-
-        if 0 <= idx < len(self._vocab["idx_to_token"]):
-            return self._vocab["idx_to_token"][idx]
+        if 0 <= idx < len(self._idx_to_token):
+            return self._idx_to_token[idx]
         else:
             # Raise error instead of returning None implicitly
             raise IndexError(f"Index {idx} out of vocabulary range.")
 
     # [[ Public method ]]
-    def save(self, path: Union[str, Path], type: str = "json"):
+    def save(self, path: Union[str, Path]):
         """Save to file
 
         Args:
             file (_type_): _description_
         """
-        current_support_type = ["json", "pickle"]
-        if (type.strip().lower()) not in ["json", "pickle"]:
-            raise ValueError(
-                f"Only support save file type in {str(current_support_type)}"
-            )
-
-        if self._vocab is None:
+        if len(self._token_to_idx) == 0 or len(self._idx_to_token) == 0:
             raise ValueError("Vocabulary not built yet.")
 
         Path(path).parent.mkdir(parents=True, exist_ok=True)
 
         data = {
-            "specials": self.vocab_config.special_tokens(),
-            "token_to_idx": self.vocab()["token_idx"],
-            "idx_to_token": self.vocab()["idx_token"],
+            "config": self.vocab_config.model_dump(),
+            "tokenizer": self.tokenizer.__class__.__name__,
+            "token_to_idx": self._token_to_idx,
+            "idx_to_token": self._idx_to_token,
         }
 
-        DEFAULT_LOGGER.info(f"Save vocabulary to path {path} with type {type} ...")
+        DEFAULT_LOGGER.info(f"Save vocabulary to path {path} with ...")
 
-        if type == "json":
-            with open(path, "w+", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-        elif type == "pickle":
-            with open(path, "wb+", encoding="utf-8") as f:
-                pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(path, "w+", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
 
-    def vocab(self) -> dict:
-        if self._vocab is None:
-            raise ValueError("Vocabulary not built yet.")
-        return self._vocab
-
+    @property
     def vocab_size(self) -> int:
-        if self._vocab is None or "idx_to_token" not in self._vocab:
-            raise ValueError("Vocabulary is not built yet.")
-        return len(self._vocab["idx_to_token"])
+        return len(self.get_vocab())
 
-    def tokens_to_ids(self, tokens: List[str]) -> List[int]:
-        return [self.__token_to_id(token) for token in tokens]
-
-    def ids_to_tokens(self, ids: List[int]) -> List[str]:
-        return [self.__id_to_token(id) for id in ids]
-
-    @property
-    def eos_tok(self) -> str:
-        return self.vocab_config.eos_tok
-
-    @property
-    def sos_tok(self) -> str:
-        return self.vocab_config.sos_tok
-
-    @property
-    def pad_id(self) -> int:
-        if self.pad_idx == -1:
-            raise ValueError(
-                "Vocabulary is not built yet or there is something wrong with building/loading vocabulary"
-            )
-        return self.pad_idx
+    def get_vocab(self) -> List[int]:
+        if len(self._token_to_idx) == 0 or len(self._idx_to_token) == 0:
+            raise ValueError("Vocabulary not built yet.")
+        return self.idx_to_token
 
     @property
     def unk_id(self) -> int:
-        if self.unk_idx == -1:
-            raise ValueError(
-                "Vocabulary is not built yet or there is something wrong with building/loading vocabulary"
-            )
-        return self.unk_idx
+        return self.vocab_config.special_token_idx(self.vocab_config.unk_tok)
 
-    # Covenient method
+    @property
+    def pad_id(self) -> int:
+        return self.vocab_config.special_token_idx(self.vocab_config.pad_tok)
+
+    @property
+    def bos_id(self) -> int:
+        return self.vocab_config.special_token_idx(self.vocab_config.bos_tok)
+
+    @property
+    def sep_id(self) -> int:
+        return self.vocab_config.special_token_idx(self.vocab_config.sep_tok)
+
+    @property
+    def sep(self) -> int:
+        return self.vocab_config.special_token_idx(self.vocab_config.sep_tok)
+
+    @property
+    def unk_tok(self) -> str:
+        return self.vocab_config.unk_tok
+
+    @property
+    def bos_toks(self) -> List[str]:
+        return [self.vocab_config.bos_tok]
+
+    @property
+    def sep_toks(self) -> List[str]:
+        return [self.vocab_config.sep_tok]
+
+    @property
+    def token_to_idx(self):
+        return self._token_to_idx
+
+    @property
+    def idx_to_token(self):
+        return self._idx_to_token
+
+    def tokens_to_ids(self, tokens: List[str]) -> List[int]:
+        return [self._convert_token_to_id(token) for token in tokens]
+
+    def ids_to_tokens(self, ids: List[int]) -> List[str]:
+        return [self._convert_id_to_token(id) for id in ids]
+
+    # Convenient method
     def __len__(self) -> int:
-        return self.vocab_size()
-
-    def __getitem__(self, index):
-        return self.__id_to_token(index)
+        return self.vocab_size

@@ -7,6 +7,7 @@ readme = "README.md"
 requires-python = ">=3.9, <3.13"
 dependencies = [
     "asyncer>=0.0.8",
+    "gdown>=5.2.0",
     "numpy",
     "optuna>=4.3.0",
     "polars",
@@ -14,6 +15,7 @@ dependencies = [
     "requests>=2.32.3",
     "rich>=14.0.0",
     "torch",
+    "torchinfo>=1.8.0",
     "tqdm",
 ]
 

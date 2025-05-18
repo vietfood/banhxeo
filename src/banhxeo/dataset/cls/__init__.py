@@ -4,16 +4,16 @@ import torch
 from pydantic import BaseModel, field_validator
 from torch.utils.data import Dataset
 
-from banhxeo.core.tokenizer import Tokenizer
+from banhxeo.core.tokenizer import Tokenizer, TokenizerConfig
 from banhxeo.core.vocabulary import Vocabulary
 from banhxeo.dataset.raw import RawTextDataset
 from banhxeo.dataset.transforms import ComposeTransforms, Transforms
 
 
-class ClsfDatasetConfig(BaseModel):
+class ClsDatasetConfig(BaseModel):
     tokenizer: Tokenizer
+    tokenizer_config: TokenizerConfig
     vocab: Vocabulary
-    max_len: int = 256
     transforms: Union[List[Transforms], ComposeTransforms] = []
 
     @field_validator("transforms")
@@ -27,7 +27,7 @@ class ClsfDatasetConfig(BaseModel):
         arbitrary_types_allowed = True
 
 
-class TextClsfDataset(Dataset):
+class TextClsDataset(Dataset):
     """
     PyTorch Dataset for text classification tasks.
     Takes raw data, tokenizes, numericalizes, and applies padding/truncation.
@@ -36,7 +36,7 @@ class TextClsfDataset(Dataset):
     def __init__(
         self,
         data: RawTextDataset,
-        config: ClsfDatasetConfig,
+        config: ClsDatasetConfig,
         label_map: Optional[Dict[str, int]],  # e.g., {"positive": 1, "negative": 0}
     ):
         self.config = config
@@ -50,5 +50,6 @@ class TextClsfDataset(Dataset):
         # Inherit class should implement this
         raise NotImplementedError()
 
-
-from .imdb import IMDBDataset  # noqa: E402
+    def __getitems__(self, indexes: List[int]) -> List[Dict[str, torch.Tensor]]:
+        # Inherit class should implement this
+        raise NotImplementedError()

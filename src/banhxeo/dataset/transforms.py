@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from pydantic import BaseModel
+
+from banhxeo.utils.logging import DEFAULT_LOGGER
 
 
 class Transforms(BaseModel):
     # arbitrary dictionary acts as metadata for transforms
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Dict[str, Any] = {}
 
-    def __call__(self, *args, **kwds):
+    def __call__(self, *args, **kwargs):
         raise NotImplementedError()
 
 
@@ -27,7 +29,7 @@ class ComposeTransforms:
     def __init__(self, transforms):
         self.transforms = transforms
 
-    def __call__(self, text):
+    def __call__(self, text) -> str:
         for t in self.transforms:
             text = t(text)
         return text
@@ -67,7 +69,10 @@ class RemovePunctuation(Transforms):
 
 class Strip(Transforms):
     def __call__(self, text: str) -> str:
-        return text.strip()
+        if self.metadata["lower"]:
+            return text.strip().lower()
+        else:
+            return text.strip()
 
 
 class SpellingCorrection(Transforms):
@@ -77,6 +82,8 @@ class SpellingCorrection(Transforms):
 
             correct_text = TextBlob(text)
             return correct_text.correct().string
-        except ImportError as e:
-            # TODO: Print error and warning here
+        except ImportError:
+            DEFAULT_LOGGER.warning(
+                "You need to install `textblob` to use `SpellingCorrection` transform"
+            )
             return text
