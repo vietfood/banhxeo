@@ -37,8 +37,6 @@ class IMDBClsDataset(TextClsDataset):
             )
 
         return {
-            "text": raw_text,
-            "processed_text": text,
             "input_ids": torch.tensor(output["input_ids"], dtype=torch.long),
             "attention_mask": torch.tensor(output["attention_mask"], dtype=torch.long),
             "labels": torch.tensor(label_id, dtype=torch.long),

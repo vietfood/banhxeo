@@ -1,19 +1,19 @@
 [project]
 name = "banhxeo"
-version = "0.1.0"
+version = "0.0.1"
 authors = [{ name = "Le Nguyen", email = "lenguyen18072003@gmail.com" }]
 license = { text = "MIT License" }
 readme = "README.md"
 requires-python = ">=3.9, <3.13"
 dependencies = [
     "asyncer>=0.0.8",
+    "datasets>=3.6.0",
+    "einops>=0.8.1",
     "gdown>=5.2.0",
     "numpy",
     "optuna>=4.3.0",
     "polars",
     "pydantic>=2.11.4",
-    "requests>=2.32.3",
-    "rich>=14.0.0",
     "torch",
     "torchinfo>=1.8.0",
     "tqdm",
@@ -31,6 +31,8 @@ dev = [
     "notebook>=7.4.2",
     "plotly>=6.0.1",
     "pytest>=8.3.5",
+    "rich>=14.0.0",
+    "requests>=2.32.3",
 ]
 
 [tool.pyright]

@@ -62,6 +62,7 @@ class NGram(ProbLanguageModel):
         k: Optional[int] = None,
     ):
         super().__init__(NGramConfig(n=n, smoothing=smoothing, k=k))
+        self.config: NGramConfig
 
         self.vocab = vocab
         self.root = NgramTrieNode(id=-1)

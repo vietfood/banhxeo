@@ -85,13 +85,17 @@ def extract_archive(
             "r",
         ) as zip:
             for member in progress_bar(
-                iterable=zip.infolist(), total=len(zip.infolist())
+                iterable=zip.infolist(),
+                total=len(zip.infolist()),
+                desc=f"Extracting {archive_file_path.name}",
             ):
                 zip.extract(path=dataset_base_path, member=member)
     elif ext == "tar.gz":
         with tarfile.open(archive_file_path, "r") as tar:
             for member in progress_bar(
-                iterable=tar.getmembers(), total=len(tar.getmembers())
+                iterable=tar.getmembers(),
+                total=len(tar.getmembers()),
+                desc=f"Extracting {archive_file_path.name}",
             ):
                 tar.extract(path=dataset_base_path, member=member)
     else:

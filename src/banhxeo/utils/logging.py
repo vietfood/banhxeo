@@ -7,7 +7,10 @@ try:
 
     logging_handler.append(RichHandler(rich_tracebacks=True, markup=True))
 except ModuleNotFoundError:
-    pass
+    logFormatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setFormatter(logFormatter)
+    logging_handler.append(consoleHandler)
 
 
 # Set up Logger

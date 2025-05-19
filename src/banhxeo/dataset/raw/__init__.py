@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Optional
 
 import polars as pl
+from datasets import get_dataset_split_names, load_dataset, load_dataset_builder
 
 from banhxeo.utils.file import check_md5, download_archive, extract_archive
 from banhxeo.utils.logging import DEFAULT_LOGGER
@@ -29,7 +30,7 @@ class RawDatasetFile:
 class RawDatasetConfig:
     name: str
     url: str
-    file: RawDatasetFile
+    file: Optional[RawDatasetFile] = None
     md5: Optional[str] = None
     split: Optional[DatasetSplit] = None
 
@@ -47,6 +48,7 @@ class RawTextDataset(metaclass=ABCMeta):
         split: str,
         config: RawDatasetConfig,
         seed: int,
+        download: bool = True,
     ):
         if not root_dir:
             DEFAULT_LOGGER.warning(
@@ -56,12 +58,6 @@ class RawTextDataset(metaclass=ABCMeta):
         else:
             self.root_path = Path(root_dir).resolve()
 
-        self.config = config
-
-        self.max_workers = min(32, os.cpu_count() + 4)  # type: ignore
-
-        self.split = split
-
         self.dataset_base_path = self.root_path / "datasets" / self.config.name
 
         if not self.dataset_base_path.exists():
@@ -70,12 +66,19 @@ class RawTextDataset(metaclass=ABCMeta):
             )
             self.dataset_base_path.mkdir(parents=True, exist_ok=True)
 
+        self.config = config
+        self.max_workers = min(32, os.cpu_count() + 4)  # type: ignore
+        self.split = split
         self.seed = seed
 
         # Download and extract raw data
-        self._download_and_extract_data()
+        if download:
+            self._download_and_extract_data()
 
     def _download_and_extract_data(self):
+        if self.config.file is None:
+            raise
+
         archive_file_path = (
             self.dataset_base_path / f"{self.config.file.name}.{self.config.file.ext}"
         )
@@ -139,3 +142,28 @@ class RawTextDataset(metaclass=ABCMeta):
 
     def __getitem__(self, index):
         raise NotImplementedError()
+
+    @classmethod
+    def from_huggingface(cls, root_dir: str, url: str, split: str, seed: int, **kwargs):
+        dataset_name = url.split("/")[-1]
+
+        result = cls(
+            root_dir=root_dir,
+            split=split,
+            seed=seed,
+            config=RawDatasetConfig(name=dataset_name, url=url),
+        )
+
+        dataset = load_dataset(
+            "cornell-movie-review-data/rotten_tomatoes",
+            split="train",
+            data_dir=result.dataset_base_path.as_posix(),
+            **kwargs,
+        )
+
+    @staticmethod
+    def inspect_huggingface_dataset(url: str):
+        ds_builder = load_dataset_builder(url)
+        print(ds_builder.info.description)
+        print(f"Features: {ds_builder.info.features}")
+        print(f"Splits: {str(get_dataset_split_names(url))}")
