@@ -1,6 +1,6 @@
 [project]
 name = "banhxeo"
-version = "0.1.2"
+version = "0.1.3"
 authors = [{ name = "Le Nguyen", email = "lenguyen18072003@gmail.com" }]
 license = { text = "MIT License" }
 readme = "README.md"
