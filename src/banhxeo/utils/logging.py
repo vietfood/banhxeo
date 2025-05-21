@@ -2,15 +2,15 @@ import logging
 from typing import Any
 
 logging_handler = []
-try:
-    from rich.logging import RichHandler
+# try:
+#     from rich.logging import RichHandler
 
-    logging_handler.append(RichHandler(rich_tracebacks=True, markup=True))
-except ModuleNotFoundError:
-    logFormatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
-    consoleHandler = logging.StreamHandler()
-    consoleHandler.setFormatter(logFormatter)
-    logging_handler.append(consoleHandler)
+#     logging_handler.append(RichHandler(rich_tracebacks=True, markup=True))
+# except ModuleNotFoundError:
+logFormatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+logging_handler.append(consoleHandler)
 
 
 # Set up Logger

@@ -111,7 +111,7 @@ class BaseTextDataset(metaclass=ABCMeta):
                 raise e
 
     def __len__(self) -> int:
-        return len(self._data) if self._data else 0
+        return len(self._data) if self._data is not None else 0
 
     def __getitem__(self, index: int) -> Any:
         # Should return a raw data sample, e.g., (text, label) or dict (hugging face)
@@ -132,6 +132,9 @@ class BaseTextDataset(metaclass=ABCMeta):
                 texts.append(sample[self.config.text_column])
         return texts
 
+    def get_data(self) -> Any:
+        return self._data
+
     def to_torch_dataset(
         self,
         tokenizer: Tokenizer,
@@ -151,9 +154,11 @@ class BaseTextDataset(metaclass=ABCMeta):
             tokenizer=tokenizer,
             tokenizer_config=tokenizer_config,
             vocab=vocab,
-            is_classification=kwargs.get("is_classifcation", False),
+            is_classification=kwargs.get("is_classification", False),
             transforms=kwargs.get("transforms", []),
             label_map=kwargs.get("label_map"),
+            text_column_name=kwargs.get("text_column_name", "text"),
+            label_column_name=kwargs.get("label_column_name", "label"),
         )
 
         from banhxeo.data.torch import TorchTextDataset

@@ -34,13 +34,11 @@ class BaseLanguageModel(metaclass=ABCMeta):
         print(f"  Configuration: {self.get_config()}")
         print(f"  Trained/Fitted: {self._is_trained_or_fitted}")
 
-    @abstractmethod
     def save_model(self, save_path: Union[Path, str]):  # Changed to directory
         """Saves model state and configuration to a directory."""
         raise NotImplementedError()
 
     @classmethod
-    @abstractmethod
     def load_model(cls, load_directory: Union[Path, str]):  # Changed to directory
         """Loads a model from a directory."""
         raise NotImplementedError()

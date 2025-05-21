@@ -69,7 +69,7 @@ DEFAULT_VOCAB_CONFIG = VocabConfig()
 class Vocabulary:
     """Manages token<=>ID mapping, special tokens."""
 
-    def __init__(self, vocab_config: Optional[VocabConfig]):
+    def __init__(self, vocab_config: Optional[VocabConfig] = None):
         self.vocab_config = vocab_config if vocab_config else DEFAULT_VOCAB_CONFIG
 
         self.tokenizer = None

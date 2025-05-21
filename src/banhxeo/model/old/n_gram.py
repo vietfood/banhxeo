@@ -26,7 +26,7 @@ class NgramTrieNode:
 class NGramConfig(ModelConfig):
     n: int
     smoothing: Union[bool, str] = False
-    k: Optional[int] = None
+    k: Optional[float] = None
 
     @model_validator(mode="after")
     def check_smoothing(self) -> Self:

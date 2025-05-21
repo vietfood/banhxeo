@@ -59,7 +59,6 @@ class TorchTextDataset(TorchDataset):
                 raise ValueError(
                     f"Label is None for sample {idx}, but is_classification is True."
                 )
-
             if self.config.label_map:
                 label_id = self.config.label_map.get(str(raw_label))
                 if label_id is None:
