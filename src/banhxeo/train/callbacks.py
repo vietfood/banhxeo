@@ -107,14 +107,15 @@ class AccuracyCallback(TrainerCallback):
             # reset
             self.correct = 0
             self.total = 0
-            self.accs[global_step] = acc
-            DEFAULT_LOGGER.info(f"Accuracy after {global_step + 1} steps: {acc}%")
+            self.accs[global_step + 1] = acc
+            DEFAULT_LOGGER.info(f"Accuracy after {global_step + 1} steps: {acc:.2f}%")
         else:
             self.correct += logs["correct"]
             self.total += logs["total"]
 
     def on_evaluate(self, trainer, metrics):
-        return super().on_evaluate(trainer, metrics)
+        acc = (metrics["correct"] * 100) / metrics["total"]  # type: ignore
+        DEFAULT_LOGGER.info(f"Testing accuracy: {acc:.2f}%")
 
     def get_output(self):
         return self.accs

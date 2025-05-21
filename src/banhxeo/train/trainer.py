@@ -102,7 +102,7 @@ class Trainer:
             torch.cuda.manual_seed_all(seed)
 
     def _create_optim_and_loss(self):
-        self.optimizer = self.config.optim.get_optimizer(self.model.named_parameters())
+        self.optimizer = self.config.optim.get_optimizer(self.model.parameters())
         if self.config.optim.scheduler_name is not None:
             self.scheduler = self.config.optim.get_scheduler(self.optimizer)
         self.loss = self.config.loss.get_loss_function()
