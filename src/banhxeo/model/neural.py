@@ -1,10 +1,11 @@
 import json
 from abc import abstractmethod
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Dict, Optional, Union
 
 import torch
 import torch.nn as nn
+from jaxtyping import Integer
 
 from banhxeo import CPU_DEVICE, GPU_DEVICE
 from banhxeo.core.vocabulary import Vocabulary
@@ -14,7 +15,7 @@ from banhxeo.utils.logging import DEFAULT_LOGGER
 
 
 class NeuralModelConfig(ModelConfig):
-    embedding_dim: Optional[int] = None
+    embedding_dim: int
 
 
 class NeuralLanguageModel(BaseLanguageModel, nn.Module):
@@ -24,26 +25,25 @@ class NeuralLanguageModel(BaseLanguageModel, nn.Module):
 
         self.downstream_heads = nn.ModuleDict()  # Downstream task
 
+    def freeze(self):
+        for param in self.parameters():
+            param.requires_grad = False
+
+    def summary(self):
+        super().summary()
+        print(self)
+
     @abstractmethod
     def forward(
         self,
-        input_ids: torch.Tensor,
-        attention_mask: Optional[torch.Tensor] = None,
+        input_ids: Integer[torch.Tensor, "batch seq"],  # noqa: F722
+        attention_mask: Optional[Integer[torch.Tensor, "batch seq"]] = None,  # noqa: F722
         **kwargs,
     ) -> Dict[str, torch.Tensor]:
         raise NotImplementedError(
             f"{self.__class__.__name__} must implement the its own forward pass."
         )
 
-    @abstractmethod
-    def predict(
-        self, processed_input_data: Dict[str, torch.Tensor], **kwargs
-    ) -> Dict[str, Any]:
-        raise NotImplementedError(
-            f"{self.__class__.__name__} must implement the its own predict function."
-        )
-
-    @abstractmethod
     def generate_sequence(
         self,
         prompt: str,  # Takes raw string prompt

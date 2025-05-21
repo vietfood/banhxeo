@@ -2,6 +2,7 @@ from typing import Dict, List, Optional
 
 import einops
 import torch
+from jaxtyping import Integer
 from pydantic import Field, model_validator
 from torch import nn
 from typing_extensions import Self
@@ -128,8 +129,8 @@ class MLP(NeuralLanguageModel):
 
     def forward(
         self,
-        input_ids: torch.Tensor,
-        attention_mask: Optional[torch.Tensor] = None,
+        input_ids: Integer[torch.Tensor, "batch seq"],  # noqa: F722
+        attention_mask: Optional[Integer[torch.Tensor, "batch seq"]] = None,  # noqa: F722
         **kwargs,
     ) -> Dict[str, torch.Tensor]:
         if attention_mask is None and self.embedding.padding_idx is not None:
@@ -187,7 +188,3 @@ class MLP(NeuralLanguageModel):
 
     def generate_sequence(self, *args, **kwargs) -> str:
         raise NotImplementedError("MLP is not an autoregressive model.")
-
-    def summary(self):
-        super().summary()
-        print(self)
