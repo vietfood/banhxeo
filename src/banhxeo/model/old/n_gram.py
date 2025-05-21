@@ -313,7 +313,22 @@ class NGram(BaseLanguageModel):
                     indices_to_remove = (
                         token_probs < np.partition(token_probs, -config.k)[-config.k]
                     )
+                # Inside top_k sampling
+                original_token_probs = token_probs
                 token_probs[indices_to_remove] = 0
+                if (
+                    np.sum(token_probs) == 0
+                ):  # All probs became 0, fallback (e.g. uniform over top_k or all)
+                    # Find indices of top_k elements
+                    top_k_indices = np.argsort(original_token_probs)[
+                        -config.k :
+                    ]  # original_token_probs before modification
+                    next_token_id = np.random.choice(top_k_indices)
+                else:
+                    token_probs /= np.sum(token_probs)  # Re-normalize
+                    next_token_id = np.random.choice(
+                        np.arange(len(self.vocab)), p=token_probs
+                    )
                 next_token_id = np.random.choice(len(self.vocab), p=token_probs)
             else:
                 raise NotImplementedError(

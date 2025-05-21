@@ -32,29 +32,10 @@ git clone https://github.com/vietfood/banhxeo.git
 cd banhxeo
 uv sync
 ```
-
-2. **A Quick Start**
-```python
-from banhxeo.dataset import IMDBDataset
-from banhxeo.core.tokenizer import NLTKTokenizer, TokenizerConfig
-from banhxeo.core.vocabulary import Vocabulary
-from banhxeo.models.neural.mlp import MLP, MLPConfig
-from banhxeo.training.trainer import Trainer, TrainerConfig
-
-# --- Load Data ---
-raw_imdb = IMDBDataset(root_dir="./", split="train")
-
-# -- Create Tokenizer and Vocab ---
-tokenizer = NLTKTokenizer()
-vocab = Vocabulary.build(corpus=raw_imdb.text_data, tokenizer=tokenizer)
-
-# -- Train MLP ---
-```
-
-3. **Use our Examples**
+22. **Examples**
 
 - [x] [N-gram example](./examples/n_gram.ipynb)
-- [x] [MLP example](./examples/mlp_train.ipynb)
+- [x] [MLP example](https://colab.research.google.com/drive/1d8Yw_Go6FmAoJdXRTaHVsDJasZMEiv41?usp=sharing)
 - [ ] RNN/LSTM example
 
 ## 🗺️ Roadmap
