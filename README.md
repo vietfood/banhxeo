@@ -54,7 +54,7 @@ vocab = Vocabulary.build(corpus=raw_imdb.text_data, tokenizer=tokenizer)
 3. **Use our Examples**
 
 - [x] [N-gram example](./examples/n_gram.ipynb)
-- [ ] [MLP example](./examples/mlp_train.ipynb)
+- [x] [MLP example](./examples/mlp_train.ipynb)
 - [ ] RNN/LSTM example
 
 ## 🗺️ Roadmap
