@@ -1,6 +1,7 @@
 from typing import Dict
 
 import torch
+from torch.utils.data import DataLoader
 from torch.utils.data import Dataset as TorchDataset
 
 from banhxeo.data.base import BaseTextDataset
@@ -74,3 +75,15 @@ class TorchTextDataset(TorchDataset):
             output_dict["labels"] = torch.tensor(label_id, dtype=torch.long)
 
         return output_dict
+
+    def to_loader(
+        self, batch_size: int, num_workers: int, shuffle: bool = True, **kwargs
+    ):
+        return DataLoader(
+            self,
+            batch_size=batch_size,
+            shuffle=shuffle,
+            num_workers=num_workers,
+            collate_fn=kwargs.get("collate_fn"),
+            sampler=kwargs.get("sampler"),
+        )
