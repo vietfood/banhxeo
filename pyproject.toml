@@ -10,6 +10,7 @@ dependencies = [
     "datasets>=3.6.0",
     "einops>=0.8.1",
     "gdown>=5.2.0",
+    "jaxtyping>=0.2.36",
     "numpy",
     "optuna>=4.3.0",
     "polars",
