@@ -6,9 +6,6 @@ from typing import Any, Callable, Dict, Optional, Union
 
 import numpy as np
 import torch
-from torch.nn.modules.loss import _Loss
-from torch.optim import Optimizer
-from torch.optim.lr_scheduler import LRScheduler  # Base class
 from torch.utils.data import DataLoader
 
 from banhxeo import CPU_DEVICE, GPU_DEVICE
@@ -114,12 +111,13 @@ class Trainer:
         for cb in self.callbacks:
             getattr(cb, method_name)(self, *args, **kwargs)
 
-    def get_callback_outputs(self):
+    def get_callbacks_output(self):
         result = dict()
         for callback in self.callbacks:
             output = callback.get_output()
             if output is not None:
                 result[callback.name] = output
+        return result
 
     def get_train_dataloader(self) -> DataLoader:
         if self.train_dataset is None:

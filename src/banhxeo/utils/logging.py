@@ -1,30 +1,49 @@
 import logging
 from typing import Any
 
-logging_handler = []
-# try:
-#     from rich.logging import RichHandler
+from banhxeo.utils import RuntimeEnv, get_runtime
 
-#     logging_handler.append(RichHandler(rich_tracebacks=True, markup=True))
-# except ModuleNotFoundError:
-logFormatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
-consoleHandler = logging.StreamHandler()
-consoleHandler.setFormatter(logFormatter)
-logging_handler.append(consoleHandler)
+
+class PrintLogger:  # fix Colab issues
+    template: str = "[{level}]: {msg}"
+
+    def info(self, msg: str):
+        print(self.template.format(level="INFO", msg=msg))
+
+    def debug(self, msg: str):
+        print(self.template.format(level="DEBUG", msg=msg))
+
+    def exception(self, msg: str):
+        print(self.template.format(level="EXCEPTION", msg=msg))
+
+    def error(self, msg: str):
+        print(self.template.format(level="ERROR", msg=msg))
+
+    def warning(self, msg: str):
+        print(self.template.format(level="WARNING", msg=msg))
 
 
 # Set up Logger
 class Logger:
-    base = logging.getLogger("banhxeo")
-
     def __init__(self):
-        # set up config
-        logging.basicConfig(
-            level="NOTSET",
-            format="%(message)s",
-            datefmt="[%Y-%m-%d-%H:%M:%S%z]",
-            handlers=logging_handler,
-        )
+        if get_runtime() == RuntimeEnv.COLAB:
+            self.base = PrintLogger()
+        else:
+            self.base = logging.getLogger("banhxeo")
+
+            logging_handler = []
+            logFormatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
+            consoleHandler = logging.StreamHandler()
+            consoleHandler.setFormatter(logFormatter)
+            logging_handler.append(consoleHandler)
+
+            # set up config
+            logging.basicConfig(
+                level="NOTSET",
+                format="%(message)s",
+                datefmt="[%Y-%m-%d-%H:%M:%S%z]",
+                handlers=logging_handler,
+            )
 
     def info(self, msg: str):
         self.base.info(msg)
