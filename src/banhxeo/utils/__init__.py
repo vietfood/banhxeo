@@ -1,5 +1,6 @@
 import os
 import sys
+
 from enum import Enum, auto
 
 import __main__

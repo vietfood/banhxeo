@@ -1,7 +1,4 @@
 from dataclasses import dataclass
-from typing import List, Optional, Union
-
-from torch import Size
 
 from banhxeo.model.config import ModelConfig
 

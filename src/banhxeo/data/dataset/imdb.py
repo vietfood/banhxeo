@@ -1,4 +1,5 @@
 import concurrent.futures
+
 from glob import glob
 from pathlib import Path
 from typing import Dict, Optional
@@ -11,6 +12,7 @@ from banhxeo.data.config import DatasetConfig, DatasetSplit, DownloadDatasetFile
 from banhxeo.utils import progress_bar
 from banhxeo.utils.logging import DEFAULT_LOGGER
 
+
 IMDB_DATASET_CONFIG = DatasetConfig(
     name="IMDB",
     url="http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz",
@@ -19,6 +21,7 @@ IMDB_DATASET_CONFIG = DatasetConfig(
     split=DatasetSplit(train=25000, test=25000),
     text_column="content",
     label_column="label",
+    label_map={"pos": 1, "neg": 0},
 )
 
 
@@ -32,7 +35,7 @@ class IMDBDataset(BaseTextDataset):
         super().__init__(root_dir, split_name, IMDB_DATASET_CONFIG, seed, download=True)
 
         # Load data using polars
-        self._data: pl.DataFrame = self._build_data()
+        self._data = self._build_data()
 
     def _read_file_data(self, file_path: str) -> Optional[Dict]:
         """Reads a single file and returns its data, or None on error."""

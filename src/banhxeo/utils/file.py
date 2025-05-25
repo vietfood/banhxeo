@@ -3,11 +3,13 @@ import shutil
 import tarfile
 import urllib.request
 import zipfile
+
 from pathlib import Path
 from typing import Optional
 
 from banhxeo.utils import progress_bar
 from banhxeo.utils.logging import DEFAULT_LOGGER
+
 
 USER_AGENT = "vietfood/banhxeo"
 
@@ -50,12 +52,12 @@ def check_md5(md5: Optional[str], name: str, archive_file_path: Path):
         if accept != "yes":
             if archive_file_path.is_file():
                 archive_file_path.unlink()
-                DEFAULT_LOGGER.warning(f"Removed {archive_file_path.name}")
+                DEFAULT_LOGGER.warning(f"Removed {str(archive_file_path)}")
             raise ValueError(
-                f"Extraction aborted by user for dataset {archive_file_path.name}."
+                f"Extraction aborted by user for dataset {str(archive_file_path)}."
             )
     else:
-        DEFAULT_LOGGER.info(f"Verifying MD5 for {archive_file_path.name}...")
+        DEFAULT_LOGGER.info(f"Verifying MD5 for {str(archive_file_path)}...")
 
         with archive_file_path.open(mode="rb") as f:
             file_hash = hashlib.md5()
@@ -65,9 +67,9 @@ def check_md5(md5: Optional[str], name: str, archive_file_path: Path):
 
         if archive_md5 != md5:
             archive_file_path.unlink()
-            DEFAULT_LOGGER.warning(f"Removed corrupted file {archive_file_path.name}")
+            DEFAULT_LOGGER.warning(f"Removed corrupted file {str(archive_file_path)}")
             raise ValueError(
-                f"MD5 mismatch for {archive_file_path.name}. Expected {md5}, got {archive_md5}. File may be corrupted."
+                f"MD5 mismatch for {str(archive_file_path)}. Expected {md5}, got {archive_md5}. File may be corrupted."
             )
 
         DEFAULT_LOGGER.info("MD5 checksum verified.")

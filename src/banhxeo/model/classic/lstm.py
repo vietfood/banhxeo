@@ -4,6 +4,7 @@ import einops
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 from jaxtyping import Integer
 
 from banhxeo.core.vocabulary import Vocabulary
@@ -63,8 +64,7 @@ class LSTMCell(nn.Module):
 
 
 class LSTM(NeuralLanguageModel):
-    """
-    Use batch_first as default
+    """Use batch_first as default
     """
 
     def __init__(

@@ -2,6 +2,7 @@ from typing import Dict, List, Optional
 
 import einops
 import torch
+
 from jaxtyping import Integer
 from pydantic import Field, model_validator
 from torch import nn

@@ -31,10 +31,7 @@ class TokenizerConfig(BaseModel):
 
 
 class Tokenizer(metaclass=ABCMeta):
-    """
-    Abstract Base Class for all tokenizers.
-    Defines the core interface for tokenization and related functionalities.
-    """
+    """Abstract Base Class for all tokenizers. Defines the core interface for tokenization and related functionalities."""
 
     def __call__(self, text_or_texts: Union[List[str], str], **kwargs):
         if isinstance(text_or_texts, str):
@@ -43,7 +40,7 @@ class Tokenizer(metaclass=ABCMeta):
             return [self.tokenize(text, **kwargs) for text in text_or_texts]
 
     def tokenize(self, text: str, **kwargs) -> List[str]:
-        """This is base implementation of Tokenizer tokenize, each child class should implement their own version"""
+        """This is base implementation of Tokenizer tokenize, each child class should implement their own version."""
         # Default is regrex tokenizer
         import re
 
@@ -57,8 +54,7 @@ class Tokenizer(metaclass=ABCMeta):
         config: TokenizerConfig,
         **kwargs,
     ) -> Dict[str, List[int]]:
-        """This is base implementation of Tokenizer encode, each child class should implement their own version"""
-
+        """This is base implementation of Tokenizer encode, each child class should implement their own version."""
         # Tokenize text
         tokens = self.tokenize(text, **kwargs)  # kwargs might be passed to tokenize
 
@@ -116,8 +112,7 @@ class Tokenizer(metaclass=ABCMeta):
         special_tokens: List[str] = ["<pad>", "<unk>", "<bos>", "<eos>"],
         **kwargs,
     ) -> None:
-        """
-        Trains the tokenizer (e.g., learns merges for BPE, or word pieces) from an iterator of texts.
+        """Trains the tokenizer (e.g., learns merges for BPE, or word pieces) from an iterator of texts.
         This is mainly for tokenizers that have a trainable vocabulary component (like BPE, WordPiece).
         Simple tokenizers like WordTokenizer or CharTokenizer might not need this or implement it as a no-op.
         """
@@ -128,8 +123,7 @@ class Tokenizer(metaclass=ABCMeta):
     # --- Saving and Loading (Essential for trained/complex tokenizers) ---
 
     def save_pretrained(self, save_directory: Union[str, Path], **kwargs):
-        """
-        Saves the tokenizer's configuration and any learned vocabulary/merges
+        """Saves the tokenizer's configuration and any learned vocabulary/merges
         to a directory, so it can be reloaded.
         """
         ...
@@ -137,9 +131,7 @@ class Tokenizer(metaclass=ABCMeta):
 
     @classmethod
     def from_pretrained(cls, load_directory: Union[str, Path], **kwargs) -> Tokenizer:
-        """
-        Loads a tokenizer from a previously saved directory.
-        """
+        """Loads a tokenizer from a previously saved directory."""
         raise NotImplementedError("Waiting to be implemented")
 
 

@@ -1,5 +1,6 @@
 import json
-from collections import defaultdict
+
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
@@ -58,7 +59,6 @@ class VocabConfig(BaseModel):
 
     def special_token_idx(self, token) -> int:
         """Responsiblity from the caller, if token isn't in special token list, this method will raise ValueError"""
-
         idx = self.special_tokens.index(token)
         return idx
 
@@ -73,12 +73,13 @@ class Vocabulary:
         self.vocab_config = vocab_config if vocab_config else DEFAULT_VOCAB_CONFIG
 
         self.tokenizer = None
-        self._idx_to_token = []
-        self._token_to_idx = {}
+        self._idx_to_token = list()
+        self._token_to_idx = dict()
+        self._word_counts = None
 
     @classmethod
     def load(cls, path: Union[Path, str], tokenizer: Tokenizer):
-        """Loading pre-trained vocabulary from file"""
+        """Loading pre-trained vocabulary from file."""
         if isinstance(path, str):
             path = Path(path)
 
@@ -177,7 +178,7 @@ class Vocabulary:
 
     # [[ Public method ]]
     def save(self, path: Union[str, Path]):
-        """Save to file
+        """Save to file.
 
         Args:
             file (_type_): _description_
@@ -257,3 +258,11 @@ class Vocabulary:
     # Convenient method
     def __len__(self) -> int:
         return self.vocab_size
+
+    def get_word_counts(self) -> Dict[str, int]:
+        if len(self._token_to_idx) == 0 or len(self._idx_to_token) == 0:
+            raise ValueError("Vocabulary not built yet.")
+
+        if self._word_counts is None:
+            self._word_counts = dict(Counter(self._token_to_idx))
+        return self._word_counts

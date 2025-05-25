@@ -1,6 +1,7 @@
 from typing import Dict
 
 import torch
+
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset as TorchDataset
 
@@ -9,10 +10,7 @@ from banhxeo.data.config import TorchDatasetConfig
 
 
 class TorchTextDataset(TorchDataset):
-    """
-    A PyTorch Dataset that wraps a TextDataset, applying tokenization,
-    numericalization, and transformations.
-    """
+    """A PyTorch Dataset that wraps a TextDataset, applying tokenization, numericalization, and transformations."""
 
     def __init__(
         self,

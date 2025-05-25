@@ -4,6 +4,7 @@ import einops
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 from jaxtyping import Integer
 from pydantic import model_validator
 from typing_extensions import Self
@@ -54,9 +55,7 @@ class RNNCell(nn.Module):
 
 
 class RNN(NeuralLanguageModel):
-    """
-    Use batch_first as default
-    """
+    """Use batch_first as default."""
 
     def __init__(
         self,

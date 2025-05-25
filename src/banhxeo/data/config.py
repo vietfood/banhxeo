@@ -33,8 +33,11 @@ class DatasetConfig(BaseModel):
     # For HF datasets:
     hf_path: Optional[str] = None
     hf_name: Optional[str] = None  # For subsets/configurations of HF datasets
+
+    # For torch dataset
     text_column: str = "text"  # Default text column for HF
     label_column: Optional[str] = "label"  # Default label column for HF
+    label_map: Dict[str, int] = {"pos": 1, "neg": 0}
 
     # Common
     split: Optional[DatasetSplit] = None  # Keep DatasetSplit if used
@@ -46,11 +49,11 @@ class TorchDatasetConfig(BaseModel):
     vocab: Vocabulary
     is_classification: bool = False
     transforms: Union[List[Transforms], ComposeTransforms] = []
-    label_map: Optional[Dict[str, int]]
 
     # For Hugging face
     text_column_name: str = "text"
     label_column_name: Optional[str] = "label"
+    label_map: Optional[Dict[str, int]]
 
     @field_validator("transforms")
     @classmethod

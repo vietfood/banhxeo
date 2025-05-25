@@ -48,10 +48,10 @@ class ClassificationHead(BaseHead):
     def forward(
         self, base_model_output_feature: torch.Tensor, **kwargs
     ) -> torch.Tensor:
-        """
-        Args:
+        """Args:
             pooled_output (torch.Tensor): Tensor of shape (batch_size, input_dim),
                                           typically the pooled output of the base model.
+
         Returns:
             torch.Tensor: Logits of shape (batch_size, num_classes).
         """

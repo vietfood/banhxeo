@@ -1,5 +1,6 @@
 import os
 import shutil
+
 from abc import ABCMeta
 from pathlib import Path
 from typing import Any, List, Optional
@@ -13,8 +14,8 @@ from banhxeo.utils.logging import DEFAULT_LOGGER
 
 
 class BaseTextDataset(metaclass=ABCMeta):
-    """
-    - This is the *raw* dataset, will return text (string) not Tensor, convert to Pytorch dataset by using `to_torch_dataset`.
+    """This is the *raw* dataset, will return text (string) not Tensor, convert to Pytorch dataset by using `to_torch_dataset`.
+
     - Can load hugging face dataset by using `load_from_huggingface`.
     - ABC Class for all text datasets in banhxeo library. Cannot be directly instantiated itself.
     """
@@ -41,7 +42,7 @@ class BaseTextDataset(metaclass=ABCMeta):
         if config.url or config.file_info:
             if not self.dataset_base_path.exists():
                 DEFAULT_LOGGER.info(
-                    f"Creating folder for dataset {config.name} in {self.dataset_base_path.name}"
+                    f"Creating folder for dataset {config.name} in {str(self.dataset_base_path)}"
                 )
                 self.dataset_base_path.mkdir(parents=True, exist_ok=True)
 
@@ -69,7 +70,7 @@ class BaseTextDataset(metaclass=ABCMeta):
         # Download file if not exist
         if not archive_file_path.is_file():
             DEFAULT_LOGGER.info(
-                f"Downloading {self.config.name} dataset to {archive_file_path.name}..."
+                f"Downloading {self.config.name} dataset to {str(archive_file_path)}..."
             )
             try:
                 download_archive(
@@ -90,7 +91,7 @@ class BaseTextDataset(metaclass=ABCMeta):
         extracted_data_dir_path = self.dataset_base_path / self.config.file_info.name
         if not extracted_data_dir_path.is_dir():
             DEFAULT_LOGGER.info(
-                f"Extracting file {archive_file_path.name} to {self.dataset_base_path.name}..."
+                f"Extracting file {archive_file_path.name} to {str(self.dataset_base_path)}..."
             )
             try:
                 extract_archive(
@@ -100,11 +101,11 @@ class BaseTextDataset(metaclass=ABCMeta):
                     extracted_data_dir_path,
                 )
                 DEFAULT_LOGGER.info(
-                    f"Successfully extracted to {extracted_data_dir_path.name}"
+                    f"Successfully extracted to {str(extracted_data_dir_path)}"
                 )
             except Exception as e:
                 DEFAULT_LOGGER.error(
-                    f"Error unpacking archive {archive_file_path.name}: {e}"
+                    f"Error unpacking archive {str(archive_file_path)}: {e}"
                 )
                 if extracted_data_dir_path.exists():
                     shutil.rmtree(extracted_data_dir_path, ignore_errors=True)
@@ -156,9 +157,9 @@ class BaseTextDataset(metaclass=ABCMeta):
             vocab=vocab,
             is_classification=kwargs.get("is_classification", False),
             transforms=kwargs.get("transforms", []),
-            label_map=kwargs.get("label_map"),
-            text_column_name=kwargs.get("text_column_name", "text"),
-            label_column_name=kwargs.get("label_column_name", "label"),
+            label_map=kwargs.get("label_map", self.config.label_map),
+            text_column_name=kwargs.get("text_column_name", self.config.text_column),
+            label_column_name=kwargs.get("label_column_name", self.config.label_column),
         )
 
         from banhxeo.data.torch import TorchTextDataset
@@ -182,7 +183,7 @@ class BaseTextDataset(metaclass=ABCMeta):
             dataset_name = f"{dataset_name}_{hf_name}"
 
         config = DatasetConfig(
-            name=f"hf_{dataset_name}_{split_name.replace('[', '_').replace(']', '')}",  # Unique name
+            name=f"hf_{dataset_name}_{split_name.replace('[', '_').replace(']', '')}",
             hf_path=hf_path,
             hf_name=hf_name,
             text_column=text_column,

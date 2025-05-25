@@ -1,10 +1,12 @@
 import json
+
 from abc import abstractmethod
 from pathlib import Path
 from typing import Dict, Optional, Union
 
 import torch
 import torch.nn as nn
+
 from jaxtyping import Integer
 
 from banhxeo import CPU_DEVICE, GPU_DEVICE
@@ -36,8 +38,7 @@ class NeuralLanguageModel(BaseLanguageModel, nn.Module):
     @abstractmethod
     def forward(
         self,
-        input_ids: Integer[torch.Tensor, "batch seq"],  # noqa: F722
-        attention_mask: Optional[Integer[torch.Tensor, "batch seq"]] = None,  # noqa: F722
+        *args,
         **kwargs,
     ) -> Dict[str, torch.Tensor]:
         raise NotImplementedError(
@@ -50,9 +51,7 @@ class NeuralLanguageModel(BaseLanguageModel, nn.Module):
         generate_config: Optional[GenerateConfig] = None,
         **kwargs,  # For tokenizer config during prompt processing
     ) -> str:
-        """
-        Only applicable to autoregressive models.
-        """
+        """Only applicable to autoregressive models."""
         raise NotImplementedError(
             f"{self.__class__.__name__} must implement the generation loop."
         )
@@ -69,13 +68,14 @@ class NeuralLanguageModel(BaseLanguageModel, nn.Module):
     def get_downstream_head_output(
         self, head_name: str, base_model_output: Dict[str, torch.Tensor], **head_kwargs
     ) -> torch.Tensor:
-        """
-        Passes the base model's output through a specified downstream head.
+        """Passes the base model's output through a specified downstream head.
+
         Args:
             head_name: Name of the head to use.
             base_model_output: Output dictionary from the base model's forward pass.
                                Expected to contain keys like 'last_hidden_state', 'pooled_output', etc.
             head_kwargs: Additional arguments to pass to the head's forward method.
+
         Returns:
             Output tensor from the downstream head.
         """

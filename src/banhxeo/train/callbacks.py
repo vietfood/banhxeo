@@ -2,15 +2,11 @@ from abc import ABCMeta
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
-import torch
-
 from banhxeo.utils.logging import DEFAULT_LOGGER
+
 
 # Forward reference
 if TYPE_CHECKING:
-    from banhxeo.model.neural import (
-        NeuralLanguageModel,
-    )
     from banhxeo.train.trainer import Trainer
 
 

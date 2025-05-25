@@ -1,11 +1,13 @@
 import json
 import os
 import random
+
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Union
 
 import numpy as np
 import torch
+
 from torch.utils.data import DataLoader
 
 from banhxeo import CPU_DEVICE, GPU_DEVICE
@@ -16,6 +18,7 @@ from banhxeo.train.callbacks import (
 )
 from banhxeo.train.config import TrainerConfig
 from banhxeo.utils.logging import DEFAULT_LOGGER
+
 
 # User train step must do:
 # 1. Move batch data to the correct device.

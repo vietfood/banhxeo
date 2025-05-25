@@ -1,8 +1,10 @@
 import itertools
+
 from dataclasses import dataclass, field
 from typing import Dict, Optional, Union
 
 import numpy as np
+
 from pydantic import model_validator
 from typing_extensions import Self
 
