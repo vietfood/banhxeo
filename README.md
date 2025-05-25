@@ -1,6 +1,7 @@
 # 🥞 Banhxeo: A Simple, Efficient (Enough), and Educational NLP Library
 
-> WARNING: Banhxeo cannot be used (and will never be used) for production.
+> [!WARNING] 
+> Banhxeo cannot be used (and will never be used) for production.
 
 **Welcome to Banhxeo!**
 
@@ -32,11 +33,16 @@ git clone https://github.com/vietfood/banhxeo.git
 cd banhxeo
 uv sync
 ```
-22. **Examples**
+2. **Examples**
 
 - [x] [N-gram example](./examples/n_gram.ipynb)
 - [x] [MLP example](https://colab.research.google.com/drive/1d8Yw_Go6FmAoJdXRTaHVsDJasZMEiv41?usp=sharing)
 - [ ] RNN/LSTM example
+
+3. **Read Documentation**
+
+> [!NOTE]
+> Stay tune.
 
 ## 🗺️ Roadmap
 
