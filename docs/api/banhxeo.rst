@@ -1,6 +1,11 @@
 banhxeo package
 ===============
 
+.. automodule:: banhxeo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -12,11 +17,3 @@ Subpackages
    banhxeo.model
    banhxeo.train
    banhxeo.utils
-
-Module contents
----------------
-
-.. automodule:: banhxeo
-   :members:
-   :undoc-members:
-   :show-inheritance:
