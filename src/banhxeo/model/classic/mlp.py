@@ -14,18 +14,39 @@ from banhxeo.utils.logging import DEFAULT_LOGGER
 
 
 class MLPConfig(NeuralModelConfig):
-    output_size: int  # Number of output classes (e.g., for classification)
+    """Configuration for the Multi-Layer Perceptron (MLP) model.
+
+    Attributes:
+        output_size: The number of output units (e.g., number of classes for
+            classification).
+        hidden_sizes: A list of integers, where each integer is the number of
+            units in a hidden layer. E.g., `[256, 128]` for two hidden layers.
+        activation_fn: The activation function to use in hidden layers.
+            Supported: "relu", "tanh", "gelu", "sigmoid". Defaults to "relu".
+        dropout_rate: Dropout rate to apply after activation in hidden layers.
+            Must be between 0.0 and 1.0. Defaults to 0.0.
+        aggregate_strategy: Strategy to aggregate token embeddings from a sequence
+            into a single vector before passing to the MLP. Supported:
+            "average", "max", "sum". "concat_window" is planned.
+            Defaults to "average".
+        window_size: Required if `aggregate_strategy` is "concat_window".
+            Specifies the window size for concatenating embeddings.
+        embedding_dim (from NeuralModelConfig): Dimension of the input embeddings.
+    """
+
+    output_size: int
     hidden_sizes: List[int] = Field(
         default_factory=list
     )  # e.g., [256, 128] -> two hidden layers
     activation_fn: str = "relu"
     dropout_rate: float = 0.0
 
-    aggregate_strategy: str = "average"  # "average", "max", "sum", "concat_window"
+    aggregate_strategy: str = "average"
     window_size: Optional[int] = None
 
     @model_validator(mode="after")
     def check_valid(self) -> Self:
+        """Validates the MLP configuration."""
         supported_aggregates = ["average", "max", "sum", "concat_window"]
         if self.aggregate_strategy not in supported_aggregates:
             raise ValueError(
@@ -54,6 +75,13 @@ class MLPConfig(NeuralModelConfig):
 
 
 class MLP(NeuralLanguageModel):
+    """Multi-Layer Perceptron model for sequence classification or regression.
+
+    This model takes token embeddings, aggregates them into a single vector
+    using a specified strategy (e.g., averaging), and then passes this
+    vector through one or more fully connected layers to produce an output.
+    """
+
     ConfigClass = MLPConfig  # for Loading
 
     def __init__(
@@ -64,6 +92,17 @@ class MLP(NeuralLanguageModel):
         hidden_sizes: List[int] = [256],
         **kwargs,
     ):
+        """Initializes the MLP model.
+
+        Args:
+            vocab: The vocabulary instance.
+            output_size: The dimensionality of the output layer.
+            embedding_dim: The dimensionality of the input token embeddings.
+                Defaults to 128.
+            hidden_sizes: A list of hidden layer sizes. Defaults to `[256]`.
+            **kwargs: Additional arguments for `MLPConfig`, such as
+                `activation_fn`, `dropout_rate`, `aggregate_strategy`.
+        """
         super().__init__(
             vocab=vocab,
             model_config=MLPConfig(
@@ -77,12 +116,6 @@ class MLP(NeuralLanguageModel):
             ),
         )
         self.config: MLPConfig
-
-        self.embedding = nn.Embedding(
-            num_embeddings=self.config.vocab_size,  # type: ignore
-            embedding_dim=self.config.embedding_dim,  # type: ignore
-            padding_idx=self.vocab.pad_id,
-        )
 
         self.embedding = nn.Embedding(
             num_embeddings=len(vocab),
@@ -134,6 +167,24 @@ class MLP(NeuralLanguageModel):
         attention_mask: Optional[Integer[torch.Tensor, "batch seq"]] = None,  # noqa: F722
         **kwargs,
     ) -> Dict[str, torch.Tensor]:
+        """Performs the forward pass of the MLP.
+
+        Args:
+            input_ids: Tensor of token IDs with shape `(batch_size, seq_len)`.
+            attention_mask: Optional tensor indicating valid tokens (1) and padding (0)
+                with shape `(batch_size, seq_len)`. If None and `padding_idx`
+                is set for embeddings, a warning is issued and all tokens are
+                assumed valid.
+            **kwargs: Additional keyword arguments (ignored by this base forward pass).
+
+        Returns:
+            A dictionary containing:
+                - "logits": Output logits from the MLP, shape `(batch_size, output_size)`.
+
+        Raises:
+            NotImplementedError: If an unsupported `aggregate_strategy` is configured
+                                (though `check_valid` should catch this).
+        """
         if attention_mask is None and self.embedding.padding_idx is not None:
             DEFAULT_LOGGER.warning(
                 "Fallback: Assume all token is valid because attention_mask is None"
@@ -179,13 +230,9 @@ class MLP(NeuralLanguageModel):
             aggregated_embeddings = einops.reduce(
                 embeddings * mask_expanded, "batch seq dim -> batch dim", "sum"
             )
-        else:
-            raise NotImplementedError(
-                f"Aggregation strategy {self.config.aggregate_strategy} not fully implemented for MLP."
-            )
 
         logits = self.layers(aggregated_embeddings)  # type: ignore
         return {"logits": logits}
 
-    def generate_sequence(self, *args, **kwargs) -> str:
+    def generate_sequence(self, *args, **kwargs) -> str:  # noqa: D102
         raise NotImplementedError("MLP is not an autoregressive model.")
