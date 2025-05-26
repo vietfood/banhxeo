@@ -12,6 +12,5 @@ build:
 
 .PHONY: docs
 docs:
-	(cd docs && make clean) && \
 	uv run sphinx-apidoc -o docs/api src/banhxeo --force --separate --module-first && \
-	(cd docs && make html)
+	uv run sphinx-build -M html docs docs/_build

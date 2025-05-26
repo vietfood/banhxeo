@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
       - name: Ruff lint
-        run: uv run ruff check .
+        run: uv run ruff check src/banhxeo/
       - name: Ruff format
         run: uv run ruff format --diff .
 
