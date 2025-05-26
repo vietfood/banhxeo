@@ -20,7 +20,20 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-docs = ["sphinx>=7.4.7", "sphinx-book-theme>=1.1.4"]
+docs = [
+    "sphinx>=7.4.7",
+ "sphinx-book-theme>=1.1.4",
+ "sphinx-rtd-theme>=3.0.2",
+]
+test = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+]
+extras = [
+    "nltk>=3.9.1",
+    "plotly>=6.0.1",
+    "rich>=14.0.0",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -30,12 +43,7 @@ build-backend = "hatchling.build"
 dev = [
     "ipykernel>=6.29.5",
     "ipywidgets>=8.1.7",
-    "nltk>=3.9.1",
     "notebook>=7.4.2",
-    "plotly>=6.0.1",
-    "rich>=14.0.0",
-    "requests>=2.32.3",
-    "pytest>=8.3.5",
 ]
 
 [tool.pyright]
@@ -49,7 +57,7 @@ select = ["E", "F", "I", "D"]
 
 # On top of the Google convention, disable `D417`, which requires
 # documentation for every function parameter.
-ignore = ["D417", "E501", "D104"]
+ignore = ["D417", "E501", "D104", "D100"]
 
 [tool.ruff.lint.isort]
 lines-between-types = 1
