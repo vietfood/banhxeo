@@ -15,7 +15,7 @@ jobs:
       - uses: astral-sh/setup-uv@v3
       - name: Sync uv for docs
         run: |
-          uv sync --extra docs
+          uv sync --extra docs && source .venv/bin/activate
       - name: Sphinx Build
         run: |
           make docs
