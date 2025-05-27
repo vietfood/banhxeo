@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>banhxeo.model package &mdash; banhxeo  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="banhxeo.model.classic package" href="banhxeo.model.classic.html" />
+    <link rel="prev" title="banhxeo.data.transforms module" href="banhxeo.data.transforms.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            banhxeo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">banhxeo.model package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">banhxeo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
+          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
+      <li class="breadcrumb-item active">banhxeo.model package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/banhxeo.model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-banhxeo.model">
+<span id="banhxeo-model-package"></span><h1>banhxeo.model package<a class="headerlink" href="#module-banhxeo.model" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.model.LSTM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.</span></span><span class="sig-name descname"><span class="pre">LSTM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/lstm.html#LSTM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.LSTM" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeuralLanguageModel</span></code></a></p>
+<p>Use batch_first as default</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.LSTM.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/lstm.html#LSTM.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.LSTM.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the NeuralLanguageModel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_config</strong> – The configuration object, instance of <cite>NeuralModelConfig</cite>
+or its subclass.</p></li>
+<li><p><strong>vocab</strong> – The <cite>Vocabulary</cite> instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.LSTM.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/lstm.html#LSTM.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.LSTM.forward" title="Link to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Subclasses must implement this method. It should take tensors as input
+(e.g., <cite>input_ids</cite>, <cite>attention_mask</cite>) and return a dictionary of
+output tensors (e.g., <cite>logits</cite>, <cite>hidden_states</cite>, <cite>loss</cite> if computed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list for model inputs.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for model inputs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where keys are string names of outputs (e.g., “logits”,
+“last_hidden_state”) and values are the corresponding <a href="#id1"><span class="problematic" id="id2">`</span></a>torch.Tensor`s.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the subclass does not implement this method.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.model.MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[256]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.MLP" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeuralLanguageModel</span></code></a></p>
+<p>Multi-Layer Perceptron model for sequence classification or regression.</p>
+<p>This model takes token embeddings, aggregates them into a single vector
+using a specified strategy (e.g., averaging), and then passes this
+vector through one or more fully connected layers to produce an output.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="banhxeo.model.MLP.ConfigClass">
+<span class="sig-name descname"><span class="pre">ConfigClass</span></span><a class="headerlink" href="#banhxeo.model.MLP.ConfigClass" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="banhxeo.model.classic.mlp.html#banhxeo.model.classic.mlp.MLPConfig" title="banhxeo.model.classic.mlp.MLPConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">MLPConfig</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.MLP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[256]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.MLP.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the MLP model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vocab</strong> – The vocabulary instance.</p></li>
+<li><p><strong>output_size</strong> – The dimensionality of the output layer.</p></li>
+<li><p><strong>embedding_dim</strong> – The dimensionality of the input token embeddings.
+Defaults to 128.</p></li>
+<li><p><strong>hidden_sizes</strong> – A list of hidden layer sizes. Defaults to <cite>[256]</cite>.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments for <cite>MLPConfig</cite>, such as
+<cite>activation_fn</cite>, <cite>dropout_rate</cite>, <cite>aggregate_strategy</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.MLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.MLP.forward" title="Link to this definition"></a></dt>
+<dd><p>Performs the forward pass of the MLP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_ids</strong> – Tensor of token IDs with shape <cite>(batch_size, seq_len)</cite>.</p></li>
+<li><p><strong>attention_mask</strong> – Optional tensor indicating valid tokens (1) and padding (0)
+with shape <cite>(batch_size, seq_len)</cite>. If None and <cite>padding_idx</cite>
+is set for embeddings, a warning is issued and all tokens are
+assumed valid.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments (ignored by this base forward pass).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>“logits”: Output logits from the MLP, shape <cite>(batch_size, output_size)</cite>.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary containing</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If an unsupported <cite>aggregate_strategy</cite> is configured
+    (though <cite>check_valid</cite> should catch this).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.MLP.generate_sequence">
+<span class="sig-name descname"><span class="pre">generate_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP.generate_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.MLP.generate_sequence" title="Link to this definition"></a></dt>
+<dd><p>Generates a sequence of text starting from a given prompt.</p>
+<p>This method is typically applicable to autoregressive models (e.g., GPT-like LMs,
+sequence-to-sequence models in generation mode). Non-autoregressive models
+(like MLP classifiers or Word2Vec) should raise <cite>NotImplementedError</cite>.</p>
+<p>The implementation should handle:
+1. Tokenizing the input <cite>prompt</cite> using <cite>self.vocab.tokenizer</cite>.
+2. Iteratively predicting the next token.
+3. Applying sampling strategies specified in <cite>generate_config</cite> (e.g., greedy, top-k).
+4. Stopping generation based on <cite>max_length</cite> or an end-of-sequence token.
+5. Detokenizing the generated token IDs back into a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prompt</strong> – The initial text string to start generation from.</p></li>
+<li><p><strong>generate_config</strong> – A <cite>GenerateConfig</cite> object specifying generation
+parameters like <cite>max_length</cite>, <cite>sampling</cite> strategy, <cite>top_k</cite>, etc.
+If None, default generation parameters should be used.</p></li>
+<li><p><strong>tokenizer_config</strong> – An optional <cite>TokenizerConfig</cite> for encoding the prompt.
+If None, a default sensible configuration should be used (e.g.,
+no padding, no truncation initially unless prompt is too long for model).</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments that might be passed to the
+tokenizer’s <cite>encode</cite> method when processing the prompt.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The generated text string (excluding the initial prompt, or including it,
+based on implementation choice).</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>NotImplementedError</strong> – If the model does not support sequence generation.</p></li>
+<li><p><strong>ValueError</strong> – If prerequisites for generation (like a tokenizer in vocab) are missing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.model.RNN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.</span></span><span class="sig-name descname"><span class="pre">RNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/rnn.html#RNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.RNN" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeuralLanguageModel</span></code></a></p>
+<p>Use batch_first as default.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.RNN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/rnn.html#RNN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.RNN.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the NeuralLanguageModel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_config</strong> – The configuration object, instance of <cite>NeuralModelConfig</cite>
+or its subclass.</p></li>
+<li><p><strong>vocab</strong> – The <cite>Vocabulary</cite> instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.RNN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/rnn.html#RNN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.RNN.forward" title="Link to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Subclasses must implement this method. It should take tensors as input
+(e.g., <cite>input_ids</cite>, <cite>attention_mask</cite>) and return a dictionary of
+output tensors (e.g., <cite>logits</cite>, <cite>hidden_states</cite>, <cite>loss</cite> if computed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list for model inputs.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for model inputs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where keys are string names of outputs (e.g., “logits”,
+“last_hidden_state”) and values are the corresponding <a href="#id3"><span class="problematic" id="id4">`</span></a>torch.Tensor`s.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the subclass does not implement this method.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.model.NGram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.</span></span><span class="sig-name descname"><span class="pre">NGram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/old/n_gram.html#NGram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.NGram" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel" title="banhxeo.model.base.BaseLanguageModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLanguageModel</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="banhxeo.model.NGram.ConfigClass">
+<span class="sig-name descname"><span class="pre">ConfigClass</span></span><a class="headerlink" href="#banhxeo.model.NGram.ConfigClass" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="banhxeo.model.old.n_gram.html#banhxeo.model.old.n_gram.NGramConfig" title="banhxeo.model.old.n_gram.NGramConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">NGramConfig</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.NGram.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/old/n_gram.html#NGram.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.NGram.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the BaseLanguageModel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_config</strong> – The configuration object for the model.
+It should be an instance of <cite>ModelConfig</cite> or its subclass.</p></li>
+<li><p><strong>vocab</strong> – The <cite>Vocabulary</cite> instance to be used by the model.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.NGram.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/old/n_gram.html#NGram.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.NGram.fit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.model.NGram.generate_sequence">
+<span class="sig-name descname"><span class="pre">generate_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'greedy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/old/n_gram.html#NGram.generate_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.NGram.generate_sequence" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.model.classic.html">banhxeo.model.classic package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.classic.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.classic.gru.html">banhxeo.model.classic.gru module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.gru.html#banhxeo.model.classic.gru.GRUConfig"><code class="docutils literal notranslate"><span class="pre">GRUConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.gru.html#banhxeo.model.classic.gru.GRUCell"><code class="docutils literal notranslate"><span class="pre">GRUCell</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.gru.html#banhxeo.model.classic.gru.GRU"><code class="docutils literal notranslate"><span class="pre">GRU</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.classic.lstm.html">banhxeo.model.classic.lstm module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.lstm.html#banhxeo.model.classic.lstm.LSTMConfig"><code class="docutils literal notranslate"><span class="pre">LSTMConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.lstm.html#banhxeo.model.classic.lstm.LSTMCell"><code class="docutils literal notranslate"><span class="pre">LSTMCell</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.lstm.html#banhxeo.model.classic.lstm.LSTM"><code class="docutils literal notranslate"><span class="pre">LSTM</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.classic.mlp.html">banhxeo.model.classic.mlp module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.mlp.html#banhxeo.model.classic.mlp.MLPConfig"><code class="docutils literal notranslate"><span class="pre">MLPConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.mlp.html#banhxeo.model.classic.mlp.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.classic.rnn.html">banhxeo.model.classic.rnn module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.rnn.html#banhxeo.model.classic.rnn.RNNConfig"><code class="docutils literal notranslate"><span class="pre">RNNConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.rnn.html#banhxeo.model.classic.rnn.RNNCell"><code class="docutils literal notranslate"><span class="pre">RNNCell</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.rnn.html#banhxeo.model.classic.rnn.RNN"><code class="docutils literal notranslate"><span class="pre">RNN</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.classic.word2vec.html">banhxeo.model.classic.word2vec module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.word2vec.html#banhxeo.model.classic.word2vec.Word2VecDataset"><code class="docutils literal notranslate"><span class="pre">Word2VecDataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.classic.word2vec.html#banhxeo.model.classic.word2vec.Word2Vec"><code class="docutils literal notranslate"><span class="pre">Word2Vec</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.model.llm.html">banhxeo.model.llm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.llm.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.llm.layers.html">banhxeo.model.llm.layers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.llm.layers.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.llm.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.llm.config.html">banhxeo.model.llm.config module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.llm.config.html#banhxeo.model.llm.config.LayerNormConfig"><code class="docutils literal notranslate"><span class="pre">LayerNormConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.llm.config.html#banhxeo.model.llm.config.MLPConfig"><code class="docutils literal notranslate"><span class="pre">MLPConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.llm.config.html#banhxeo.model.llm.config.MHAConfig"><code class="docutils literal notranslate"><span class="pre">MHAConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.llm.config.html#banhxeo.model.llm.config.GPT2Config"><code class="docutils literal notranslate"><span class="pre">GPT2Config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.llm.gpt2.html">banhxeo.model.llm.gpt2 module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.model.old.html">banhxeo.model.old package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.old.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.old.n_gram.html">banhxeo.model.old.n_gram module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.old.n_gram.html#banhxeo.model.old.n_gram.NgramTrieNode"><code class="docutils literal notranslate"><span class="pre">NgramTrieNode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.old.n_gram.html#banhxeo.model.old.n_gram.NGramConfig"><code class="docutils literal notranslate"><span class="pre">NGramConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.old.n_gram.html#banhxeo.model.old.n_gram.NGram"><code class="docutils literal notranslate"><span class="pre">NGram</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.model.base.html">banhxeo.model.base module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel"><code class="docutils literal notranslate"><span class="pre">BaseLanguageModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel.__init__"><code class="docutils literal notranslate"><span class="pre">BaseLanguageModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel.get_config"><code class="docutils literal notranslate"><span class="pre">BaseLanguageModel.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel.summary"><code class="docutils literal notranslate"><span class="pre">BaseLanguageModel.summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel.save_model"><code class="docutils literal notranslate"><span class="pre">BaseLanguageModel.save_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel.load_model"><code class="docutils literal notranslate"><span class="pre">BaseLanguageModel.load_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.model.config.html">banhxeo.model.config module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig"><code class="docutils literal notranslate"><span class="pre">ModelConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig.vocab_size"><code class="docutils literal notranslate"><span class="pre">ModelConfig.vocab_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig.model_config"><code class="docutils literal notranslate"><span class="pre">ModelConfig.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig"><code class="docutils literal notranslate"><span class="pre">GenerateConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig.sampling"><code class="docutils literal notranslate"><span class="pre">GenerateConfig.sampling</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig.max_length"><code class="docutils literal notranslate"><span class="pre">GenerateConfig.max_length</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig.k"><code class="docutils literal notranslate"><span class="pre">GenerateConfig.k</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig.p"><code class="docutils literal notranslate"><span class="pre">GenerateConfig.p</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig.temp"><code class="docutils literal notranslate"><span class="pre">GenerateConfig.temp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig.model_config"><code class="docutils literal notranslate"><span class="pre">GenerateConfig.model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.model.neural.html">banhxeo.model.neural module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralModelConfig"><code class="docutils literal notranslate"><span class="pre">NeuralModelConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralModelConfig.embedding_dim"><code class="docutils literal notranslate"><span class="pre">NeuralModelConfig.embedding_dim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralModelConfig.model_config"><code class="docutils literal notranslate"><span class="pre">NeuralModelConfig.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.__init__"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.freeze"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.freeze()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.unfreeze"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.unfreeze()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.summary"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.forward"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.forward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.generate_sequence"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.generate_sequence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.attach_downstream_head"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.attach_downstream_head()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.get_downstream_head_output"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.get_downstream_head_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.save_model"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.save_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.load_model"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.load_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.to_gpu"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.to_gpu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel.to_cpu"><code class="docutils literal notranslate"><span class="pre">NeuralLanguageModel.to_cpu()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="banhxeo.data.transforms.html" class="btn btn-neutral float-left" title="banhxeo.data.transforms module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="banhxeo.model.classic.html" class="btn btn-neutral float-right" title="banhxeo.model.classic package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Le Nguyen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

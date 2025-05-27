@@ -1,0 +1,621 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>banhxeo.train.trainer &mdash; banhxeo  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            banhxeo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">banhxeo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">banhxeo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../banhxeo.html">banhxeo</a></li>
+      <li class="breadcrumb-item active">banhxeo.train.trainer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for banhxeo.train.trainer</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">CPU_DEVICE</span><span class="p">,</span> <span class="n">GPU_DEVICE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.data.torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">TorchTextDataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.model.neural</span><span class="w"> </span><span class="kn">import</span> <span class="n">NeuralLanguageModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.train.callbacks</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ProgressCallback</span><span class="p">,</span>
+    <span class="n">TrainerCallback</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.train.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainerConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_LOGGER</span>
+
+
+<span class="c1"># User train step must do:</span>
+<span class="c1"># 1. Move batch data to the correct device.</span>
+<span class="c1"># 2. Perform the forward pass.</span>
+<span class="c1"># 3. Calculate the loss.</span>
+<span class="c1"># 4. Call loss.backward().</span>
+<span class="c1"># 5. If using gradient accumulation, divide loss by accumulation_steps before backward.</span>
+<span class="c1"># 6. If it&#39;s time to update weights (i.e., after N accumulation steps):</span>
+<span class="c1">#    a. Optional: Gradient clipping.</span>
+<span class="c1">#    b. optimizer.step().</span>
+<span class="c1">#    c. scheduler.step() (if scheduler exists and stepping per optimizer step).</span>
+<span class="c1">#    d. optimizer.zero_grad().</span>
+<span class="c1"># 7. Calculate any desired metrics.</span>
+<span class="c1"># 8. Return a dictionary containing at least {&quot;loss&quot;: loss_item} and other metrics.</span>
+<span class="n">TrainStepCallable</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;Trainer&quot;</span><span class="p">,</span>  <span class="c1"># The trainer instance</span>
+        <span class="n">NeuralLanguageModel</span><span class="p">,</span>  <span class="c1"># The model</span>
+        <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>  <span class="c1"># The raw batch from DataLoader (on CPU initially)</span>
+    <span class="p">],</span>
+    <span class="n">Dict</span><span class="p">[</span>
+        <span class="nb">str</span><span class="p">,</span> <span class="n">Any</span>
+    <span class="p">],</span>  <span class="c1"># Should return {&quot;loss&quot;: itemized_loss (float/int), &quot;metric1&quot;: val1, ...}</span>
+<span class="p">]</span>
+
+<span class="c1"># EvalStepCallable can remain simpler, as it doesn&#39;t involve optimizers/schedulers</span>
+<span class="n">EvalStepCallable</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;Trainer&quot;</span><span class="p">,</span>  <span class="c1"># The trainer instance</span>
+        <span class="n">NeuralLanguageModel</span><span class="p">,</span>  <span class="c1"># The model</span>
+        <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>  <span class="c1"># The raw batch from DataLoader (on CPU initially)</span>
+    <span class="p">],</span>
+    <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>  <span class="c1"># Returns {&quot;eval_loss&quot;: itemized_loss, &quot;eval_metric1&quot;: val1, ...}</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="Trainer">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Trainer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles the training and evaluation loop for neural language models.</span>
+
+<span class="sd">    The `Trainer` orchestrates the training process, including data loading,</span>
+<span class="sd">    model optimization, logging, checkpointing, and evaluation, according</span>
+<span class="sd">    to a provided `TrainerConfig`. It supports custom training and evaluation</span>
+<span class="sd">    logic via `train_step_fn` and `eval_step_fn` callables.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        model (NeuralLanguageModel): The model to be trained.</span>
+<span class="sd">        config (TrainerConfig): Configuration for the training process.</span>
+<span class="sd">        train_dataset (TorchTextDataset): The dataset for training.</span>
+<span class="sd">        eval_dataset (Optional[TorchTextDataset]): The dataset for evaluation.</span>
+<span class="sd">        optimizer (Optional[torch.optim.Optimizer]): The optimizer instance.</span>
+<span class="sd">        loss_fn (Optional[torch.nn.modules.loss._Loss]): The loss function instance.</span>
+<span class="sd">            Renamed from `loss` to avoid conflict with loss values.</span>
+<span class="sd">        scheduler (Optional[torch.optim.lr_scheduler._LRScheduler]): The LR scheduler.</span>
+<span class="sd">        train_step_fn (TrainStepCallable): User-defined function for a single training step.</span>
+<span class="sd">        eval_step_fn (Optional[EvalStepCallable]): User-defined function for a single eval step.</span>
+<span class="sd">        callbacks (List[TrainerCallback]): List of callbacks to customize training.</span>
+<span class="sd">        collate_fn (Optional[Callable]): Custom collate function for DataLoaders.</span>
+<span class="sd">        device (torch.device): The device (CPU or GPU) where training will occur.</span>
+<span class="sd">        global_step (int): Total number of training steps (optimizer updates or micro-batches) performed.</span>
+<span class="sd">        current_epoch (int): The current training epoch (1-indexed).</span>
+<span class="sd">        total_train_steps (int): The total number of training steps planned across all epochs.</span>
+<span class="sd">        best_metric (Optional[float]): Stores the best evaluation metric value achieved,</span>
+<span class="sd">            used for saving the best model (if logic is implemented in a callback).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Trainer.__init__">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">NeuralLanguageModel</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">TrainerConfig</span><span class="p">,</span>
+        <span class="n">train_dataset</span><span class="p">:</span> <span class="n">TorchTextDataset</span><span class="p">,</span>
+        <span class="n">eval_dataset</span><span class="p">:</span> <span class="n">TorchTextDataset</span><span class="p">,</span>
+        <span class="n">train_step_fn</span><span class="p">:</span> <span class="n">TrainStepCallable</span><span class="p">,</span>
+        <span class="n">eval_step_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrainStepCallable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Allow str like &quot;cuda&quot;</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">TrainerCallback</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">collate_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]],</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Trainer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model: The `NeuralLanguageModel` to train.</span>
+<span class="sd">            config: The `TrainerConfig` specifying training parameters.</span>
+<span class="sd">            train_dataset: The training `TorchTextDataset`.</span>
+<span class="sd">            eval_dataset: Optional evaluation `TorchTextDataset`.</span>
+<span class="sd">            train_step_fn: A callable that executes a single training step.</span>
+<span class="sd">                It&#39;s responsible for the forward pass, loss calculation, backward pass,</span>
+<span class="sd">                and optimizer step (including gradient accumulation if desired).</span>
+<span class="sd">                See `TrainStepCallable` for signature.</span>
+<span class="sd">            eval_step_fn: An optional callable that executes a single evaluation step.</span>
+<span class="sd">                See `EvalStepCallable` for signature.</span>
+<span class="sd">            device: The device to train on (&#39;cuda&#39;, &#39;mps&#39;, &#39;cpu&#39;, or torch.device object).</span>
+<span class="sd">                If None, attempts to use GPU, otherwise CPU.</span>
+<span class="sd">            callbacks: An optional list of `TrainerCallback` instances.</span>
+<span class="sd">                `ProgressCallback` is added by default.</span>
+<span class="sd">            collate_fn: An optional custom collate function for the DataLoaders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_dataset</span> <span class="o">=</span> <span class="n">train_dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_dataset</span> <span class="o">=</span> <span class="n">eval_dataset</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_step_fn</span> <span class="o">=</span> <span class="n">train_step_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_step_fn</span> <span class="o">=</span> <span class="n">eval_step_fn</span>
+
+        <span class="c1"># Initialize callbacks: add ProgressCallback if not already present by user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span> <span class="o">=</span> <span class="n">callbacks</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">ProgressCallback</span><span class="p">)</span> <span class="k">for</span> <span class="n">cb</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ProgressCallback</span><span class="p">())</span>  <span class="c1"># Add to the beginning</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">collate_fn</span> <span class="o">=</span> <span class="n">collate_fn</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Will be 1-indexed during training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_train_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span>  <span class="c1"># Example: for best F1, lower is better for loss</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Determine and set device</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="k">elif</span> <span class="n">GPU_DEVICE</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">GPU_DEVICE</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">CPU_DEVICE</span>
+        <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trainer will use device: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Seed everything</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="c1"># Create output directory</span>
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span><span class="s2">&quot;on_init_end&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">manual_seed_all</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_optim_and_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the optimizer, LR scheduler, and loss function from config.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">get_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Optimizer created: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">scheduler_name</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">get_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">:</span>
+                <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;LR Scheduler created: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">get_loss_function</span><span class="p">()</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Loss function created: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_invoke_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Invokes a specified method on all registered callbacks.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">cb</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in callback </span><span class="si">{</span><span class="n">cb</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Trainer.get_callbacks_output">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.get_callbacks_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_callbacks_output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collects and returns outputs from all callbacks that provide them.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary where keys are callback names and values are their outputs</span>
+<span class="sd">            (obtained via `callback.get_output()`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">callback</span><span class="o">.</span><span class="n">get_output</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">callback</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error getting output from callback </span><span class="si">{</span><span class="n">callback</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Trainer.get_train_dataloader">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.get_train_dataloader">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_train_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and returns the DataLoader for the training set.&quot;&quot;&quot;</span>
+        <span class="c1"># Ensure train_dataset is a PyTorch Dataset</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;train_dataset must be a PyTorch Dataset, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_dataset</span><span class="o">.</span><span class="n">to_loader</span><span class="p">(</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">per_device_train_batch_size</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">training_shuffle</span><span class="p">,</span>
+            <span class="n">num_workers</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collate_fn</span><span class="p">,</span>
+            <span class="n">pin_memory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">,</span>  <span class="c1"># Pin memory if using CUDA</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Trainer.get_eval_dataloader">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.get_eval_dataloader">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_eval_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DataLoader</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and returns the DataLoader for the evaluation set, if available.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_dataset</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;eval_dataset must be a PyTorch Dataset, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_dataset</span><span class="o">.</span><span class="n">to_loader</span><span class="p">(</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">per_device_eval_batch_size</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Don&#39;t shuffle for evaluate dataset</span>
+            <span class="n">num_workers</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collate_fn</span><span class="p">,</span>
+            <span class="n">pin_memory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Trainer.train">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.train">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the main training loop.</span>
+
+<span class="sd">        The loop iterates over epochs and batches, calling `train_step_fn` for</span>
+<span class="sd">        each batch. It handles optimizer creation, logging, callbacks, and</span>
+<span class="sd">        optional evaluation during training.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary containing training results, potentially including</span>
+<span class="sd">            outputs from callbacks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">train_dataloader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_train_dataloader</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_train_steps</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">)</span>
+            <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_train_epochs</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_train_steps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Total training steps is 0. Training will not proceed. &quot;</span>
+                <span class="s2">&quot;Check dataset size and batch size.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;No training steps.&quot;</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_optim_and_loss</span><span class="p">()</span>  <span class="c1"># Ensure optimizer and loss are ready</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span><span class="s2">&quot;on_train_begin&quot;</span><span class="p">)</span>
+
+        <span class="n">overall_training_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">num_steps_for_loss_agg</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_train_epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">epoch</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span><span class="s2">&quot;on_epoch_begin&quot;</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>  <span class="c1"># Set model to training mode</span>
+            <span class="n">epoch_loss_agg</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">num_batches_in_epoch_processed</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span>
+                    <span class="s2">&quot;on_step_begin&quot;</span><span class="p">,</span> <span class="n">global_step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span> <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span>
+                <span class="p">)</span>
+
+                <span class="c1"># User&#39;s function is responsible for:</span>
+                <span class="c1"># - Moving batch to device</span>
+                <span class="c1"># - Forward pass</span>
+                <span class="c1"># - Loss calculation</span>
+                <span class="c1"># - loss.backward()</span>
+                <span class="c1"># - Gradient accumulation logic (if any, impacting optimizer.step())</span>
+                <span class="c1"># - optimizer.step(), scheduler.step(), optimizer.zero_grad()</span>
+                <span class="c1"># - Metric calculation</span>
+                <span class="n">step_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step_fn</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                    <span class="n">batch</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Extract loss for aggregation - user MUST return an itemized loss</span>
+                <span class="n">current_loss_item</span> <span class="o">=</span> <span class="n">step_outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">current_loss_item</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">current_loss_item</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+                <span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;train_step_fn must return a dictionary with an itemized &#39;loss&#39; (float/int).&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="n">epoch_loss_agg</span> <span class="o">+=</span> <span class="n">current_loss_item</span>
+                <span class="n">overall_training_loss</span> <span class="o">+=</span> <span class="n">current_loss_item</span>
+                <span class="n">num_steps_for_loss_agg</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">num_batches_in_epoch_processed</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Logging based on TrainerConfig.logging_steps (uses global_step)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logging_steps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">avg_log_loss</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">overall_training_loss</span> <span class="o">/</span> <span class="n">num_steps_for_loss_agg</span>
+                        <span class="k">if</span> <span class="n">num_steps_for_loss_agg</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                        <span class="k">else</span> <span class="mf">0.0</span>
+                    <span class="p">)</span>
+                    <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_train_epochs</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_train_steps</span><span class="si">}</span><span class="s2">: &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">current_loss_item</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (Avg over last </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logging_steps</span><span class="si">}</span><span class="s2"> steps: </span><span class="si">{</span><span class="n">avg_log_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="p">)</span>
+                    <span class="c1"># Reset for next logging period</span>
+                    <span class="n">overall_training_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="n">num_steps_for_loss_agg</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span>
+                    <span class="s2">&quot;on_step_end&quot;</span><span class="p">,</span>
+                    <span class="n">global_step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
+                    <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span>
+                    <span class="n">logs</span><span class="o">=</span><span class="n">step_outputs</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Evaluation during training</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">evaluate_during_training</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">evaluation_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">evaluation_steps</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_train_steps</span>  <span class="c1"># Avoid eval on last step if also end of epoch</span>
+                <span class="p">):</span>
+                    <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Running evaluation at step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">...&quot;</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>  <span class="c1"># Ensure model is back in train mode</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Calculate average epoch loss</span>
+            <span class="n">avg_epoch_loss</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">epoch_loss_agg</span> <span class="o">/</span> <span class="n">num_batches_in_epoch_processed</span>
+                <span class="k">if</span> <span class="n">num_batches_in_epoch_processed</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="p">)</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;End of Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">: Average Training Loss: </span><span class="si">{</span><span class="n">avg_epoch_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span>
+                <span class="s2">&quot;on_epoch_end&quot;</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;avg_epoch_loss&quot;</span><span class="p">:</span> <span class="n">avg_epoch_loss</span><span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="n">final_logs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;final_avg_epoch_loss&quot;</span><span class="p">:</span> <span class="n">avg_epoch_loss</span>  <span class="c1"># type: ignore</span>
+            <span class="k">if</span> <span class="s2">&quot;avg_epoch_loss&quot;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span>
+            <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span><span class="s2">&quot;on_train_end&quot;</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="n">final_logs</span><span class="p">)</span>
+        <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Training finished.&quot;</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;training_summary&quot;</span><span class="p">:</span> <span class="n">final_logs</span><span class="p">,</span>
+            <span class="s2">&quot;callback_outputs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_callbacks_output</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="Trainer.evaluate">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.evaluate">[docs]</a>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the evaluation loop on the `eval_dataset`.</span>
+
+<span class="sd">        If `eval_dataset` or `eval_step_fn` is not provided, evaluation is skipped.</span>
+<span class="sd">        Sets the model to evaluation mode (`model.eval()`) and disables gradient calculations.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary containing evaluation metrics, or None if evaluation</span>
+<span class="sd">            is skipped. Keys typically include &quot;avg_eval_loss&quot; and other</span>
+<span class="sd">            metrics returned by `eval_step_fn`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eval_dataloader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_eval_dataloader</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">eval_dataloader</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_step_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;No evaluation dataset or eval_step_fn provided. Skipping evaluation.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>  <span class="c1"># Set model to evaluation mode</span>
+
+        <span class="n">all_eval_metrics_sum</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">num_eval_steps</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eval_dataloader</span><span class="p">):</span>
+            <span class="c1"># User&#39;s eval_step_fn is responsible for:</span>
+            <span class="c1"># - Moving batch to device</span>
+            <span class="c1"># - Forward pass</span>
+            <span class="c1"># - Loss calculation (optional, for eval loss)</span>
+            <span class="c1"># - Metric calculation</span>
+            <span class="n">step_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_step_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">step_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)):</span>
+                    <span class="n">all_eval_metrics_sum</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="n">v</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span>
+                    <span class="p">)</span>
+                <span class="c1"># Non-numeric metrics could be collected differently if needed</span>
+            <span class="n">num_eval_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Average metrics</span>
+        <span class="n">final_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">num_eval_steps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v_sum</span> <span class="ow">in</span> <span class="n">all_eval_metrics_sum</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">final_metrics</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_sum</span> <span class="o">/</span> <span class="n">num_eval_steps</span>
+
+        <span class="c1"># Standardize &quot;eval_loss&quot; key if present</span>
+        <span class="k">if</span> <span class="s2">&quot;loss&quot;</span> <span class="ow">in</span> <span class="n">final_metrics</span><span class="p">:</span>  <span class="c1"># If eval_step_fn returns &quot;loss&quot;</span>
+            <span class="n">final_metrics</span><span class="p">[</span><span class="s2">&quot;avg_eval_loss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_metrics</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;eval_loss&quot;</span> <span class="ow">in</span> <span class="n">final_metrics</span><span class="p">:</span>  <span class="c1"># If eval_step_fn returns &quot;eval_loss&quot;</span>
+            <span class="n">final_metrics</span><span class="p">[</span><span class="s2">&quot;avg_eval_loss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_metrics</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;eval_loss&quot;</span><span class="p">)</span>
+
+        <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluation Results: </span><span class="si">{</span><span class="n">final_metrics</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span><span class="s2">&quot;on_evaluate&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">final_metrics</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">final_metrics</span></div>
+
+
+<div class="viewcode-block" id="Trainer.save_model">
+<a class="viewcode-back" href="../../../api/banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.save_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the model, optimizer, scheduler, and trainer configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_dir: The directory where components will be saved.</span>
+<span class="sd">                It will be created if it doesn&#39;t exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output_dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+        <span class="n">output_dir_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># 1. Save the model itself (weights and model-specific config)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">output_dir_path</span><span class="p">)</span>
+
+        <span class="c1"># 2. Save optimizer state</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">:</span>
+            <span class="n">optimizer_path</span> <span class="o">=</span> <span class="n">output_dir_path</span> <span class="o">/</span> <span class="s2">&quot;optimizer.pt&quot;</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">optimizer_path</span><span class="p">)</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimizer state saved to </span><span class="si">{</span><span class="n">optimizer_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 3. Save scheduler state</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">:</span>
+            <span class="n">scheduler_path</span> <span class="o">=</span> <span class="n">output_dir_path</span> <span class="o">/</span> <span class="s2">&quot;scheduler.pt&quot;</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">scheduler_path</span><span class="p">)</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scheduler state saved to </span><span class="si">{</span><span class="n">scheduler_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 4. Save TrainerConfig (Pydantic model)</span>
+        <span class="n">trainer_config_path</span> <span class="o">=</span> <span class="n">output_dir_path</span> <span class="o">/</span> <span class="s2">&quot;trainer_config.json&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">trainer_config_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trainer configuration saved to </span><span class="si">{</span><span class="n">trainer_config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save trainer configuration: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Invoke on_save for callbacks so they can save their state too</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invoke_callbacks</span><span class="p">(</span><span class="s2">&quot;on_save&quot;</span><span class="p">,</span> <span class="n">checkpoint_dir</span><span class="o">=</span><span class="n">output_dir_path</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Le Nguyen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

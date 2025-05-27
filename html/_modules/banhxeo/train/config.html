@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>banhxeo.train.config &mdash; banhxeo  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            banhxeo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">banhxeo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">banhxeo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../banhxeo.html">banhxeo</a></li>
+      <li class="breadcrumb-item active">banhxeo.train.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for banhxeo.train.config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">field_validator</span>
+
+
+<div class="viewcode-block" id="LossConfig">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.LossConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LossConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for the loss function used during training.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: The name of the loss function class from `torch.nn.modules.loss`</span>
+<span class="sd">            (e.g., &quot;CrossEntropyLoss&quot;, &quot;MSELoss&quot;). Defaults to &quot;CrossEntropyLoss&quot;.</span>
+<span class="sd">        kwargs: A dictionary of keyword arguments to be passed to the</span>
+<span class="sd">            loss function&#39;s constructor (e.g., `{&quot;weight&quot;: torch.tensor([0.1, 0.9])}`).</span>
+<span class="sd">            Defaults to an empty dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;CrossEntropyLoss&quot;</span>  <span class="c1"># e.g., &quot;CrossEntropyLoss&quot;, &quot;MSELoss&quot;</span>
+    <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LossConfig.get_loss_function">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.LossConfig.get_loss_function">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_loss_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates and returns the configured PyTorch loss function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the specified PyTorch loss function.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the specified `name` is not a valid loss function</span>
+<span class="sd">                in `torch.nn.modules.loss`.</span>
+<span class="sd">            AttributeError: If the specified `name` is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">__all__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Optimizer &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found in torch.nn.module.loss&quot;</span>
+            <span class="p">)</span>
+        <span class="n">imported</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;torch.nn.modules.loss&quot;</span><span class="p">,</span> <span class="n">fromlist</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">imported</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="OptimizerConfig">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizerConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for the optimizer and learning rate scheduler.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: The name of the optimizer class from `torch.optim`</span>
+<span class="sd">            (e.g., &quot;AdamW&quot;, &quot;SGD&quot;). Defaults to &quot;AdamW&quot;.</span>
+<span class="sd">        scheduler_name: Optional name of the learning rate scheduler class</span>
+<span class="sd">            from `torch.optim.lr_scheduler` (e.g., &quot;LambdaLR&quot;, &quot;ReduceLROnPlateau&quot;).</span>
+<span class="sd">            Defaults to None (no scheduler).</span>
+<span class="sd">        warmup_steps: Number of initial steps during which the learning rate</span>
+<span class="sd">            is linearly warmed up from 0 to its initial value. This is typically</span>
+<span class="sd">            implemented by custom logic or a scheduler like `transformers.get_linear_schedule_with_warmup`.</span>
+<span class="sd">            Note: This field is declarative; actual warmup logic needs to be</span>
+<span class="sd">            implemented in the training loop or via a specific scheduler. Defaults to 0.</span>
+<span class="sd">        optimizer_kwargs: Keyword arguments for the optimizer&#39;s constructor</span>
+<span class="sd">            (e.g., `{&quot;lr&quot;: 1e-3, &quot;weight_decay&quot;: 0.01}`). Defaults to an empty dict.</span>
+<span class="sd">        lr_scheduler_kwargs: Keyword arguments for the LR scheduler&#39;s constructor.</span>
+<span class="sd">            Defaults to an empty dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;AdamW&quot;</span>  <span class="c1"># e.g., &quot;AdamW&quot;, &quot;SGD&quot;</span>
+
+    <span class="c1"># LR Scheduler</span>
+    <span class="n">scheduler_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># e.g. &quot;LambdaLR&quot;, ...</span>
+
+    <span class="c1"># Hyperparemeters</span>
+    <span class="n">optimizer_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">lr_scheduler_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OptimizerConfig.Config">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.Config">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>  <span class="c1"># noqa: D106</span>
+        <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="OptimizerConfig.get_optimizer">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.get_optimizer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates and returns the configured PyTorch optimizer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model_parameters: An iterable of model parameters to optimize,</span>
+<span class="sd">                typically `model.parameters()`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the specified PyTorch optimizer.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the specified `name` is not a valid optimizer</span>
+<span class="sd">                in `torch.optim`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># https://stackoverflow.com/questions/6677424/how-do-i-import-variable-packages-in-python-like-using-variable-variables-i</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">optim</span><span class="o">.</span><span class="n">__all__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimizer &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found in torch.optim&quot;</span><span class="p">)</span>
+        <span class="n">imported</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;torch.optim&quot;</span><span class="p">,</span> <span class="n">fromlist</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">imported</span><span class="p">(</span><span class="n">model_parameters</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OptimizerConfig.get_scheduler">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.get_scheduler">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates and returns the configured PyTorch learning rate scheduler.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            optimizer: The PyTorch optimizer instance for which to create the scheduler.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the specified LR scheduler, or None if `scheduler_name` is not set.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If `scheduler_name` is set but not found in</span>
+<span class="sd">                `torch.optim.lr_scheduler`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">__all__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LR Scheduler &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler_name</span><span class="si">}</span><span class="s2">&#39; not found in torch.optim.lr_scheduler&quot;</span>
+            <span class="p">)</span>
+        <span class="n">imported</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;torch.optim.lr_scheduler&quot;</span><span class="p">,</span> <span class="n">fromlist</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler_name</span><span class="p">]),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_name</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">imported</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">lr_scheduler_kwargs</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TrainerConfig">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.TrainerConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrainerConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for the `Trainer`.</span>
+
+<span class="sd">    Specifies parameters for the training process, including directories,</span>
+<span class="sd">    epochs, batch sizes, logging, saving, evaluation, and optimization settings.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        output_dir: Directory to save checkpoints, logs, and other training artifacts.</span>
+<span class="sd">            Defaults to &quot;./training_output&quot;.</span>
+<span class="sd">        num_train_epochs: Total number of training epochs to perform. Defaults to 3.</span>
+<span class="sd">        per_device_train_batch_size: Batch size per GPU/CPU for training. Defaults to 8.</span>
+<span class="sd">        per_device_eval_batch_size: Batch size per GPU/CPU for evaluation. Defaults to 8.</span>
+<span class="sd">        gradient_accumulation_steps: Number of updates steps to accumulate gradients</span>
+<span class="sd">            before performing a backward/update pass. Effective batch size will be</span>
+<span class="sd">            `per_device_train_batch_size * num_devices * gradient_accumulation_steps`.</span>
+<span class="sd">            Defaults to 1.</span>
+<span class="sd">        training_shuffle: Whether to shuffle the training data at each epoch.</span>
+<span class="sd">            Defaults to True.</span>
+<span class="sd">        logging_steps: Log training loss and metrics every N global steps.</span>
+<span class="sd">            Defaults to 100.</span>
+<span class="sd">        save_steps: Save a checkpoint every N global steps. If None, checkpoints</span>
+<span class="sd">            are only saved at the end of epochs (if `CheckpointCallback` is used).</span>
+<span class="sd">            Defaults to 500.</span>
+<span class="sd">        save_total_limit: If set, limits the total number of saved checkpoints.</span>
+<span class="sd">            Older checkpoints will be deleted. If None, all checkpoints are kept.</span>
+<span class="sd">            Needs to be implemented in `CheckpointCallback` or `Trainer`. Defaults to None.</span>
+<span class="sd">        evaluate_during_training: Whether to run evaluation on the eval dataset</span>
+<span class="sd">            during training. Defaults to False.</span>
+<span class="sd">        evaluation_steps: If `evaluate_during_training` is True, evaluate every</span>
+<span class="sd">            N global steps. If None, evaluation might occur at epoch ends if</span>
+<span class="sd">            controlled by callbacks. Defaults to None.</span>
+<span class="sd">        seed: Random seed for initialization and data shuffling. Defaults to 42.</span>
+<span class="sd">        optim: An `OptimizerConfig` instance defining the optimizer and LR scheduler.</span>
+<span class="sd">        loss: A `LossConfig` instance defining the loss function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./training_output&quot;</span>
+    <span class="n">num_train_epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">per_device_train_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">per_device_eval_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">gradient_accumulation_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">training_shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">logging_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">save_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">500</span>
+    <span class="n">save_total_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Note: Needs implementation for deletion</span>
+    <span class="n">evaluate_during_training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">evaluation_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="n">optim</span><span class="p">:</span> <span class="n">OptimizerConfig</span>
+    <span class="n">loss</span><span class="p">:</span> <span class="n">LossConfig</span>
+
+<div class="viewcode-block" id="TrainerConfig.check_grad_acc_steps">
+<a class="viewcode-back" href="../../../api/banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.check_grad_acc_steps">[docs]</a>
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_grad_acc_steps</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates gradient_accumulation_steps.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;gradient_accumulation_steps must be at least 1.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Le Nguyen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>banhxeo.data.torch &mdash; banhxeo  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            banhxeo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">banhxeo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">banhxeo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../banhxeo.html">banhxeo</a></li>
+      <li class="breadcrumb-item active">banhxeo.data.torch</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for banhxeo.data.torch</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span> <span class="k">as</span> <span class="n">TorchDataset</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.data.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseTextDataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.data.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TorchDatasetConfig</span>
+
+
+<div class="viewcode-block" id="TorchTextDataset">
+<a class="viewcode-back" href="../../../api/banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TorchTextDataset</span><span class="p">(</span><span class="n">TorchDataset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A PyTorch Dataset wrapper for `BaseTextDataset`.</span>
+
+<span class="sd">    This class handles the transformation of raw text samples from a</span>
+<span class="sd">    `BaseTextDataset` into tokenized and numericalized PyTorch tensors,</span>
+<span class="sd">    ready for model consumption. It applies tokenization, vocabulary mapping,</span>
+<span class="sd">    and any specified text transformations.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        text_dataset (BaseTextDataset): The underlying raw text dataset.</span>
+<span class="sd">        config (TorchDatasetConfig): Configuration specifying tokenizer, vocabulary,</span>
+<span class="sd">            text processing, and label handling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TorchTextDataset.__init__">
+<a class="viewcode-back" href="../../../api/banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">text_dataset</span><span class="p">:</span> <span class="n">BaseTextDataset</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">TorchDatasetConfig</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the TorchTextDataset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text_dataset: The instance of `BaseTextDataset` containing raw data.</span>
+<span class="sd">            config: A `TorchDatasetConfig` object that defines how to process</span>
+<span class="sd">                the raw data into tensors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_dataset</span> <span class="o">=</span> <span class="n">text_dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># noqa: D105</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text_dataset</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves and processes a single sample into a tensor dictionary.</span>
+
+<span class="sd">        Fetches a raw sample from `text_dataset`, applies configured text</span>
+<span class="sd">        transformations, tokenizes and encodes it using the tokenizer and</span>
+<span class="sd">        vocabulary from `self.config`. If `is_classification` is True,</span>
+<span class="sd">        it also processes and includes the label.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            idx: The index of the sample to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A dictionary containing:</span>
+<span class="sd">                - &quot;input_ids&quot;: LongTensor of token IDs.</span>
+<span class="sd">                - &quot;attention_mask&quot;: LongTensor indicating valid tokens (1) vs padding (0).</span>
+<span class="sd">                - &quot;labels&quot; (optional): LongTensor of the label ID, if</span>
+<span class="sd">                  `config.is_classification` is True.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If `is_classification` is True but a label cannot be</span>
+<span class="sd">                obtained or mapped for the sample.</span>
+<span class="sd">            IndexError: If `idx` is out of bounds for the underlying `text_dataset`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">raw_sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_dataset</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_sample</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">raw_text</span><span class="p">,</span> <span class="n">raw_label</span> <span class="o">=</span> <span class="n">raw_sample</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_sample</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">raw_text</span> <span class="o">=</span> <span class="n">raw_sample</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">text_column_name</span><span class="p">]</span>
+            <span class="n">raw_label</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">raw_sample</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">label_column_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">label_column_name</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Assuming raw_sample is just text</span>
+            <span class="n">raw_text</span> <span class="o">=</span> <span class="n">raw_sample</span>
+            <span class="n">raw_label</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_text</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected raw_text to be a string, but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span><span class="si">}</span><span class="s2"> for sample </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">transforms</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="c1"># Encode text</span>
+        <span class="n">encoded_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">tokenizer_config</span>
+        <span class="p">)</span>
+
+        <span class="n">output_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;input_ids&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">encoded_output</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">),</span>
+            <span class="s2">&quot;attention_mask&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+                <span class="n">encoded_output</span><span class="p">[</span><span class="s2">&quot;attention_mask&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">is_classification</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">raw_label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Label is None for sample </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">, but is_classification is True.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">label_map</span><span class="p">:</span>
+                <span class="n">label_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">label_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">raw_label</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">label_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Label &#39;</span><span class="si">{</span><span class="n">raw_label</span><span class="si">}</span><span class="s2">&#39; not found in label_map: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">label_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_label</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">label_id</span> <span class="o">=</span> <span class="n">raw_label</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Label must be an int, castable to int, or label_map must be provided. Got </span><span class="si">{</span><span class="n">raw_label</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">raw_label</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="p">)</span>
+            <span class="n">output_dict</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">label_id</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output_dict</span>
+
+<div class="viewcode-block" id="TorchTextDataset.to_loader">
+<a class="viewcode-back" href="../../../api/banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset.to_loader">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_loader</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a PyTorch DataLoader for this dataset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch_size: Number of samples per batch.</span>
+<span class="sd">            num_workers: Number of subprocesses to use for data loading.</span>
+<span class="sd">            shuffle: Whether to shuffle the data at every epoch. If `sampler`</span>
+<span class="sd">                is provided, `shuffle` must be False (or will be ignored).</span>
+<span class="sd">            collate_fn: Custom function to merge a list of samples to form a</span>
+<span class="sd">                mini-batch of Tensor(s). If None, uses default PyTorch collate_fn.</span>
+<span class="sd">                Note: Default collate_fn works well if `__getitem__` returns a</span>
+<span class="sd">                dictionary of tensors, which this class does.</span>
+<span class="sd">            sampler: Defines the strategy to draw samples from the dataset.</span>
+<span class="sd">                If specified, `shuffle` must be False.</span>
+<span class="sd">            **kwargs: Additional arguments passed directly to `torch.utils.data.DataLoader`.</span>
+<span class="sd">                      (e.g., `pin_memory`, `drop_last`).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A PyTorch DataLoader instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">DataLoader</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span>
+            <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;collate_fn&quot;</span><span class="p">),</span>
+            <span class="n">sampler</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sampler&quot;</span><span class="p">),</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Le Nguyen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

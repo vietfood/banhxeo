@@ -1,0 +1,480 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>banhxeo.data package &mdash; banhxeo  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="banhxeo.data.dataset package" href="banhxeo.data.dataset.html" />
+    <link rel="prev" title="banhxeo.core.vocabulary module" href="banhxeo.core.vocabulary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            banhxeo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">banhxeo.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">banhxeo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
+          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
+      <li class="breadcrumb-item active">banhxeo.data package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/banhxeo.data.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-banhxeo.data">
+<span id="banhxeo-data-package"></span><h1>banhxeo.data package<a class="headerlink" href="#module-banhxeo.data" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.data.BaseTextDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.data.</span></span><span class="sig-name descname"><span class="pre">BaseTextDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig" title="banhxeo.data.config.DatasetConfig"><span class="pre">DatasetConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.BaseTextDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract base class for raw text datasets.</p>
+<p>This class handles common dataset operations like downloading, extracting,
+and providing an interface to access raw text samples. It’s designed
+to be subclassed for specific datasets. Raw datasets return text strings,
+which can then be converted to PyTorch Datasets using <cite>to_torch_dataset</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_path</strong> (<em>Path</em>) – The root directory for storing datasets.</p></li>
+<li><p><strong>dataset_base_path</strong> (<em>Path</em>) – The specific directory for this dataset
+(e.g., <cite>root_path/datasets/MyDatasetName</cite>).</p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig" title="banhxeo.data.config.DatasetConfig"><em>DatasetConfig</em></a>) – Configuration for the dataset, including name,
+URL, file info, etc.</p></li>
+<li><p><strong>split_name</strong> (<em>str</em>) – The name of the dataset split (e.g., “train”, “test”).</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Random seed, primarily for reproducibility if subsampling
+or shuffling is involved at this stage.</p></li>
+<li><p><strong>max_workers</strong> (<em>int</em>) – Maximum number of workers for parallel processing tasks
+(e.g., file reading in subclasses).</p></li>
+<li><p><strong>_data</strong> (<em>Any</em>) – Internal storage for the loaded dataset samples. Subclasses
+are responsible for populating this.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.BaseTextDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig" title="banhxeo.data.config.DatasetConfig"><span class="pre">DatasetConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.BaseTextDataset.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the BaseTextDataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> – The root directory where datasets are stored. If None,
+defaults to the current working directory.</p></li>
+<li><p><strong>split_name</strong> – The name of the dataset split (e.g., “train”, “test”).</p></li>
+<li><p><strong>config</strong> – A <cite>DatasetConfig</cite> object containing metadata for the dataset.</p></li>
+<li><p><strong>seed</strong> – A random seed for reproducibility.</p></li>
+<li><p><strong>download</strong> – If True, attempts to download and extract the dataset
+if it’s not already present and <cite>config.url</cite> is provided.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.BaseTextDataset.get_all_texts">
+<span class="sig-name descname"><span class="pre">get_all_texts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.get_all_texts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.BaseTextDataset.get_all_texts" title="Link to this definition"></a></dt>
+<dd><p>Extracts all text content from the dataset.</p>
+<p>Iterates through the dataset using <cite>__getitem__</cite> and extracts the text
+portion from each sample. Assumes samples are either strings,
+tuples where the first element is text, or dictionaries with a
+<cite>self.config.text_column</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all text strings in the dataset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.BaseTextDataset.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.BaseTextDataset.get_data" title="Link to this definition"></a></dt>
+<dd><p>Returns the internal data structure holding all samples.</p>
+<p>The type of this structure (<cite>self._data</cite>) depends on the subclass
+(e.g., list, Polars DataFrame, Hugging Face Dataset).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The raw, loaded dataset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.BaseTextDataset.to_torch_dataset">
+<span class="sig-name descname"><span class="pre">to_torch_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer" title="banhxeo.core.tokenizer.Tokenizer"><span class="pre">Tokenizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.to_torch_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.BaseTextDataset.to_torch_dataset" title="Link to this definition"></a></dt>
+<dd><p>Converts this raw text dataset into a <cite>TorchTextDataset</cite>.</p>
+<p>This method sets up the necessary configurations for tokenization,
+numericalization, and transformations to prepare the data for
+PyTorch models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tokenizer</strong> – The <cite>Tokenizer</cite> instance to use.</p></li>
+<li><p><strong>vocab</strong> – The <cite>Vocabulary</cite> instance for ID mapping.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional configuration options:
+add_special_tokens (bool): Passed to <cite>TokenizerConfig</cite>. Defaults to False.
+max_length (Optional[int]): Passed to <cite>TokenizerConfig</cite>. Defaults to None.
+truncation (bool): Passed to <cite>TokenizerConfig</cite>. Defaults to False.
+padding (Union[bool, str]): Passed to <cite>TokenizerConfig</cite>. Defaults to False.
+is_classification (bool): Whether this is for a classification task.</p>
+<blockquote>
+<div><p>Defaults to False.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>transforms (Union[List[“Transforms”], “ComposeTransforms”]): Preprocessing</dt><dd><p>transforms to apply to text before tokenization. Defaults to [].</p>
+</dd>
+<dt>label_map (Optional[Dict[str, int]]): Mapping for labels if</dt><dd><p><cite>is_classification</cite> is True. Defaults to <cite>self.config.label_map</cite>.</p>
+</dd>
+<dt>text_column_name (str): Name of the text column. Defaults to</dt><dd><p><cite>self.config.text_column</cite>.</p>
+</dd>
+<dt>label_column_name (Optional[str]): Name of the label column.</dt><dd><p>Defaults to <cite>self.config.label_column</cite>.</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <cite>TorchTextDataset</cite> instance ready for use with PyTorch DataLoaders.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.BaseTextDataset.load_from_huggingface">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_from_huggingface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hf_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hf_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'label'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">hf_load_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.load_from_huggingface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.BaseTextDataset.load_from_huggingface" title="Link to this definition"></a></dt>
+<dd><p>Loads a dataset from Hugging Face Datasets Hub.</p>
+<p>This classmethod creates an instance of the calling <cite>BaseTextDataset</cite>
+subclass (or <cite>BaseTextDataset</cite> itself if called directly, though subclasses
+are typical) and populates its <cite>_data</cite> attribute with the loaded
+Hugging Face dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hf_path</strong> – The path or name of the dataset on Hugging Face Hub (e.g., “imdb”, “glue”).</p></li>
+<li><p><strong>hf_name</strong> – The specific configuration or subset of the dataset (e.g., “cola” for “glue”).</p></li>
+<li><p><strong>root_dir</strong> – Root directory for dataset caching (can be managed by HF Datasets).
+If provided, used to construct a unique <cite>DatasetConfig.name</cite>.</p></li>
+<li><p><strong>split_name</strong> – The dataset split to load (e.g., “train”, “test”, “validation”, “train[:10%]”).</p></li>
+<li><p><strong>text_column</strong> – The name of the column containing text data in the HF dataset.</p></li>
+<li><p><strong>label_column</strong> – The name of the column containing label data. Can be None.</p></li>
+<li><p><strong>seed</strong> – Random seed, primarily for dataset config naming consistency.</p></li>
+<li><p><strong>**hf_load_kwargs</strong> – Additional keyword arguments to pass to
+<cite>datasets.load_dataset()</cite> (e.g., <cite>cache_dir</cite>, <cite>num_proc</cite>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the class this method is called on, with <cite>_data</cite>
+populated by the Hugging Face dataset.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ImportError</strong> – If <cite>datasets</cite> library is not installed.</p></li>
+<li><p><strong>ValueError</strong> – If specified <cite>text_column</cite> or <cite>label_column</cite> are not
+    found in the loaded dataset.</p></li>
+<li><p><strong>Exception</strong> – Propagates exceptions from <cite>datasets.load_dataset()</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.BaseTextDataset.inspect_huggingface_dataset">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inspect_huggingface_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hf_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hf_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.inspect_huggingface_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.BaseTextDataset.inspect_huggingface_dataset" title="Link to this definition"></a></dt>
+<dd><p>Prints information about a Hugging Face dataset.</p>
+<p>Displays the dataset description, features, and available splits.
+Useful for exploring a dataset before loading it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hf_path</strong> – The path or name of the dataset on Hugging Face Hub.</p></li>
+<li><p><strong>hf_name</strong> – The specific configuration or subset of the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ImportError</strong> – If <cite>datasets</cite> library is not installed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.data.IMDBDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.data.</span></span><span class="sig-name descname"><span class="pre">IMDBDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/imdb.html#IMDBDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.IMDBDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset" title="banhxeo.data.base.BaseTextDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseTextDataset</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.IMDBDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/imdb.html#IMDBDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.IMDBDataset.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the BaseTextDataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> – The root directory where datasets are stored. If None,
+defaults to the current working directory.</p></li>
+<li><p><strong>split_name</strong> – The name of the dataset split (e.g., “train”, “test”).</p></li>
+<li><p><strong>config</strong> – A <cite>DatasetConfig</cite> object containing metadata for the dataset.</p></li>
+<li><p><strong>seed</strong> – A random seed for reproducibility.</p></li>
+<li><p><strong>download</strong> – If True, attempts to download and extract the dataset
+if it’s not already present and <cite>config.url</cite> is provided.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.data.AmazonReviewFullDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.data.</span></span><span class="sig-name descname"><span class="pre">AmazonReviewFullDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/amazon_review.html#AmazonReviewFullDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.AmazonReviewFullDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset" title="banhxeo.data.base.BaseTextDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseTextDataset</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.AmazonReviewFullDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/amazon_review.html#AmazonReviewFullDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.AmazonReviewFullDataset.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the BaseTextDataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> – The root directory where datasets are stored. If None,
+defaults to the current working directory.</p></li>
+<li><p><strong>split_name</strong> – The name of the dataset split (e.g., “train”, “test”).</p></li>
+<li><p><strong>config</strong> – A <cite>DatasetConfig</cite> object containing metadata for the dataset.</p></li>
+<li><p><strong>seed</strong> – A random seed for reproducibility.</p></li>
+<li><p><strong>download</strong> – If True, attempts to download and extract the dataset
+if it’s not already present and <cite>config.url</cite> is provided.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.dataset.html">banhxeo.data.dataset package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.dataset.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.dataset.amazon_review.html">banhxeo.data.dataset.amazon_review module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.dataset.amazon_review.html#banhxeo.data.dataset.amazon_review.AmazonReviewFullDataset"><code class="docutils literal notranslate"><span class="pre">AmazonReviewFullDataset</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.dataset.imdb.html">banhxeo.data.dataset.imdb module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.dataset.imdb.html#banhxeo.data.dataset.imdb.IMDBDataset"><code class="docutils literal notranslate"><span class="pre">IMDBDataset</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.base.html">banhxeo.data.base module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.__init__"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.get_all_texts"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.get_all_texts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.get_data"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.get_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.to_torch_dataset"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.to_torch_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.load_from_huggingface"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.load_from_huggingface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.inspect_huggingface_dataset"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.inspect_huggingface_dataset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.config.html">banhxeo.data.config module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetSplit"><code class="docutils literal notranslate"><span class="pre">DatasetSplit</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetSplit.train"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.train</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetSplit.test"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.test</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetSplit.val"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.val</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetSplit.__init__"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DownloadDatasetFile"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DownloadDatasetFile.name"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DownloadDatasetFile.ext"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.ext</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DownloadDatasetFile.source"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.source</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DownloadDatasetFile.__init__"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig"><code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.name"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.url"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.url</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.file_info"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.file_info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.md5"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.md5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.hf_path"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.hf_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.hf_name"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.hf_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.text_column"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.text_column</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.label_column"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.label_column</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.label_map"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.label_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.split"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.split</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig.model_config"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.tokenizer"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.tokenizer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.tokenizer_config"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.tokenizer_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.vocab"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.vocab</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.is_classification"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.is_classification</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.transforms"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.transforms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.text_column_name"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.text_column_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.label_column_name"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.label_column_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.label_map"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.label_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.ensure_compose_transforms"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.ensure_compose_transforms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.Config"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.Config</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.Config.arbitrary_types_allowed"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.Config.arbitrary_types_allowed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.TorchDatasetConfig.model_config"><code class="docutils literal notranslate"><span class="pre">TorchDatasetConfig.model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.torch.html">banhxeo.data.torch module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset"><code class="docutils literal notranslate"><span class="pre">TorchTextDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset.__init__"><code class="docutils literal notranslate"><span class="pre">TorchTextDataset.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset.to_loader"><code class="docutils literal notranslate"><span class="pre">TorchTextDataset.to_loader()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.transforms.html">banhxeo.data.transforms module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.Transforms"><code class="docutils literal notranslate"><span class="pre">Transforms</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.Transforms.metadata"><code class="docutils literal notranslate"><span class="pre">Transforms.metadata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.Transforms.model_config"><code class="docutils literal notranslate"><span class="pre">Transforms.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.ComposeTransforms"><code class="docutils literal notranslate"><span class="pre">ComposeTransforms</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.ComposeTransforms.__init__"><code class="docutils literal notranslate"><span class="pre">ComposeTransforms.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.RemoveHTMLTag"><code class="docutils literal notranslate"><span class="pre">RemoveHTMLTag</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.RemoveHTMLTag.model_config"><code class="docutils literal notranslate"><span class="pre">RemoveHTMLTag.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.RemoveURL"><code class="docutils literal notranslate"><span class="pre">RemoveURL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.RemoveURL.model_config"><code class="docutils literal notranslate"><span class="pre">RemoveURL.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.RemovePunctuation"><code class="docutils literal notranslate"><span class="pre">RemovePunctuation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.RemovePunctuation.model_config"><code class="docutils literal notranslate"><span class="pre">RemovePunctuation.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.Strip"><code class="docutils literal notranslate"><span class="pre">Strip</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.Strip.model_config"><code class="docutils literal notranslate"><span class="pre">Strip.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.SpellingCorrection"><code class="docutils literal notranslate"><span class="pre">SpellingCorrection</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.transforms.html#banhxeo.data.transforms.SpellingCorrection.model_config"><code class="docutils literal notranslate"><span class="pre">SpellingCorrection.model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="banhxeo.core.vocabulary.html" class="btn btn-neutral float-left" title="banhxeo.core.vocabulary module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="banhxeo.data.dataset.html" class="btn btn-neutral float-right" title="banhxeo.data.dataset package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Le Nguyen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
