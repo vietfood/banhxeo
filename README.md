@@ -39,10 +39,10 @@ uv sync
 - [x] [MLP example](https://colab.research.google.com/drive/1d8Yw_Go6FmAoJdXRTaHVsDJasZMEiv41?usp=sharing)
 - [ ] RNN/LSTM example
 
-3. **Read Documentation**
+3. **API References**
 
-> [!NOTE]
-> Stay tune.
+>[!NOTE]
+>https://vietfood.github.io/banhxeo/api/modules.html
 
 ## 🗺️ Roadmap
 
@@ -61,15 +61,15 @@ Banhxeo is an ongoing project. Here's a glimpse of where we're headed. We welcom
 -  [x] Initial Models:
     - [x] N-gram
     - [x] MLP for text classification
-    - [ ] RNN
-    - [ ] LSTM
+    - [x] RNN
+    - [x] LSTM
     - [ ] GPT-2
-    - [ ] Word2Vec
+    - [x] Word2Vec
 - [x] `Trainer` class:
    - [x] User-defined training step.
    - [x] Callback system for logging (console, file, W&B).
    - [x] Checkpointing.
-- [ ] Comprehensive documentation for all core modules.
+- [x] Comprehensive documentation for all core modules (50%)
 - [ ] More examples and tutorials for common NLP tasks.
 - [ ] Add test (Important)
 
