@@ -4,10 +4,11 @@ version = "0.2.0"
 authors = [{ name = "Le Nguyen", email = "lenguyen18072003@gmail.com" }]
 license = { text = "MIT License" }
 readme = "README.md"
-keywords = ["nlp"]
+keywords = ["nlp", "deep learning", "jax"]
 requires-python = ">=3.10, <3.13"
 
 dependencies = [
+    "clu>=0.0.12",
     "datasets>=3.6.0",
     "einops>=0.8.1",
     "flax>=0.8.5",
@@ -44,7 +45,7 @@ venv = ".venv"
 [tool.ruff.lint]
 # Enable pycodestyle (`E`), Pyflakes (`F`), and isort (`I`) codes
 # See https://beta.ruff.rs/docs/rules/ for more possible rules
-select = ["E", "F", "I", "D"]
+select = ["E", "F", "I"]
 
 # On top of the Google convention, disable `D417`, which requires
 # documentation for every function parameter.
