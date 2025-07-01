@@ -1,17 +1,21 @@
 import os
 
 import tensorflow as tf
+from jax.lib import xla_bridge
+
+# Set up seed
+DEFAULT_SEED = 1234
+
+BACKEND = xla_bridge.get_backend().platform
+
+# Ensure TF does not see GPU and grab all GPU memory.
+tf.config.set_visible_devices([], device_type="GPU")
+tf.random.set_seed(DEFAULT_SEED)
 
 # https://docs.jax.dev/en/latest/gpu_performance_tips.html
 os.environ["XLA_FLAGS"] = (
     "--xla_gpu_triton_gemm_any=True " "--xla_gpu_enable_latency_hiding_scheduler=true "
 )
-
-# Ensure TF does not see GPU and grab all GPU memory.
-tf.config.set_visible_devices([], device_type="GPU")
-
-# Set up seed
-DEFAULT_SEED = 1234
 
 # Copy from: https://github.com/unslothai/unsloth/blob/main/unsloth/__init__.py
 # Hugging Face Hub faster downloads
