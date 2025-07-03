@@ -1,12 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, List, Union
-
 import jax
 from jax import numpy as jnp
-
-from banhxeo.core.tokenizer import Tokenizer
-from banhxeo.data.transforms import ComposeTransforms, Transforms
 
 
 class DataLoader:
@@ -14,13 +9,11 @@ class DataLoader:
         self,
         dataset,
         batch_size: int,
-        tokenizer: Tokenizer,
         shuffle: bool = True,
         drop_last: bool = True,
         seed: int = 42,
         **kwargs,
     ):
-        self.tokenizer = tokenizer
         self.dataset = dataset
         self.shuffle = shuffle
         self.drop_last = drop_last
@@ -56,20 +49,21 @@ class DataLoader:
         self._on_batch_end()
         return self
 
-    def __next__(self) -> Dict[str, jax.Array]:
-        # TODO: Implement this carefully
-        # if self.current_step >= self.total_steps:
-        #     raise StopIteration
+    def __next__(self):
+        if self.current_step >= self.total_steps:
+            raise StopIteration
 
-        # start_idx = self.current_step * self.batch_size
-        # end_idx = start_idx + self.batch_size
-        # batch_indices = self.indices[start_idx:end_idx]
+        start_idx = self.current_step * self.batch_size
+        end_idx = start_idx + self.batch_size
+        batch_indices = self.indices[start_idx:end_idx]
 
-        # if len(batch_indices) < self.batch_size and not self.drop_last:
-        #     pass
+        if len(batch_indices) < self.batch_size and not self.drop_last:
+            pass
 
-        # batch_samples = [self.dataset[i] for i in batch_indices]
-        # self.current_step += 1
+        if hasattr(self.dataset, "__getitems__"):
+            batch_samples = self.dataset.__getitems__(batch_indices)
+        else:
+            batch_samples = [self.dataset[i] for i in batch_indices]
 
-        # return self.tokenizer(batch_samples, return_array=True, **self.config)  # type: ignore
-        ...
+        self.current_step += 1
+        return batch_samples

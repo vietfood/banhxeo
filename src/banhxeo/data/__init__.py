@@ -1,5 +1,5 @@
-from .base import HFTextDataset, TextDataset
+from .base import HFDataset
 from .dataset.amazon_review import AmazonReviewFullDataset
 from .dataset.imdb import IMDBDataset
 
-__all__ = ["TextDataset", "HFTextDataset", "IMDBDataset", "AmazonReviewFullDataset"]
+__all__ = ["HFDataset", "IMDBDataset", "AmazonReviewFullDataset"]

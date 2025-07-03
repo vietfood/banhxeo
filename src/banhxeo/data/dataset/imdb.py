@@ -7,10 +7,10 @@ import polars as pl
 
 from banhxeo import DEFAULT_SEED
 from banhxeo.data.base import (
+    BaseTextDataset,
     DatasetConfig,
     DatasetSplit,
     DownloadDatasetFile,
-    TextDataset,
 )
 from banhxeo.utils import progress_bar
 from banhxeo.utils.logging import default_logger
@@ -27,7 +27,7 @@ IMDB_DATASET_CONFIG = DatasetConfig(
 )
 
 
-class IMDBDataset(TextDataset):
+class IMDBDataset(BaseTextDataset):
     def __init__(
         self,
         root_dir: Optional[str] = None,

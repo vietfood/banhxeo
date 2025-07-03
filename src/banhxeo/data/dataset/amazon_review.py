@@ -4,10 +4,10 @@ import polars as pl
 
 from banhxeo import DEFAULT_SEED
 from banhxeo.data.base import (
+    BaseTextDataset,
     DatasetConfig,
     DatasetSplit,
     DownloadDatasetFile,
-    TextDataset,
 )
 
 AMAZON_REVIEW_FULL_CONFIG = DatasetConfig(
@@ -23,7 +23,7 @@ AMAZON_REVIEW_FULL_CONFIG = DatasetConfig(
 )
 
 
-class AmazonReviewFullDataset(TextDataset):
+class AmazonReviewFullDataset(BaseTextDataset):
     def __init__(
         self,
         root_dir: Optional[str] = None,
