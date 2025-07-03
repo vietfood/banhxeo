@@ -83,6 +83,7 @@ class EncodeConfig(BaseModel):
     )
     padding_side: Literal["left", "right"] = "left"
     truncation_side: Literal["left", "right"] = "right"
+    add_special_tokens: bool = True
 
     @model_validator(mode="after")
     def check_padding(self) -> Self:  # noqa: D102
@@ -205,14 +206,16 @@ class Tokenizer(metaclass=ABCMeta):
     def __call__(
         self,
         texts: List[str],
-        add_special_tokens: bool = True,
         return_array: bool = True,
-        **kwargs,
+        max_length: Optional[int] = None,
+        truncation: bool = False,
+        padding: Union[bool, Literal["do_not_pad", "max_length", "longest"]] = (
+            False  # False = "do_not_pad", True = "longest"
+        ),
+        padding_side: Literal["left", "right"] = "left",
+        truncation_side: Literal["left", "right"] = "right",
+        add_special_tokens: bool = True,
     ) -> Union[Dict[str, jax.Array], Dict[str, List[int]]]:
-        config = validate_config(
-            config_cls=EncodeConfig, add_special_tokens=add_special_tokens, **kwargs
-        )
-
         batch_ids = []
 
         for text in texts:
@@ -221,15 +224,11 @@ class Tokenizer(metaclass=ABCMeta):
             if add_special_tokens:
                 tokens = [self.bos_tok] + tokens + [self.eos_tok]
 
-            if (
-                config.truncation
-                and config.max_length is not None
-                and len(tokens) > config.max_length
-            ):
-                if config.truncation_side == "right":
-                    tokens = tokens[: config.max_length]
+            if truncation and max_length is not None and len(tokens) > max_length:
+                if truncation_side == "right":
+                    tokens = tokens[:max_length]
                 else:
-                    tokens = tokens[-config.max_length :]
+                    tokens = tokens[-max_length:]
 
             batch_ids.append(
                 [self._token_to_idx.get(tok, self.pad_id) for tok in tokens]
@@ -238,9 +237,9 @@ class Tokenizer(metaclass=ABCMeta):
         batch_longest = max([len(ids) for ids in batch_ids]) if batch_ids else 0
         batch_size = len(batch_ids)
 
-        if config.padding == "max_length" and config.max_length is not None:
-            max_seq_len = config.max_length
-        elif config.padding == "longest":
+        if padding == "max_length" and max_length is not None:
+            max_seq_len = max_length
+        elif padding == "longest":
             # Find the max length from the processed lists. Handle empty input.
             max_seq_len = batch_longest
         else:
@@ -258,9 +257,9 @@ class Tokenizer(metaclass=ABCMeta):
 
         for i, id_list in enumerate(batch_ids):
             ids = id_list[:max_seq_len]
-            if config.padding_side == "right":
+            if padding_side == "right":
                 ids_arr[i, : len(ids)] = ids
-            elif config.padding_side == "left":
+            elif padding_side == "left":
                 ids_arr[i, -len(ids) :] = ids
 
         attention_mask_arr = (ids_arr != self.pad_id).astype(jnp.int64)
@@ -278,7 +277,7 @@ class Tokenizer(metaclass=ABCMeta):
     def encode(
         self,
         texts: List[str],
-        return_array: bool = True,
+        return_array: bool = False,
         **kwargs,
     ) -> Union[jax.Array, List[int]]:
         results = self.__call__(texts, return_array, **kwargs)
