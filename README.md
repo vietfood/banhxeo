@@ -50,12 +50,11 @@ uv sync
 Banhxeo is an ongoing project. Here's a glimpse of where we're headed. We welcome contributions and ideas!
 
 - [ ] `Tokenizer` system
-    - [x] Basic system
+    - [x] Basic system (Normalizer -> PreTokenizer -> Model -> PostProcessor)
     - [x] NLTK Tokenizer wrapper
-    - [ ] HuggingFace Tokenizer wrapper
-    - [ ] BPE from scratch (Greedy and Dynamic version, maybe ?)
+    - [ ] HuggingFace Tokenizer wrapper (we have HuggingFace Toeknizer at home)
+    - [x] BPE from scratch (Greedy version)
 -  [x] Initial Models:
-    - [ ] N-gram
     - [ ] MLP for text classification
     - [ ] RNN
     - [ ] LSTM
@@ -67,6 +66,7 @@ Banhxeo is an ongoing project. Here's a glimpse of where we're headed. We welcom
    - [ ] Checkpointing.
 - [ ] More examples and tutorials for common NLP tasks.
 - [ ] Add test (Important)
+    - [ ] Tokenizer Test (50%)
 
 ## 🤝 Contributing
 
