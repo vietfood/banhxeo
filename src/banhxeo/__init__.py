@@ -1,12 +1,15 @@
 import os
 
+import jax
 import tensorflow as tf
-from jax.lib import xla_bridge
+from jax import extend as jextend
 
 # Set up seed
 DEFAULT_SEED = 1234
 
-BACKEND = xla_bridge.get_backend().platform
+BACKEND = jextend.backend.get_backend()
+
+USE_TORCH = True
 
 # Ensure TF does not see GPU and grab all GPU memory.
 tf.config.set_visible_devices([], device_type="GPU")

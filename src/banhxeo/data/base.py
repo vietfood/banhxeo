@@ -12,7 +12,7 @@ from jax import numpy as jnp
 from pydantic import BaseModel, field_validator
 
 from banhxeo import DEFAULT_SEED
-from banhxeo.core.tokenizer import EncodeConfig, Tokenizer
+from banhxeo.core.tokenizer import ProcessConfig, Tokenizer
 from banhxeo.data.loader import DataLoader
 from banhxeo.data.transforms import ComposeTransforms, Transforms
 from banhxeo.utils.file import check_md5, download_archive, extract_archive
@@ -60,7 +60,7 @@ class TextDatasetConfig(BaseModel):
 
     # For tokenizer
     tokenizer: Tokenizer
-    encode_config: EncodeConfig
+    encode_config: ProcessConfig
 
     @field_validator("transforms")
     @classmethod
@@ -382,6 +382,7 @@ class TextDataset:
         shuffle: bool = True,
         drop_last: bool = True,
         seed: int = DEFAULT_SEED,
+        num_workers=8,
         **kwargs,
     ):
         return DataLoader(
@@ -390,5 +391,6 @@ class TextDataset:
             shuffle=shuffle,
             drop_last=drop_last,
             seed=seed,
+            num_workers=num_workers,
             **kwargs,
         )
