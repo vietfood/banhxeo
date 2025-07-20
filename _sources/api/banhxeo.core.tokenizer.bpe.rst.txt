@@ -1,0 +1,7 @@
+banhxeo.core.tokenizer.bpe module
+=================================
+
+.. automodule:: banhxeo.core.tokenizer.bpe
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+banhxeo.core.tokenizer.post\_processor module
+=============================================
+
+.. automodule:: banhxeo.core.tokenizer.post_processor
+   :members:
+   :undoc-members:
+   :show-inheritance:

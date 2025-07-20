@@ -14,7 +14,7 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -49,12 +49,9 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -105,27 +102,57 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.PrintLogger.info">
 <span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#PrintLogger.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.PrintLogger.info" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs an info-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.PrintLogger.debug">
 <span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#PrintLogger.debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.PrintLogger.debug" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs a debug-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.PrintLogger.exception">
 <span class="sig-name descname"><span class="pre">exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#PrintLogger.exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.PrintLogger.exception" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs an exception-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.PrintLogger.error">
 <span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#PrintLogger.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.PrintLogger.error" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs an error-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.PrintLogger.warning">
 <span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#PrintLogger.warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.PrintLogger.warning" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs a warning-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -136,37 +163,82 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.Logger.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#Logger.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.Logger.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the Logger instance.</p>
+<p>Chooses between PrintLogger (for Colab) and the standard logging.Logger.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.Logger.info">
 <span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#Logger.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.Logger.info" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs an info-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.Logger.debug">
 <span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#Logger.debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.Logger.debug" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs a debug-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.Logger.exception">
 <span class="sig-name descname"><span class="pre">exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#Logger.exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.Logger.exception" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs an exception-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.Logger.error">
 <span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#Logger.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.Logger.error" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs an error-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.Logger.warning">
 <span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#Logger.warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.Logger.warning" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Logs a warning-level message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The message to log.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="banhxeo.utils.logging.Logger.check_and_raise">
 <span class="sig-name descname"><span class="pre">check_and_raise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/logging.html#Logger.check_and_raise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.logging.Logger.check_and_raise" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks a condition and raises an error if the condition is not met.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> (<em>str</em>) – The error message to log and raise.</p></li>
+<li><p><strong>error_type</strong> (<em>Exception</em>) – The exception type to raise if the condition is False.</p></li>
+<li><p><strong>condition</strong> (<em>Any</em>) – The condition to check. If False, the error is raised.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>error_type</strong> – If the condition is False.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

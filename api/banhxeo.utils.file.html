@@ -14,7 +14,7 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -50,12 +50,9 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -97,17 +94,57 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="banhxeo.utils.file.download_archive">
 <span class="sig-prename descclassname"><span class="pre">banhxeo.utils.file.</span></span><span class="sig-name descname"><span class="pre">download_archive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">archive_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/file.html#download_archive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.file.download_archive" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Download an archive file from a given URL or Google Drive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Source type, e.g., ‘drive’ for Google Drive, or None for direct URL.</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – The URL to download the archive from.</p></li>
+<li><p><strong>archive_file_path</strong> (<em>Path</em>) – The local path where the archive will be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Any exception raised by gdown</strong><strong> or </strong><strong>urllib.request on download failure.</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="banhxeo.utils.file.check_md5">
 <span class="sig-prename descclassname"><span class="pre">banhxeo.utils.file.</span></span><span class="sig-name descname"><span class="pre">check_md5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">md5</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">archive_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/file.html#check_md5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.file.check_md5" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Check the MD5 checksum of a file, optionally prompting the user if not provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>md5</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The expected MD5 checksum. If None, user is prompted to continue.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the dataset (for logging).</p></li>
+<li><p><strong>archive_file_path</strong> (<em>Path</em>) – Path to the archive file to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the user aborts or if the MD5 does not match.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="banhxeo.utils.file.extract_archive">
 <span class="sig-prename descclassname"><span class="pre">banhxeo.utils.file.</span></span><span class="sig-name descname"><span class="pre">extract_archive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">archive_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extracted_data_dir_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils/file.html#extract_archive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.file.extract_archive" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Extract an archive file to a target directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ext</strong> (<em>str</em>) – Archive extension, e.g., ‘zip’, ‘tar.gz’, or others supported by shutil.</p></li>
+<li><p><strong>archive_file_path</strong> (<em>Path</em>) – Path to the archive file.</p></li>
+<li><p><strong>dataset_base_path</strong> (<em>Path</em>) – Base directory to extract files into.</p></li>
+<li><p><strong>extracted_data_dir_path</strong> (<em>Path</em>) – Path to the extracted data directory (for logging).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Any exception raised by zipfile</strong><strong>, </strong><strong>tarfile</strong><strong>, or </strong><strong>shutil on extraction failure.</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

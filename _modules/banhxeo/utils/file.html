@@ -13,7 +13,7 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -63,7 +63,6 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../../banhxeo.html">banhxeo</a></li>
           <li class="breadcrumb-item"><a href="../utils.html">banhxeo.utils</a></li>
       <li class="breadcrumb-item active">banhxeo.utils.file</li>
       <li class="wy-breadcrumbs-aside">
@@ -80,13 +79,11 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress_bar</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_LOGGER</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_logger</span>
 
 <span class="n">USER_AGENT</span> <span class="o">=</span> <span class="s2">&quot;vietfood/banhxeo&quot;</span>
 
@@ -94,6 +91,16 @@
 <div class="viewcode-block" id="download_archive">
 <a class="viewcode-back" href="../../../api/banhxeo.utils.file.html#banhxeo.utils.file.download_archive">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_archive</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">archive_file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download an archive file from a given URL or Google Drive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (Optional[str]): Source type, e.g., &#39;drive&#39; for Google Drive, or None for direct URL.</span>
+<span class="sd">        url (str): The URL to download the archive from.</span>
+<span class="sd">        archive_file_path (Path): The local path where the archive will be saved.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Any exception raised by gdown or urllib.request on download failure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;drive&quot;</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">gdown</span>
 
@@ -126,20 +133,30 @@
 <div class="viewcode-block" id="check_md5">
 <a class="viewcode-back" href="../../../api/banhxeo.utils.file.html#banhxeo.utils.file.check_md5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_md5</span><span class="p">(</span><span class="n">md5</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">archive_file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the MD5 checksum of a file, optionally prompting the user if not provided.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        md5 (Optional[str]): The expected MD5 checksum. If None, user is prompted to continue.</span>
+<span class="sd">        name (str): Name of the dataset (for logging).</span>
+<span class="sd">        archive_file_path (Path): Path to the archive file to check.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the user aborts or if the MD5 does not match.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">md5</span><span class="p">:</span>
-        <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+        <span class="n">default_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;MD5 checksum not provided for dataset </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">. Extraction is potentially unsafe.&quot;</span>
         <span class="p">)</span>
         <span class="n">accept</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Do you want to continue (yes/no): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">accept</span> <span class="o">!=</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">archive_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="n">archive_file_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
-                <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">default_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Extraction aborted by user for dataset </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Verifying MD5 for </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="n">default_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Verifying MD5 for </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">archive_file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">file_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
@@ -149,12 +166,12 @@
 
         <span class="k">if</span> <span class="n">archive_md5</span> <span class="o">!=</span> <span class="n">md5</span><span class="p">:</span>
             <span class="n">archive_file_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
-            <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed corrupted file </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">default_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed corrupted file </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;MD5 mismatch for </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">archive_file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">. Expected </span><span class="si">{</span><span class="n">md5</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">archive_md5</span><span class="si">}</span><span class="s2">. File may be corrupted.&quot;</span>
             <span class="p">)</span>
 
-        <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;MD5 checksum verified.&quot;</span><span class="p">)</span></div>
+        <span class="n">default_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;MD5 checksum verified.&quot;</span><span class="p">)</span></div>
 
 
 
@@ -166,6 +183,17 @@
     <span class="n">dataset_base_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">extracted_data_dir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract an archive file to a target directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ext (str): Archive extension, e.g., &#39;zip&#39;, &#39;tar.gz&#39;, or others supported by shutil.</span>
+<span class="sd">        archive_file_path (Path): Path to the archive file.</span>
+<span class="sd">        dataset_base_path (Path): Base directory to extract files into.</span>
+<span class="sd">        extracted_data_dir_path (Path): Path to the extracted data directory (for logging).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Any exception raised by zipfile, tarfile, or shutil on extraction failure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;zip&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span>
             <span class="n">archive_file_path</span><span class="p">,</span>
@@ -186,7 +214,7 @@
             <span class="p">):</span>
                 <span class="n">tar</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">dataset_base_path</span><span class="p">,</span> <span class="n">member</span><span class="o">=</span><span class="n">member</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">DEFAULT_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+        <span class="n">default_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Use shutil to extract </span><span class="si">{</span><span class="n">extracted_data_dir_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, this will be very slow&quot;</span>
         <span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">unpack_archive</span><span class="p">(</span>

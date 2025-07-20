@@ -1,0 +1,7 @@
+banhxeo.core.tokenizer.normalizer module
+========================================
+
+.. automodule:: banhxeo.core.tokenizer.normalizer
+   :members:
+   :undoc-members:
+   :show-inheritance:

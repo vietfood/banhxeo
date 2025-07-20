@@ -14,13 +14,11 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.train package" href="banhxeo.train.html" />
-    <link rel="prev" title="banhxeo.model.config module" href="banhxeo.model.config.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,22 +45,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API References</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">banhxeo</a></li>
 </ul>
 
         </div>
@@ -79,9 +63,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.model.html">banhxeo.model package</a></li>
       <li class="breadcrumb-item active">banhxeo.model.neural module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.model.neural.rst.txt" rel="nofollow"> View page source</a>
@@ -92,284 +73,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.model.neural">
-<span id="banhxeo-model-neural-module"></span><h1>banhxeo.model.neural module<a class="headerlink" href="#module-banhxeo.model.neural" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralModelConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.neural.</span></span><span class="sig-name descname"><span class="pre">NeuralModelConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralModelConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralModelConfig" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig" title="banhxeo.model.config.ModelConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelConfig</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralModelConfig.embedding_dim">
-<span class="sig-name descname"><span class="pre">embedding_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.model.neural.NeuralModelConfig.embedding_dim" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralModelConfig.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#banhxeo.model.neural.NeuralModelConfig.model_config" title="Link to this definition"></a></dt>
-<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.neural.</span></span><span class="sig-name descname"><span class="pre">NeuralLanguageModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.model.neural.NeuralModelConfig" title="banhxeo.model.neural.NeuralModelConfig"><span class="pre">NeuralModelConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="banhxeo.model.base.html#banhxeo.model.base.BaseLanguageModel" title="banhxeo.model.base.BaseLanguageModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLanguageModel</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<p>Abstract base class for neural network-based language models.</p>
-<p>Extends <cite>BaseLanguageModel</cite> and <cite>torch.nn.Module</cite>. It provides common
-functionalities for neural models, such as device management (CPU/GPU),
-model saving/loading (weights and config), attaching downstream heads,
-and a more detailed summary.</p>
-<p>Subclasses must implement the <cite>forward</cite> method and typically override
-<cite>generate_sequence</cite> if applicable.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<a class="reference internal" href="#banhxeo.model.neural.NeuralModelConfig" title="banhxeo.model.neural.NeuralModelConfig"><em>NeuralModelConfig</em></a>) – Configuration specific to neural models,
-inheriting from <cite>ModelConfig</cite> and often adding <cite>embedding_dim</cite>.</p></li>
-<li><p><strong>vocab</strong> (<a class="reference internal" href="banhxeo.core.html#banhxeo.core.Vocabulary" title="banhxeo.core.Vocabulary"><em>Vocabulary</em></a>) – The vocabulary used by the model.</p></li>
-<li><p><strong>downstream_heads</strong> (<em>nn.ModuleDict</em>) – A dictionary to hold task-specific
-output layers (heads) that can be attached to the base model.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.model.neural.NeuralModelConfig" title="banhxeo.model.neural.NeuralModelConfig"><span class="pre">NeuralModelConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the NeuralLanguageModel.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model_config</strong> – The configuration object, instance of <cite>NeuralModelConfig</cite>
-or its subclass.</p></li>
-<li><p><strong>vocab</strong> – The <cite>Vocabulary</cite> instance.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.freeze">
-<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.freeze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.freeze" title="Link to this definition"></a></dt>
-<dd><p>Freezes all parameters of the model.</p>
-<p>Sets <cite>requires_grad = False</cite> for all parameters, making them
-non-trainable. Useful for feature extraction or fine-tuning only
-a part of the model (e.g., a downstream head).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.unfreeze">
-<span class="sig-name descname"><span class="pre">unfreeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.unfreeze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.unfreeze" title="Link to this definition"></a></dt>
-<dd><p>Unfreezes all parameters of the model.</p>
-<p>Sets <cite>requires_grad = True</cite> for all parameters, making them trainable.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.summary">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.summary" title="Link to this definition"></a></dt>
-<dd><p>Prints an enhanced summary of the neural model.</p>
-<p>Includes the summary from <cite>BaseLanguageModel</cite> and also prints the
-PyTorch model structure (layers and parameters).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.forward">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.forward" title="Link to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Subclasses must implement this method. It should take tensors as input
-(e.g., <cite>input_ids</cite>, <cite>attention_mask</cite>) and return a dictionary of
-output tensors (e.g., <cite>logits</cite>, <cite>hidden_states</cite>, <cite>loss</cite> if computed).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong> – Variable length argument list for model inputs.</p></li>
-<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for model inputs.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A dictionary where keys are string names of outputs (e.g., “logits”,
-“last_hidden_state”) and values are the corresponding <a href="#id1"><span class="problematic" id="id2">`</span></a>torch.Tensor`s.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the subclass does not implement this method.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.generate_sequence">
-<span class="sig-name descname"><span class="pre">generate_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.GenerateConfig" title="banhxeo.model.config.GenerateConfig"><span class="pre">GenerateConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.TokenizerConfig" title="banhxeo.core.tokenizer.TokenizerConfig"><span class="pre">TokenizerConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.generate_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.generate_sequence" title="Link to this definition"></a></dt>
-<dd><p>Generates a sequence of text starting from a given prompt.</p>
-<p>This method is typically applicable to autoregressive models (e.g., GPT-like LMs,
-sequence-to-sequence models in generation mode). Non-autoregressive models
-(like MLP classifiers or Word2Vec) should raise <cite>NotImplementedError</cite>.</p>
-<p>The implementation should handle:
-1. Tokenizing the input <cite>prompt</cite> using <cite>self.vocab.tokenizer</cite>.
-2. Iteratively predicting the next token.
-3. Applying sampling strategies specified in <cite>generate_config</cite> (e.g., greedy, top-k).
-4. Stopping generation based on <cite>max_length</cite> or an end-of-sequence token.
-5. Detokenizing the generated token IDs back into a string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prompt</strong> – The initial text string to start generation from.</p></li>
-<li><p><strong>generate_config</strong> – A <cite>GenerateConfig</cite> object specifying generation
-parameters like <cite>max_length</cite>, <cite>sampling</cite> strategy, <cite>top_k</cite>, etc.
-If None, default generation parameters should be used.</p></li>
-<li><p><strong>tokenizer_config</strong> – An optional <cite>TokenizerConfig</cite> for encoding the prompt.
-If None, a default sensible configuration should be used (e.g.,
-no padding, no truncation initially unless prompt is too long for model).</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments that might be passed to the
-tokenizer’s <cite>encode</cite> method when processing the prompt.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The generated text string (excluding the initial prompt, or including it,
-based on implementation choice).</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>NotImplementedError</strong> – If the model does not support sequence generation.</p></li>
-<li><p><strong>ValueError</strong> – If prerequisites for generation (like a tokenizer in vocab) are missing.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.attach_downstream_head">
-<span class="sig-name descname"><span class="pre">attach_downstream_head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">head_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.attach_downstream_head"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.attach_downstream_head" title="Link to this definition"></a></dt>
-<dd><p>Attaches a task-specific head to the base model.</p>
-<p>This allows reusing the base model’s learned representations for different
-downstream tasks (e.g., classification, token classification) by adding
-a new final layer or set of layers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>head_name</strong> – A unique string name for the head. If a head with this
-name already exists, it will be replaced.</p></li>
-<li><p><strong>head_module</strong> – The <cite>torch.nn.Module</cite> instance representing the head.
-This head will be registered in <cite>self.downstream_heads</cite>.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.get_downstream_head_output">
-<span class="sig-name descname"><span class="pre">get_downstream_head_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">head_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_model_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">head_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.get_downstream_head_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.get_downstream_head_output" title="Link to this definition"></a></dt>
-<dd><p>Passes features from the base model’s output through a specified downstream head.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>head_name</strong> – The name of the downstream head to use (must have been
-previously attached via <cite>attach_downstream_head</cite>).</p></li>
-<li><p><strong>base_model_output</strong> – The dictionary output from the base model’s
-<cite>forward()</cite> method. The head might expect specific keys from
-this dictionary (e.g., “last_hidden_state”, “pooled_output”).</p></li>
-<li><p><strong>**head_kwargs</strong> – Additional keyword arguments to pass to the
-downstream head’s <cite>forward</cite> method.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The output tensor from the specified downstream head.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>KeyError</strong> – If <cite>head_name</cite> is not found in <cite>self.downstream_heads</cite>.</p></li>
-<li><p><strong>ValueError</strong> – If the <cite>head_module</cite> (from <cite>self.downstream_heads[head_name]</cite>)
-    is not a callable <cite>nn.Module</cite> or if its <cite>expected_input_key</cite> (if defined)
-    is not in <cite>base_model_output</cite>.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.save_model">
-<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.save_model" title="Link to this definition"></a></dt>
-<dd><p>Saves the neural model’s state_dict, configuration, and vocabulary.</p>
-<p>The model’s <cite>state_dict</cite> is saved to <cite>pytorch_model.bin</cite> (or similar),
-the configuration (<cite>self.config</cite>) to <cite>config.json</cite>, and the vocabulary
-(<cite>self.vocab</cite>) to <cite>vocabulary.json</cite> within the specified <cite>save_directory</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>save_directory</strong> – The directory path where the model components will be saved.
-The directory will be created if it doesn’t exist.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.load_model">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">load_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_for_vocab_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer" title="banhxeo.core.tokenizer.Tokenizer"><span class="pre">Tokenizer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">model_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><span class="pre">NeuralLanguageModel</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.load_model" title="Link to this definition"></a></dt>
-<dd><p>Loads a neural model from a saved directory.</p>
-<p>This method reconstructs the model by:
-1. Loading the configuration from <cite>config.json</cite>.
-2. Loading the vocabulary from <cite>vocabulary.json</cite> (if it exists and <cite>vocab</cite> is not provided).
-3. Instantiating the model with the loaded config and vocab.
-4. Loading the saved weights from <cite>pytorch_model.bin</cite> into the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cls</strong> – The specific <cite>NeuralLanguageModel</cite> subclass to instantiate.</p></li>
-<li><p><strong>load_directory</strong> – The directory path from which to load the model components.</p></li>
-<li><p><strong>vocab</strong> – An optional pre-loaded <cite>Vocabulary</cite> instance. If provided,
-loading <cite>vocabulary.json</cite> from the directory is skipped.</p></li>
-<li><p><strong>tokenizer_for_vocab_load</strong> – A <cite>Tokenizer</cite> instance, required if <cite>vocab</cite>
-is None and <cite>vocabulary.json</cite> needs to be loaded (as <cite>Vocabulary.load</cite>
-requires a tokenizer).</p></li>
-<li><p><strong>**model_kwargs</strong> – Additional keyword arguments to pass to the model’s
-<cite>__init__</cite> method, potentially overriding loaded configuration values.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the neural model class, loaded with configuration and weights.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>FileNotFoundError</strong> – If <cite>config.json</cite> or <cite>pytorch_model.bin</cite> is missing.</p></li>
-<li><p><strong>ValueError</strong> – If vocabulary cannot be loaded/provided and is essential.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.to_gpu">
-<span class="sig-name descname"><span class="pre">to_gpu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.to_gpu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.to_gpu" title="Link to this definition"></a></dt>
-<dd><p>Moves the model and its parameters to the GPU if available.</p>
-<p>Checks for CUDA or MPS (Apple Silicon GPU) availability.
-If no GPU is found, a warning is logged, and the model remains on CPU.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The model itself, now on the GPU (or CPU if no GPU).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.neural.NeuralLanguageModel.to_cpu">
-<span class="sig-name descname"><span class="pre">to_cpu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/neural.html#NeuralLanguageModel.to_cpu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.neural.NeuralLanguageModel.to_cpu" title="Link to this definition"></a></dt>
-<dd><p>Moves the model and its parameters to the CPU.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The model itself, now on the CPU.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-model-neural-module">
+<h1>banhxeo.model.neural module<a class="headerlink" href="#banhxeo-model-neural-module" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.model.config.html" class="btn btn-neutral float-left" title="banhxeo.model.config module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.train.html" class="btn btn-neutral float-right" title="banhxeo.train package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

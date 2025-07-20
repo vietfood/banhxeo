@@ -14,13 +14,11 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.train.trainer module" href="banhxeo.train.trainer.html" />
-    <link rel="prev" title="banhxeo.train.callbacks module" href="banhxeo.train.callbacks.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,22 +45,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API References</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">banhxeo</a></li>
 </ul>
 
         </div>
@@ -79,9 +63,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.train.html">banhxeo.train package</a></li>
       <li class="breadcrumb-item active">banhxeo.train.config module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.train.config.rst.txt" rel="nofollow"> View page source</a>
@@ -92,294 +73,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.train.config">
-<span id="banhxeo-train-config-module"></span><h1>banhxeo.train.config module<a class="headerlink" href="#module-banhxeo.train.config" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.train.config.LossConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.train.config.</span></span><span class="sig-name descname"><span class="pre">LossConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'CrossEntropyLoss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/config.html#LossConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.LossConfig" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Configuration for the loss function used during training.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of the loss function class from <cite>torch.nn.modules.loss</cite>
-(e.g., “CrossEntropyLoss”, “MSELoss”). Defaults to “CrossEntropyLoss”.</p></li>
-<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – A dictionary of keyword arguments to be passed to the
-loss function’s constructor (e.g., <cite>{“weight”: torch.tensor([0.1, 0.9])}</cite>).
-Defaults to an empty dictionary.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.LossConfig.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#banhxeo.train.config.LossConfig.name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.LossConfig.kwargs">
-<span class="sig-name descname"><span class="pre">kwargs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#banhxeo.train.config.LossConfig.kwargs" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.config.LossConfig.get_loss_function">
-<span class="sig-name descname"><span class="pre">get_loss_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/config.html#LossConfig.get_loss_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.LossConfig.get_loss_function" title="Link to this definition"></a></dt>
-<dd><p>Instantiates and returns the configured PyTorch loss function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An instance of the specified PyTorch loss function.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the specified <cite>name</cite> is not a valid loss function
-    in <cite>torch.nn.modules.loss</cite>.</p></li>
-<li><p><strong>AttributeError</strong> – If the specified <cite>name</cite> is not found.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.LossConfig.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#banhxeo.train.config.LossConfig.model_config" title="Link to this definition"></a></dt>
-<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.train.config.</span></span><span class="sig-name descname"><span class="pre">OptimizerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'AdamW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler_name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_kwargs:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_scheduler_kwargs:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/config.html#OptimizerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Configuration for the optimizer and learning rate scheduler.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of the optimizer class from <cite>torch.optim</cite>
-(e.g., “AdamW”, “SGD”). Defaults to “AdamW”.</p></li>
-<li><p><strong>scheduler_name</strong> (<em>str</em><em> | </em><em>None</em>) – Optional name of the learning rate scheduler class
-from <cite>torch.optim.lr_scheduler</cite> (e.g., “LambdaLR”, “ReduceLROnPlateau”).
-Defaults to None (no scheduler).</p></li>
-<li><p><strong>warmup_steps</strong> – Number of initial steps during which the learning rate
-is linearly warmed up from 0 to its initial value. This is typically
-implemented by custom logic or a scheduler like <cite>transformers.get_linear_schedule_with_warmup</cite>.
-Note: This field is declarative; actual warmup logic needs to be
-implemented in the training loop or via a specific scheduler. Defaults to 0.</p></li>
-<li><p><strong>optimizer_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Keyword arguments for the optimizer’s constructor
-(e.g., <cite>{“lr”: 1e-3, “weight_decay”: 0.01}</cite>). Defaults to an empty dict.</p></li>
-<li><p><strong>lr_scheduler_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Keyword arguments for the LR scheduler’s constructor.
-Defaults to an empty dict.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.scheduler_name">
-<span class="sig-name descname"><span class="pre">scheduler_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.scheduler_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.optimizer_kwargs">
-<span class="sig-name descname"><span class="pre">optimizer_kwargs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.optimizer_kwargs" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.lr_scheduler_kwargs">
-<span class="sig-name descname"><span class="pre">lr_scheduler_kwargs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.lr_scheduler_kwargs" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.Config">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../_modules/banhxeo/train/config.html#OptimizerConfig.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.Config" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.Config.arbitrary_types_allowed">
-<span class="sig-name descname"><span class="pre">arbitrary_types_allowed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.Config.arbitrary_types_allowed" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.get_optimizer">
-<span class="sig-name descname"><span class="pre">get_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/config.html#OptimizerConfig.get_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.get_optimizer" title="Link to this definition"></a></dt>
-<dd><p>Instantiates and returns the configured PyTorch optimizer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model_parameters</strong> – An iterable of model parameters to optimize,
-typically <cite>model.parameters()</cite>.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the specified PyTorch optimizer.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the specified <cite>name</cite> is not a valid optimizer
-    in <cite>torch.optim</cite>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.get_scheduler">
-<span class="sig-name descname"><span class="pre">get_scheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/config.html#OptimizerConfig.get_scheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.get_scheduler" title="Link to this definition"></a></dt>
-<dd><p>Instantiates and returns the configured PyTorch learning rate scheduler.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>optimizer</strong> – The PyTorch optimizer instance for which to create the scheduler.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the specified LR scheduler, or None if <cite>scheduler_name</cite> is not set.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>scheduler_name</cite> is set but not found in
-    <cite>torch.optim.lr_scheduler</cite>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.OptimizerConfig.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'arbitrary_types_allowed':</span> <span class="pre">True}</span></em><a class="headerlink" href="#banhxeo.train.config.OptimizerConfig.model_config" title="Link to this definition"></a></dt>
-<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.train.config.</span></span><span class="sig-name descname"><span class="pre">TrainerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./training_output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_train_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">per_device_train_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">per_device_eval_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_accumulation_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_total_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluate_during_training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.train.config.OptimizerConfig" title="banhxeo.train.config.OptimizerConfig"><span class="pre">OptimizerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.train.config.LossConfig" title="banhxeo.train.config.LossConfig"><span class="pre">LossConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/config.html#TrainerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.TrainerConfig" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Configuration for the <cite>Trainer</cite>.</p>
-<p>Specifies parameters for the training process, including directories,
-epochs, batch sizes, logging, saving, evaluation, and optimization settings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>output_dir</strong> (<em>str</em>) – Directory to save checkpoints, logs, and other training artifacts.
-Defaults to “./training_output”.</p></li>
-<li><p><strong>num_train_epochs</strong> (<em>int</em>) – Total number of training epochs to perform. Defaults to 3.</p></li>
-<li><p><strong>per_device_train_batch_size</strong> (<em>int</em>) – Batch size per GPU/CPU for training. Defaults to 8.</p></li>
-<li><p><strong>per_device_eval_batch_size</strong> (<em>int</em>) – Batch size per GPU/CPU for evaluation. Defaults to 8.</p></li>
-<li><p><strong>gradient_accumulation_steps</strong> (<em>int</em>) – Number of updates steps to accumulate gradients
-before performing a backward/update pass. Effective batch size will be
-<cite>per_device_train_batch_size * num_devices * gradient_accumulation_steps</cite>.
-Defaults to 1.</p></li>
-<li><p><strong>training_shuffle</strong> (<em>bool</em>) – Whether to shuffle the training data at each epoch.
-Defaults to True.</p></li>
-<li><p><strong>logging_steps</strong> (<em>int</em>) – Log training loss and metrics every N global steps.
-Defaults to 100.</p></li>
-<li><p><strong>save_steps</strong> (<em>int</em><em> | </em><em>None</em>) – Save a checkpoint every N global steps. If None, checkpoints
-are only saved at the end of epochs (if <cite>CheckpointCallback</cite> is used).
-Defaults to 500.</p></li>
-<li><p><strong>save_total_limit</strong> (<em>int</em><em> | </em><em>None</em>) – If set, limits the total number of saved checkpoints.
-Older checkpoints will be deleted. If None, all checkpoints are kept.
-Needs to be implemented in <cite>CheckpointCallback</cite> or <cite>Trainer</cite>. Defaults to None.</p></li>
-<li><p><strong>evaluate_during_training</strong> (<em>bool</em>) – Whether to run evaluation on the eval dataset
-during training. Defaults to False.</p></li>
-<li><p><strong>evaluation_steps</strong> (<em>int</em><em> | </em><em>None</em>) – If <cite>evaluate_during_training</cite> is True, evaluate every
-N global steps. If None, evaluation might occur at epoch ends if
-controlled by callbacks. Defaults to None.</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – Random seed for initialization and data shuffling. Defaults to 42.</p></li>
-<li><p><strong>optim</strong> (<a class="reference internal" href="#banhxeo.train.config.OptimizerConfig" title="banhxeo.train.config.OptimizerConfig"><em>banhxeo.train.config.OptimizerConfig</em></a>) – An <cite>OptimizerConfig</cite> instance defining the optimizer and LR scheduler.</p></li>
-<li><p><strong>loss</strong> (<a class="reference internal" href="#banhxeo.train.config.LossConfig" title="banhxeo.train.config.LossConfig"><em>banhxeo.train.config.LossConfig</em></a>) – A <cite>LossConfig</cite> instance defining the loss function.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.output_dir">
-<span class="sig-name descname"><span class="pre">output_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.output_dir" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.num_train_epochs">
-<span class="sig-name descname"><span class="pre">num_train_epochs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.num_train_epochs" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.per_device_train_batch_size">
-<span class="sig-name descname"><span class="pre">per_device_train_batch_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.per_device_train_batch_size" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.per_device_eval_batch_size">
-<span class="sig-name descname"><span class="pre">per_device_eval_batch_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.per_device_eval_batch_size" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.gradient_accumulation_steps">
-<span class="sig-name descname"><span class="pre">gradient_accumulation_steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.gradient_accumulation_steps" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.training_shuffle">
-<span class="sig-name descname"><span class="pre">training_shuffle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.training_shuffle" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.logging_steps">
-<span class="sig-name descname"><span class="pre">logging_steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.logging_steps" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.save_steps">
-<span class="sig-name descname"><span class="pre">save_steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.save_steps" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.save_total_limit">
-<span class="sig-name descname"><span class="pre">save_total_limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.save_total_limit" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.evaluate_during_training">
-<span class="sig-name descname"><span class="pre">evaluate_during_training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.evaluate_during_training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.evaluation_steps">
-<span class="sig-name descname"><span class="pre">evaluation_steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.evaluation_steps" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.seed" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.optim">
-<span class="sig-name descname"><span class="pre">optim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#banhxeo.train.config.OptimizerConfig" title="banhxeo.train.config.OptimizerConfig"><span class="pre">OptimizerConfig</span></a></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.optim" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#banhxeo.train.config.LossConfig" title="banhxeo.train.config.LossConfig"><span class="pre">LossConfig</span></a></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.loss" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.check_grad_acc_steps">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_grad_acc_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/banhxeo/train/config.html#TrainerConfig.check_grad_acc_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.check_grad_acc_steps" title="Link to this definition"></a></dt>
-<dd><p>Validates gradient_accumulation_steps.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.train.config.TrainerConfig.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#banhxeo.train.config.TrainerConfig.model_config" title="Link to this definition"></a></dt>
-<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-train-config-module">
+<h1>banhxeo.train.config module<a class="headerlink" href="#banhxeo-train-config-module" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.train.callbacks.html" class="btn btn-neutral float-left" title="banhxeo.train.callbacks module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.train.trainer.html" class="btn btn-neutral float-right" title="banhxeo.train.trainer module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

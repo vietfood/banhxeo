@@ -14,13 +14,11 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.model.config module" href="banhxeo.model.config.html" />
-    <link rel="prev" title="banhxeo.model.old.n_gram module" href="banhxeo.model.old.n_gram.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,22 +45,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API References</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">banhxeo</a></li>
 </ul>
 
         </div>
@@ -79,9 +63,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.model.html">banhxeo.model package</a></li>
       <li class="breadcrumb-item active">banhxeo.model.base module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.model.base.rst.txt" rel="nofollow"> View page source</a>
@@ -92,115 +73,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.model.base">
-<span id="banhxeo-model-base-module"></span><h1>banhxeo.model.base module<a class="headerlink" href="#module-banhxeo.model.base" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.model.base.BaseLanguageModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.base.</span></span><span class="sig-name descname"><span class="pre">BaseLanguageModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig" title="banhxeo.model.config.ModelConfig"><span class="pre">ModelConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/base.html#BaseLanguageModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.base.BaseLanguageModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract base class for all language models in the Banhxeo library.</p>
-<p>This class defines a common interface for language models, including
-configuration management, saving/loading, and basic summary functionalities.
-It is intended to be subclassed by specific model types (e.g., N-gram,
-neural models).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig" title="banhxeo.model.config.ModelConfig"><em>ModelConfig</em></a>) – The configuration object for the model.</p></li>
-<li><p><strong>vocab</strong> (<a class="reference internal" href="banhxeo.core.html#banhxeo.core.Vocabulary" title="banhxeo.core.Vocabulary"><em>Vocabulary</em></a>) – The vocabulary associated with the model.</p></li>
-<li><p><strong>_is_trained_or_fitted</strong> (<em>bool</em>) – A flag indicating whether the model
-has been trained (for neural models) or fitted (for statistical models).</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.base.BaseLanguageModel.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig" title="banhxeo.model.config.ModelConfig"><span class="pre">ModelConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/base.html#BaseLanguageModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.base.BaseLanguageModel.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the BaseLanguageModel.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model_config</strong> – The configuration object for the model.
-It should be an instance of <cite>ModelConfig</cite> or its subclass.</p></li>
-<li><p><strong>vocab</strong> – The <cite>Vocabulary</cite> instance to be used by the model.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.base.BaseLanguageModel.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="banhxeo.model.config.html#banhxeo.model.config.ModelConfig" title="banhxeo.model.config.ModelConfig"><span class="pre">ModelConfig</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/model/base.html#BaseLanguageModel.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.base.BaseLanguageModel.get_config" title="Link to this definition"></a></dt>
-<dd><p>Returns the configuration object of the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The <cite>ModelConfig</cite> (or subclass) instance associated with this model.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.base.BaseLanguageModel.summary">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/base.html#BaseLanguageModel.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.base.BaseLanguageModel.summary" title="Link to this definition"></a></dt>
-<dd><p>Prints a human-readable summary of the model.</p>
-<p>This typically includes the model class name, its configuration,
-and its training/fitted status. Subclasses (like <cite>NeuralLanguageModel</cite>)
-may override this to provide more detailed summaries (e.g., layer structure).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.base.BaseLanguageModel.save_model">
-<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/base.html#BaseLanguageModel.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.base.BaseLanguageModel.save_model" title="Link to this definition"></a></dt>
-<dd><p>Saves the model’s state and configuration.</p>
-<p>The specific format and content depend on the model type. For neural
-models, this typically involves saving weights and architecture config.
-For statistical models, it might involve saving learned parameters or data structures.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>save_path</strong> – The file path or directory path where the model should be saved.
-Conventionally, for neural models, this might be a directory. For
-simpler models, it could be a single file.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>NotImplementedError</strong> – If the subclass does not implement this method.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.base.BaseLanguageModel.load_model">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">load_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/base.html#BaseLanguageModel.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.base.BaseLanguageModel.load_model" title="Link to this definition"></a></dt>
-<dd><p>Loads a model from a saved state.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cls</strong> – The class itself.</p></li>
-<li><p><strong>load_path</strong> – The file path or directory path from which to load the model.</p></li>
-<li><p><strong>vocab</strong> (<em>#</em>) – Optionally, a Vocabulary instance if not saved with the model.</p></li>
-<li><p><strong>**kwargs</strong> – Additional arguments that might be needed for loading,
-such as a Vocabulary instance if not bundled.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the language model class.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the subclass does not implement this method.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-model-base-module">
+<h1>banhxeo.model.base module<a class="headerlink" href="#banhxeo-model-base-module" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.model.old.n_gram.html" class="btn btn-neutral float-left" title="banhxeo.model.old.n_gram module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.model.config.html" class="btn btn-neutral float-right" title="banhxeo.model.config module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

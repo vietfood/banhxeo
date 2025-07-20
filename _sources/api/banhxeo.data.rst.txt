@@ -21,6 +21,4 @@ Submodules
    :maxdepth: 4
 
    banhxeo.data.base
-   banhxeo.data.config
-   banhxeo.data.torch
-   banhxeo.data.transforms
+   banhxeo.data.loader

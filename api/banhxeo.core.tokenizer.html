@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>banhxeo.core.tokenizer module &mdash; banhxeo  documentation</title>
+  <title>banhxeo.core.tokenizer package &mdash; banhxeo  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -14,12 +14,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.core.vocabulary module" href="banhxeo.core.vocabulary.html" />
+    <link rel="next" title="banhxeo.core.tokenizer.bpe module" href="banhxeo.core.tokenizer.bpe.html" />
     <link rel="prev" title="banhxeo.core package" href="banhxeo.core.html" /> 
 </head>
 
@@ -50,12 +50,9 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -82,7 +79,7 @@
           <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
           <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
           <li class="breadcrumb-item"><a href="banhxeo.core.html">banhxeo.core package</a></li>
-      <li class="breadcrumb-item active">banhxeo.core.tokenizer module</li>
+      <li class="breadcrumb-item active">banhxeo.core.tokenizer package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.core.tokenizer.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,244 +89,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.core.tokenizer">
-<span id="banhxeo-core-tokenizer-module"></span><h1>banhxeo.core.tokenizer module<a class="headerlink" href="#module-banhxeo.core.tokenizer" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.TokenizerConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.</span></span><span class="sig-name descname"><span class="pre">TokenizerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'do_not_pad'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'max_length'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#TokenizerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.TokenizerConfig" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Configuration for tokenizers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>add_special_tokens</strong> (<em>bool</em>) – Whether to add special tokens like BOS/EOS.</p></li>
-<li><p><strong>max_length</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Maximum sequence length. If specified, truncation or padding
-might be applied.</p></li>
-<li><p><strong>truncation</strong> (<em>bool</em>) – Whether to truncate sequences longer than <cite>max_length</cite>.</p></li>
-<li><p><strong>padding</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>Literal</em><em>[</em><em>'do_not_pad'</em><em>, </em><em>'max_length'</em><em>]</em><em>]</em>) – Strategy for padding. Can be:
-- False or “do_not_pad”: No padding.
-- True or “max_length”: Pad to <cite>max_length</cite>.</p></li>
+  <section id="banhxeo-core-tokenizer-package">
+<h1>banhxeo.core.tokenizer package<a class="headerlink" href="#banhxeo-core-tokenizer-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.bpe.html">banhxeo.core.tokenizer.bpe module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.model.html">banhxeo.core.tokenizer.model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.normalizer.html">banhxeo.core.tokenizer.normalizer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html">banhxeo.core.tokenizer.post_processor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html">banhxeo.core.tokenizer.pre_tokenizer module</a></li>
 </ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.TokenizerConfig.add_special_tokens">
-<span class="sig-name descname"><span class="pre">add_special_tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#banhxeo.core.tokenizer.TokenizerConfig.add_special_tokens" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.TokenizerConfig.max_length">
-<span class="sig-name descname"><span class="pre">max_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#banhxeo.core.tokenizer.TokenizerConfig.max_length" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.TokenizerConfig.truncation">
-<span class="sig-name descname"><span class="pre">truncation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#banhxeo.core.tokenizer.TokenizerConfig.truncation" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.TokenizerConfig.padding">
-<span class="sig-name descname"><span class="pre">padding</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'do_not_pad'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'max_length'</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#banhxeo.core.tokenizer.TokenizerConfig.padding" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.TokenizerConfig.check_padding">
-<span class="sig-name descname"><span class="pre">check_padding</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#TokenizerConfig.check_padding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.TokenizerConfig.check_padding" title="Link to this definition"></a></dt>
-<dd><p>Validates padding configuration against max_length.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.TokenizerConfig.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#banhxeo.core.tokenizer.TokenizerConfig.model_config" title="Link to this definition"></a></dt>
-<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.</span></span><span class="sig-name descname"><span class="pre">Tokenizer</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract Base Class for all tokenizers.</p>
-<p>Defines the core interface for tokenization, encoding, and managing
-tokenizer-specific data like pre-trained models or vocabularies.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.tokenize">
-<span class="sig-name descname"><span class="pre">tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.tokenize" title="Link to this definition"></a></dt>
-<dd><p>Tokenizes a single string into a list of tokens.</p>
-<p>This method should be implemented by all concrete tokenizer subclasses.
-The base implementation provides a simple regex-based tokenizer as a fallback.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – The input string to tokenize.</p></li>
-<li><p><strong>**kwargs</strong> – Subclass-specific tokenization arguments.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of string tokens.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.encode">
-<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.html#banhxeo.core.Vocabulary" title="banhxeo.core.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.TokenizerConfig" title="banhxeo.core.tokenizer.TokenizerConfig"><span class="pre">TokenizerConfig</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.encode" title="Link to this definition"></a></dt>
-<dd><p>Converts a text string into a dictionary of encoded features.</p>
-<p>This base implementation handles tokenization, addition of special tokens,
-truncation, and padding based on the provided configuration.
-Subclasses can override this for more specialized encoding logic.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – The input string to encode.</p></li>
-<li><p><strong>vocab</strong> – The vocabulary instance for mapping tokens to IDs.</p></li>
-<li><p><strong>config</strong> – TokenizerConfig object specifying encoding parameters.</p></li>
-<li><p><strong>**kwargs</strong> – Additional arguments, potentially passed to the <cite>tokenize</cite> method.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>“input_ids”: List of token IDs.</p></li>
-<li><p>”attention_mask”: List of 0s and 1s indicating padding.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary containing</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If padding is ‘max_length’ but <cite>config.max_length</cite> is not set.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.batch_encode">
-<span class="sig-name descname"><span class="pre">batch_encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.html#banhxeo.core.Vocabulary" title="banhxeo.core.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.TokenizerConfig" title="banhxeo.core.tokenizer.TokenizerConfig"><span class="pre">TokenizerConfig</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.batch_encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.batch_encode" title="Link to this definition"></a></dt>
-<dd><p>Encodes a batch of text strings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>texts</strong> – A list of strings to encode.</p></li>
-<li><p><strong>vocab</strong> – The vocabulary instance.</p></li>
-<li><p><strong>config</strong> – TokenizerConfig object.</p></li>
-<li><p><strong>**kwargs</strong> – Additional arguments for the <cite>encode</cite> method.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of dictionaries, where each dictionary is the output of <cite>encode</cite>
-for the corresponding text.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.train_from_iterator">
-<span class="sig-name descname"><span class="pre">train_from_iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['&lt;pad&gt;',</span> <span class="pre">'&lt;unk&gt;',</span> <span class="pre">'&lt;bos&gt;',</span> <span class="pre">'&lt;eos&gt;']</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.train_from_iterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.train_from_iterator" title="Link to this definition"></a></dt>
-<dd><p>Trains the tokenizer from an iterator of texts.</p>
-<p>This is primarily for tokenizers that learn a vocabulary or merges,
-such as BPE or WordPiece. Simpler tokenizers might implement this
-as a no-operation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>iterator</strong> – An iterable yielding text strings.</p></li>
-<li><p><strong>vocab_size</strong> – The desired vocabulary size.</p></li>
-<li><p><strong>min_frequency</strong> – The minimum frequency for a token to be included.</p></li>
-<li><p><strong>special_tokens</strong> – A list of special tokens to include.</p></li>
-<li><p><strong>**kwargs</strong> – Tokenizer-specific training arguments.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>NotImplementedError</strong> – If the tokenizer does not support training.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.save_pretrained">
-<span class="sig-name descname"><span class="pre">save_pretrained</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.save_pretrained"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.save_pretrained" title="Link to this definition"></a></dt>
-<dd><p>Saves the tokenizer’s state to a directory.</p>
-<p>This should save any learned vocabulary, merges, or configuration
-necessary to reload the tokenizer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>save_directory</strong> – Path to the directory where the tokenizer will be saved.</p></li>
-<li><p><strong>**kwargs</strong> – Additional saving arguments.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>NotImplementedError</strong> – If saving is not implemented.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.from_pretrained">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pretrained</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">load_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.core.tokenizer.Tokenizer" title="banhxeo.core.tokenizer.Tokenizer"><span class="pre">Tokenizer</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.from_pretrained"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.from_pretrained" title="Link to this definition"></a></dt>
-<dd><p>Loads a tokenizer from a previously saved directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>load_directory</strong> – Path to the directory from which to load.</p></li>
-<li><p><strong>**kwargs</strong> – Additional loading arguments.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the tokenizer.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>NotImplementedError</strong> – If loading is not implemented.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.NLTKTokenizer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.</span></span><span class="sig-name descname"><span class="pre">NLTKTokenizer</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#NLTKTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.NLTKTokenizer" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.Tokenizer" title="banhxeo.core.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a></p>
-<p>A tokenizer that uses NLTK’s TreebankWordTokenizer.</p>
-<p>Falls back to a regex-based tokenizer if NLTK is not installed.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.NLTKTokenizer.tokenize">
-<span class="sig-name descname"><span class="pre">tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#NLTKTokenizer.tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.NLTKTokenizer.tokenize" title="Link to this definition"></a></dt>
-<dd><p>Tokenizes text using NLTK’s TreebankWordTokenizer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – The input string.</p></li>
-<li><p><strong>**kwargs</strong> – Ignored (NLTK tokenizer doesn’t take extra args here).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of tokens.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.NLTKTokenizer.detokenize">
-<span class="sig-name descname"><span class="pre">detokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#NLTKTokenizer.detokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.NLTKTokenizer.detokenize" title="Link to this definition"></a></dt>
-<dd><p>Detokenizes a list of tokens using NLTK’s TreebankWordDetokenizer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tokens</strong> – A list of string tokens.</p></li>
-<li><p><strong>**kwargs</strong> – Ignored.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The detokenized string.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+</div>
+</section>
 </section>
 
 
@@ -337,7 +110,7 @@ necessary to reload the tokenizer.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="banhxeo.core.html" class="btn btn-neutral float-left" title="banhxeo.core package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.core.vocabulary.html" class="btn btn-neutral float-right" title="banhxeo.core.vocabulary module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="banhxeo.core.tokenizer.bpe.html" class="btn btn-neutral float-right" title="banhxeo.core.tokenizer.bpe module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

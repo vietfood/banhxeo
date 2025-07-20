@@ -14,13 +14,11 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.train.callbacks module" href="banhxeo.train.callbacks.html" />
-    <link rel="prev" title="banhxeo.model.neural module" href="banhxeo.model.neural.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,22 +45,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API References</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">banhxeo.train package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">banhxeo</a></li>
 </ul>
 
         </div>
@@ -79,8 +63,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
       <li class="breadcrumb-item active">banhxeo.train package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.train.rst.txt" rel="nofollow"> View page source</a>
@@ -91,109 +73,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.train">
-<span id="banhxeo-train-package"></span><h1>banhxeo.train package<a class="headerlink" href="#module-banhxeo.train" title="Link to this heading"></a></h1>
+  <section id="banhxeo-train-package">
+<h1>banhxeo.train package<a class="headerlink" href="#banhxeo-train-package" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.train.callbacks.html">banhxeo.train.callbacks module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback"><code class="docutils literal notranslate"><span class="pre">TrainerCallback</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.name"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.get_output"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.get_output()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_init_end"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_init_end()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_train_begin"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_train_begin()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_train_end"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_train_end()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_epoch_begin"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_epoch_begin()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_epoch_end()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_step_begin"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_step_begin()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_step_end"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_step_end()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_evaluate"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_evaluate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback.on_save"><code class="docutils literal notranslate"><span class="pre">TrainerCallback.on_save()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.ProgressCallback"><code class="docutils literal notranslate"><span class="pre">ProgressCallback</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.ProgressCallback.name"><code class="docutils literal notranslate"><span class="pre">ProgressCallback.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.ProgressCallback.__init__"><code class="docutils literal notranslate"><span class="pre">ProgressCallback.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.ProgressCallback.on_train_begin"><code class="docutils literal notranslate"><span class="pre">ProgressCallback.on_train_begin()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.ProgressCallback.on_epoch_begin"><code class="docutils literal notranslate"><span class="pre">ProgressCallback.on_epoch_begin()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.ProgressCallback.on_train_end"><code class="docutils literal notranslate"><span class="pre">ProgressCallback.on_train_end()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.ProgressCallback.on_step_end"><code class="docutils literal notranslate"><span class="pre">ProgressCallback.on_step_end()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.AccuracyCallback"><code class="docutils literal notranslate"><span class="pre">AccuracyCallback</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.AccuracyCallback.name"><code class="docutils literal notranslate"><span class="pre">AccuracyCallback.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.AccuracyCallback.__init__"><code class="docutils literal notranslate"><span class="pre">AccuracyCallback.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.AccuracyCallback.on_step_end"><code class="docutils literal notranslate"><span class="pre">AccuracyCallback.on_step_end()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.AccuracyCallback.on_evaluate"><code class="docutils literal notranslate"><span class="pre">AccuracyCallback.on_evaluate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.AccuracyCallback.get_output"><code class="docutils literal notranslate"><span class="pre">AccuracyCallback.get_output()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.CheckpointCallback"><code class="docutils literal notranslate"><span class="pre">CheckpointCallback</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.CheckpointCallback.name"><code class="docutils literal notranslate"><span class="pre">CheckpointCallback.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.CheckpointCallback.__init__"><code class="docutils literal notranslate"><span class="pre">CheckpointCallback.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.CheckpointCallback.on_step_end"><code class="docutils literal notranslate"><span class="pre">CheckpointCallback.on_step_end()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.CheckpointCallback.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">CheckpointCallback.on_epoch_end()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.train.config.html">banhxeo.train.config module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.LossConfig"><code class="docutils literal notranslate"><span class="pre">LossConfig</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.LossConfig.name"><code class="docutils literal notranslate"><span class="pre">LossConfig.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.LossConfig.kwargs"><code class="docutils literal notranslate"><span class="pre">LossConfig.kwargs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.LossConfig.get_loss_function"><code class="docutils literal notranslate"><span class="pre">LossConfig.get_loss_function()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.LossConfig.model_config"><code class="docutils literal notranslate"><span class="pre">LossConfig.model_config</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.name"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.scheduler_name"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.scheduler_name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.optimizer_kwargs"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.optimizer_kwargs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.lr_scheduler_kwargs"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.lr_scheduler_kwargs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.Config"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.Config</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.Config.arbitrary_types_allowed"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.Config.arbitrary_types_allowed</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.get_optimizer"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.get_optimizer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.get_scheduler"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.get_scheduler()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.OptimizerConfig.model_config"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.model_config</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig"><code class="docutils literal notranslate"><span class="pre">TrainerConfig</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.output_dir"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.output_dir</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.num_train_epochs"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.num_train_epochs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.per_device_train_batch_size"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.per_device_train_batch_size</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.per_device_eval_batch_size"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.per_device_eval_batch_size</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.gradient_accumulation_steps"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.gradient_accumulation_steps</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.training_shuffle"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.training_shuffle</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.logging_steps"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.logging_steps</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.save_steps"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.save_steps</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.save_total_limit"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.save_total_limit</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.evaluate_during_training"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.evaluate_during_training</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.evaluation_steps"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.evaluation_steps</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.seed"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.seed</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.optim"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.optim</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.loss"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.loss</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.check_grad_acc_steps"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.check_grad_acc_steps()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig.model_config"><code class="docutils literal notranslate"><span class="pre">TrainerConfig.model_config</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.train.trainer.html">banhxeo.train.trainer module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.__init__"><code class="docutils literal notranslate"><span class="pre">Trainer.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.get_callbacks_output"><code class="docutils literal notranslate"><span class="pre">Trainer.get_callbacks_output()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.get_train_dataloader"><code class="docutils literal notranslate"><span class="pre">Trainer.get_train_dataloader()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.get_eval_dataloader"><code class="docutils literal notranslate"><span class="pre">Trainer.get_eval_dataloader()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.train"><code class="docutils literal notranslate"><span class="pre">Trainer.train()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.evaluate"><code class="docutils literal notranslate"><span class="pre">Trainer.evaluate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.train.trainer.html#banhxeo.train.trainer.Trainer.save_model"><code class="docutils literal notranslate"><span class="pre">Trainer.save_model()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.train.callbacks.html">banhxeo.train.callbacks module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.train.config.html">banhxeo.train.config module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.train.trainer.html">banhxeo.train.trainer module</a></li>
 </ul>
 </div>
 </section>
@@ -202,10 +90,7 @@
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.model.neural.html" class="btn btn-neutral float-left" title="banhxeo.model.neural module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.train.callbacks.html" class="btn btn-neutral float-right" title="banhxeo.train.callbacks module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

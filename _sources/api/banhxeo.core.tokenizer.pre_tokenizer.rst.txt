@@ -1,0 +1,7 @@
+banhxeo.core.tokenizer.pre\_tokenizer module
+============================================
+
+.. automodule:: banhxeo.core.tokenizer.pre_tokenizer
+   :members:
+   :undoc-members:
+   :show-inheritance:

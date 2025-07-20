@@ -14,13 +14,11 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.model.classic.rnn module" href="banhxeo.model.classic.rnn.html" />
-    <link rel="prev" title="banhxeo.model.classic.lstm module" href="banhxeo.model.classic.lstm.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,22 +45,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API References</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">banhxeo</a></li>
 </ul>
 
         </div>
@@ -79,10 +63,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.model.html">banhxeo.model package</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.model.classic.html">banhxeo.model.classic package</a></li>
       <li class="breadcrumb-item active">banhxeo.model.classic.mlp module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.model.classic.mlp.rst.txt" rel="nofollow"> View page source</a>
@@ -93,193 +73,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.model.classic.mlp">
-<span id="banhxeo-model-classic-mlp-module"></span><h1>banhxeo.model.classic.mlp module<a class="headerlink" href="#module-banhxeo.model.classic.mlp" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.classic.mlp.</span></span><span class="sig-name descname"><span class="pre">MLPConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab_size:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_sizes:</span> <span class="pre">~typing.List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_fn:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregate_strategy:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'average'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLPConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralModelConfig" title="banhxeo.model.neural.NeuralModelConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeuralModelConfig</span></code></a></p>
-<p>Configuration for the Multi-Layer Perceptron (MLP) model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>output_size</strong> (<em>int</em>) – The number of output units (e.g., number of classes for
-classification).</p></li>
-<li><p><strong>hidden_sizes</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – A list of integers, where each integer is the number of
-units in a hidden layer. E.g., <cite>[256, 128]</cite> for two hidden layers.</p></li>
-<li><p><strong>activation_fn</strong> (<em>str</em>) – The activation function to use in hidden layers.
-Supported: “relu”, “tanh”, “gelu”, “sigmoid”. Defaults to “relu”.</p></li>
-<li><p><strong>dropout_rate</strong> (<em>float</em>) – Dropout rate to apply after activation in hidden layers.
-Must be between 0.0 and 1.0. Defaults to 0.0.</p></li>
-<li><p><strong>aggregate_strategy</strong> (<em>str</em>) – Strategy to aggregate token embeddings from a sequence
-into a single vector before passing to the MLP. Supported:
-“average”, “max”, “sum”. “concat_window” is planned.
-Defaults to “average”.</p></li>
-<li><p><strong>window_size</strong> (<em>int</em><em> | </em><em>None</em>) – Required if <cite>aggregate_strategy</cite> is “concat_window”.
-Specifies the window size for concatenating embeddings.</p></li>
-<li><p><strong>embedding_dim</strong> (<em>from NeuralModelConfig</em>) – Dimension of the input embeddings.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.output_size">
-<span class="sig-name descname"><span class="pre">output_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.output_size" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.hidden_sizes">
-<span class="sig-name descname"><span class="pre">hidden_sizes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.hidden_sizes" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.activation_fn">
-<span class="sig-name descname"><span class="pre">activation_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.activation_fn" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.dropout_rate">
-<span class="sig-name descname"><span class="pre">dropout_rate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.dropout_rate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.aggregate_strategy">
-<span class="sig-name descname"><span class="pre">aggregate_strategy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.aggregate_strategy" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.window_size">
-<span class="sig-name descname"><span class="pre">window_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.window_size" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.check_valid">
-<span class="sig-name descname"><span class="pre">check_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLPConfig.check_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.check_valid" title="Link to this definition"></a></dt>
-<dd><p>Validates the MLP configuration.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLPConfig.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#banhxeo.model.classic.mlp.MLPConfig.model_config" title="Link to this definition"></a></dt>
-<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.model.classic.mlp.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[256]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.classic.mlp.MLP" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeuralLanguageModel</span></code></a></p>
-<p>Multi-Layer Perceptron model for sequence classification or regression.</p>
-<p>This model takes token embeddings, aggregates them into a single vector
-using a specified strategy (e.g., averaging), and then passes this
-vector through one or more fully connected layers to produce an output.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLP.ConfigClass">
-<span class="sig-name descname"><span class="pre">ConfigClass</span></span><a class="headerlink" href="#banhxeo.model.classic.mlp.MLP.ConfigClass" title="Link to this definition"></a></dt>
-<dd><p>alias of <a class="reference internal" href="#banhxeo.model.classic.mlp.MLPConfig" title="banhxeo.model.classic.mlp.MLPConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">MLPConfig</span></code></a></p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLP.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[256]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.classic.mlp.MLP.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the MLP model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>vocab</strong> – The vocabulary instance.</p></li>
-<li><p><strong>output_size</strong> – The dimensionality of the output layer.</p></li>
-<li><p><strong>embedding_dim</strong> – The dimensionality of the input token embeddings.
-Defaults to 128.</p></li>
-<li><p><strong>hidden_sizes</strong> – A list of hidden layer sizes. Defaults to <cite>[256]</cite>.</p></li>
-<li><p><strong>**kwargs</strong> – Additional arguments for <cite>MLPConfig</cite>, such as
-<cite>activation_fn</cite>, <cite>dropout_rate</cite>, <cite>aggregate_strategy</cite>.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLP.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integer</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'batch</span> <span class="pre">seq'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.classic.mlp.MLP.forward" title="Link to this definition"></a></dt>
-<dd><p>Performs the forward pass of the MLP.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_ids</strong> – Tensor of token IDs with shape <cite>(batch_size, seq_len)</cite>.</p></li>
-<li><p><strong>attention_mask</strong> – Optional tensor indicating valid tokens (1) and padding (0)
-with shape <cite>(batch_size, seq_len)</cite>. If None and <cite>padding_idx</cite>
-is set for embeddings, a warning is issued and all tokens are
-assumed valid.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments (ignored by this base forward pass).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>“logits”: Output logits from the MLP, shape <cite>(batch_size, output_size)</cite>.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary containing</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>NotImplementedError</strong> – If an unsupported <cite>aggregate_strategy</cite> is configured
-    (though <cite>check_valid</cite> should catch this).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.model.classic.mlp.MLP.generate_sequence">
-<span class="sig-name descname"><span class="pre">generate_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/model/classic/mlp.html#MLP.generate_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.model.classic.mlp.MLP.generate_sequence" title="Link to this definition"></a></dt>
-<dd><p>Generates a sequence of text starting from a given prompt.</p>
-<p>This method is typically applicable to autoregressive models (e.g., GPT-like LMs,
-sequence-to-sequence models in generation mode). Non-autoregressive models
-(like MLP classifiers or Word2Vec) should raise <cite>NotImplementedError</cite>.</p>
-<p>The implementation should handle:
-1. Tokenizing the input <cite>prompt</cite> using <cite>self.vocab.tokenizer</cite>.
-2. Iteratively predicting the next token.
-3. Applying sampling strategies specified in <cite>generate_config</cite> (e.g., greedy, top-k).
-4. Stopping generation based on <cite>max_length</cite> or an end-of-sequence token.
-5. Detokenizing the generated token IDs back into a string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prompt</strong> – The initial text string to start generation from.</p></li>
-<li><p><strong>generate_config</strong> – A <cite>GenerateConfig</cite> object specifying generation
-parameters like <cite>max_length</cite>, <cite>sampling</cite> strategy, <cite>top_k</cite>, etc.
-If None, default generation parameters should be used.</p></li>
-<li><p><strong>tokenizer_config</strong> – An optional <cite>TokenizerConfig</cite> for encoding the prompt.
-If None, a default sensible configuration should be used (e.g.,
-no padding, no truncation initially unless prompt is too long for model).</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments that might be passed to the
-tokenizer’s <cite>encode</cite> method when processing the prompt.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The generated text string (excluding the initial prompt, or including it,
-based on implementation choice).</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>NotImplementedError</strong> – If the model does not support sequence generation.</p></li>
-<li><p><strong>ValueError</strong> – If prerequisites for generation (like a tokenizer in vocab) are missing.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-model-classic-mlp-module">
+<h1>banhxeo.model.classic.mlp module<a class="headerlink" href="#banhxeo-model-classic-mlp-module" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.model.classic.lstm.html" class="btn btn-neutral float-left" title="banhxeo.model.classic.lstm module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.model.classic.rnn.html" class="btn btn-neutral float-right" title="banhxeo.model.classic.rnn module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

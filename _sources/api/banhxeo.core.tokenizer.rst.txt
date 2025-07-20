@@ -1,7 +1,19 @@
-banhxeo.core.tokenizer module
-=============================
+banhxeo.core.tokenizer package
+==============================
 
 .. automodule:: banhxeo.core.tokenizer
    :members:
    :undoc-members:
    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   banhxeo.core.tokenizer.bpe
+   banhxeo.core.tokenizer.model
+   banhxeo.core.tokenizer.normalizer
+   banhxeo.core.tokenizer.post_processor
+   banhxeo.core.tokenizer.pre_tokenizer

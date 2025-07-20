@@ -14,12 +14,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.data.config module" href="banhxeo.data.config.html" />
+    <link rel="next" title="banhxeo.data.loader module" href="banhxeo.data.loader.html" />
     <link rel="prev" title="banhxeo.data.dataset.imdb module" href="banhxeo.data.dataset.imdb.html" /> 
 </head>
 
@@ -50,12 +50,9 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -92,181 +89,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.data.base">
-<span id="banhxeo-data-base-module"></span><h1>banhxeo.data.base module<a class="headerlink" href="#module-banhxeo.data.base" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.data.base.BaseTextDataset">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.data.base.</span></span><span class="sig-name descname"><span class="pre">BaseTextDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig" title="banhxeo.data.config.DatasetConfig"><span class="pre">DatasetConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.base.BaseTextDataset" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract base class for raw text datasets.</p>
-<p>This class handles common dataset operations like downloading, extracting,
-and providing an interface to access raw text samples. It’s designed
-to be subclassed for specific datasets. Raw datasets return text strings,
-which can then be converted to PyTorch Datasets using <cite>to_torch_dataset</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>root_path</strong> (<em>Path</em>) – The root directory for storing datasets.</p></li>
-<li><p><strong>dataset_base_path</strong> (<em>Path</em>) – The specific directory for this dataset
-(e.g., <cite>root_path/datasets/MyDatasetName</cite>).</p></li>
-<li><p><strong>config</strong> (<a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig" title="banhxeo.data.config.DatasetConfig"><em>DatasetConfig</em></a>) – Configuration for the dataset, including name,
-URL, file info, etc.</p></li>
-<li><p><strong>split_name</strong> (<em>str</em>) – The name of the dataset split (e.g., “train”, “test”).</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – Random seed, primarily for reproducibility if subsampling
-or shuffling is involved at this stage.</p></li>
-<li><p><strong>max_workers</strong> (<em>int</em>) – Maximum number of workers for parallel processing tasks
-(e.g., file reading in subclasses).</p></li>
-<li><p><strong>_data</strong> (<em>Any</em>) – Internal storage for the loaded dataset samples. Subclasses
-are responsible for populating this.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.data.base.BaseTextDataset.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.config.html#banhxeo.data.config.DatasetConfig" title="banhxeo.data.config.DatasetConfig"><span class="pre">DatasetConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.base.BaseTextDataset.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the BaseTextDataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>root_dir</strong> – The root directory where datasets are stored. If None,
-defaults to the current working directory.</p></li>
-<li><p><strong>split_name</strong> – The name of the dataset split (e.g., “train”, “test”).</p></li>
-<li><p><strong>config</strong> – A <cite>DatasetConfig</cite> object containing metadata for the dataset.</p></li>
-<li><p><strong>seed</strong> – A random seed for reproducibility.</p></li>
-<li><p><strong>download</strong> – If True, attempts to download and extract the dataset
-if it’s not already present and <cite>config.url</cite> is provided.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.data.base.BaseTextDataset.get_all_texts">
-<span class="sig-name descname"><span class="pre">get_all_texts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.get_all_texts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.base.BaseTextDataset.get_all_texts" title="Link to this definition"></a></dt>
-<dd><p>Extracts all text content from the dataset.</p>
-<p>Iterates through the dataset using <cite>__getitem__</cite> and extracts the text
-portion from each sample. Assumes samples are either strings,
-tuples where the first element is text, or dictionaries with a
-<cite>self.config.text_column</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of all text strings in the dataset.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.data.base.BaseTextDataset.get_data">
-<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.base.BaseTextDataset.get_data" title="Link to this definition"></a></dt>
-<dd><p>Returns the internal data structure holding all samples.</p>
-<p>The type of this structure (<cite>self._data</cite>) depends on the subclass
-(e.g., list, Polars DataFrame, Hugging Face Dataset).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The raw, loaded dataset.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.data.base.BaseTextDataset.to_torch_dataset">
-<span class="sig-name descname"><span class="pre">to_torch_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer" title="banhxeo.core.tokenizer.Tokenizer"><span class="pre">Tokenizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.vocabulary.html#banhxeo.core.vocabulary.Vocabulary" title="banhxeo.core.vocabulary.Vocabulary"><span class="pre">Vocabulary</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.to_torch_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.base.BaseTextDataset.to_torch_dataset" title="Link to this definition"></a></dt>
-<dd><p>Converts this raw text dataset into a <cite>TorchTextDataset</cite>.</p>
-<p>This method sets up the necessary configurations for tokenization,
-numericalization, and transformations to prepare the data for
-PyTorch models.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tokenizer</strong> – The <cite>Tokenizer</cite> instance to use.</p></li>
-<li><p><strong>vocab</strong> – The <cite>Vocabulary</cite> instance for ID mapping.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Additional configuration options:
-add_special_tokens (bool): Passed to <cite>TokenizerConfig</cite>. Defaults to False.
-max_length (Optional[int]): Passed to <cite>TokenizerConfig</cite>. Defaults to None.
-truncation (bool): Passed to <cite>TokenizerConfig</cite>. Defaults to False.
-padding (Union[bool, str]): Passed to <cite>TokenizerConfig</cite>. Defaults to False.
-is_classification (bool): Whether this is for a classification task.</p>
-<blockquote>
-<div><p>Defaults to False.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>transforms (Union[List[“Transforms”], “ComposeTransforms”]): Preprocessing</dt><dd><p>transforms to apply to text before tokenization. Defaults to [].</p>
-</dd>
-<dt>label_map (Optional[Dict[str, int]]): Mapping for labels if</dt><dd><p><cite>is_classification</cite> is True. Defaults to <cite>self.config.label_map</cite>.</p>
-</dd>
-<dt>text_column_name (str): Name of the text column. Defaults to</dt><dd><p><cite>self.config.text_column</cite>.</p>
-</dd>
-<dt>label_column_name (Optional[str]): Name of the label column.</dt><dd><p>Defaults to <cite>self.config.label_column</cite>.</p>
-</dd>
-</dl>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A <cite>TorchTextDataset</cite> instance ready for use with PyTorch DataLoaders.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.data.base.BaseTextDataset.load_from_huggingface">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_from_huggingface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hf_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hf_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'label'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">hf_load_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.load_from_huggingface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.base.BaseTextDataset.load_from_huggingface" title="Link to this definition"></a></dt>
-<dd><p>Loads a dataset from Hugging Face Datasets Hub.</p>
-<p>This classmethod creates an instance of the calling <cite>BaseTextDataset</cite>
-subclass (or <cite>BaseTextDataset</cite> itself if called directly, though subclasses
-are typical) and populates its <cite>_data</cite> attribute with the loaded
-Hugging Face dataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>hf_path</strong> – The path or name of the dataset on Hugging Face Hub (e.g., “imdb”, “glue”).</p></li>
-<li><p><strong>hf_name</strong> – The specific configuration or subset of the dataset (e.g., “cola” for “glue”).</p></li>
-<li><p><strong>root_dir</strong> – Root directory for dataset caching (can be managed by HF Datasets).
-If provided, used to construct a unique <cite>DatasetConfig.name</cite>.</p></li>
-<li><p><strong>split_name</strong> – The dataset split to load (e.g., “train”, “test”, “validation”, “train[:10%]”).</p></li>
-<li><p><strong>text_column</strong> – The name of the column containing text data in the HF dataset.</p></li>
-<li><p><strong>label_column</strong> – The name of the column containing label data. Can be None.</p></li>
-<li><p><strong>seed</strong> – Random seed, primarily for dataset config naming consistency.</p></li>
-<li><p><strong>**hf_load_kwargs</strong> – Additional keyword arguments to pass to
-<cite>datasets.load_dataset()</cite> (e.g., <cite>cache_dir</cite>, <cite>num_proc</cite>).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the class this method is called on, with <cite>_data</cite>
-populated by the Hugging Face dataset.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ImportError</strong> – If <cite>datasets</cite> library is not installed.</p></li>
-<li><p><strong>ValueError</strong> – If specified <cite>text_column</cite> or <cite>label_column</cite> are not
-    found in the loaded dataset.</p></li>
-<li><p><strong>Exception</strong> – Propagates exceptions from <cite>datasets.load_dataset()</cite>.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.data.base.BaseTextDataset.inspect_huggingface_dataset">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inspect_huggingface_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hf_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hf_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#BaseTextDataset.inspect_huggingface_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.base.BaseTextDataset.inspect_huggingface_dataset" title="Link to this definition"></a></dt>
-<dd><p>Prints information about a Hugging Face dataset.</p>
-<p>Displays the dataset description, features, and available splits.
-Useful for exploring a dataset before loading it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>hf_path</strong> – The path or name of the dataset on Hugging Face Hub.</p></li>
-<li><p><strong>hf_name</strong> – The specific configuration or subset of the dataset.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ImportError</strong> – If <cite>datasets</cite> library is not installed.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-data-base-module">
+<h1>banhxeo.data.base module<a class="headerlink" href="#banhxeo-data-base-module" title="Link to this heading"></a></h1>
 </section>
 
 
@@ -274,7 +98,7 @@ Useful for exploring a dataset before loading it.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="banhxeo.data.dataset.imdb.html" class="btn btn-neutral float-left" title="banhxeo.data.dataset.imdb module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.data.config.html" class="btn btn-neutral float-right" title="banhxeo.data.config module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="banhxeo.data.loader.html" class="btn btn-neutral float-right" title="banhxeo.data.loader module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

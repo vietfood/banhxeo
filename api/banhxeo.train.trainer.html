@@ -14,13 +14,11 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.utils package" href="banhxeo.utils.html" />
-    <link rel="prev" title="banhxeo.train.config module" href="banhxeo.train.config.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,22 +45,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API References</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">banhxeo</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="banhxeo.html">banhxeo package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.html#banhxeo.set_default_gpu"><code class="docutils literal notranslate"><span class="pre">set_default_gpu()</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="banhxeo.train.html">banhxeo.train package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">banhxeo</a></li>
 </ul>
 
         </div>
@@ -79,9 +63,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">banhxeo</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
-          <li class="breadcrumb-item"><a href="banhxeo.train.html">banhxeo.train package</a></li>
       <li class="breadcrumb-item active">banhxeo.train.trainer module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.train.trainer.rst.txt" rel="nofollow"> View page source</a>
@@ -92,145 +73,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.train.trainer">
-<span id="banhxeo-train-trainer-module"></span><h1>banhxeo.train.trainer module<a class="headerlink" href="#module-banhxeo.train.trainer" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.train.trainer.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><span class="pre">NeuralLanguageModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig" title="banhxeo.train.config.TrainerConfig"><span class="pre">TrainerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset" title="banhxeo.data.torch.TorchTextDataset"><span class="pre">TorchTextDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset" title="banhxeo.data.torch.TorchTextDataset"><span class="pre">TorchTextDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_step_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.train.trainer.Trainer" title="banhxeo.train.trainer.Trainer"><span class="pre">Trainer</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><span class="pre">NeuralLanguageModel</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_step_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.train.trainer.Trainer" title="banhxeo.train.trainer.Trainer"><span class="pre">Trainer</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><span class="pre">NeuralLanguageModel</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback" title="banhxeo.train.callbacks.TrainerCallback"><span class="pre">TrainerCallback</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collate_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Handles the training and evaluation loop for neural language models.</p>
-<p>The <cite>Trainer</cite> orchestrates the training process, including data loading,
-model optimization, logging, checkpointing, and evaluation, according
-to a provided <cite>TrainerConfig</cite>. It supports custom training and evaluation
-logic via <cite>train_step_fn</cite> and <cite>eval_step_fn</cite> callables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><em>NeuralLanguageModel</em></a>) – The model to be trained.</p></li>
-<li><p><strong>config</strong> (<a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig" title="banhxeo.train.config.TrainerConfig"><em>TrainerConfig</em></a>) – Configuration for the training process.</p></li>
-<li><p><strong>train_dataset</strong> (<a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset" title="banhxeo.data.torch.TorchTextDataset"><em>TorchTextDataset</em></a>) – The dataset for training.</p></li>
-<li><p><strong>eval_dataset</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset" title="banhxeo.data.torch.TorchTextDataset"><em>TorchTextDataset</em></a><em>]</em>) – The dataset for evaluation.</p></li>
-<li><p><strong>optimizer</strong> (<em>Optional</em><em>[</em><em>torch.optim.Optimizer</em><em>]</em>) – The optimizer instance.</p></li>
-<li><p><strong>loss_fn</strong> (<em>Optional</em><em>[</em><em>torch.nn.modules.loss._Loss</em><em>]</em>) – The loss function instance.
-Renamed from <cite>loss</cite> to avoid conflict with loss values.</p></li>
-<li><p><strong>scheduler</strong> (<em>Optional</em><em>[</em><em>torch.optim.lr_scheduler._LRScheduler</em><em>]</em>) – The LR scheduler.</p></li>
-<li><p><strong>train_step_fn</strong> (<em>TrainStepCallable</em>) – User-defined function for a single training step.</p></li>
-<li><p><strong>eval_step_fn</strong> (<em>Optional</em><em>[</em><em>EvalStepCallable</em><em>]</em>) – User-defined function for a single eval step.</p></li>
-<li><p><strong>callbacks</strong> (<em>List</em><em>[</em><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback" title="banhxeo.train.callbacks.TrainerCallback"><em>TrainerCallback</em></a><em>]</em>) – List of callbacks to customize training.</p></li>
-<li><p><strong>collate_fn</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – Custom collate function for DataLoaders.</p></li>
-<li><p><strong>device</strong> (<em>torch.device</em>) – The device (CPU or GPU) where training will occur.</p></li>
-<li><p><strong>global_step</strong> (<em>int</em>) – Total number of training steps (optimizer updates or micro-batches) performed.</p></li>
-<li><p><strong>current_epoch</strong> (<em>int</em>) – The current training epoch (1-indexed).</p></li>
-<li><p><strong>total_train_steps</strong> (<em>int</em>) – The total number of training steps planned across all epochs.</p></li>
-<li><p><strong>best_metric</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Stores the best evaluation metric value achieved,
-used for saving the best model (if logic is implemented in a callback).</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><span class="pre">NeuralLanguageModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.train.config.html#banhxeo.train.config.TrainerConfig" title="banhxeo.train.config.TrainerConfig"><span class="pre">TrainerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset" title="banhxeo.data.torch.TorchTextDataset"><span class="pre">TorchTextDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.torch.html#banhxeo.data.torch.TorchTextDataset" title="banhxeo.data.torch.TorchTextDataset"><span class="pre">TorchTextDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_step_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.train.trainer.Trainer" title="banhxeo.train.trainer.Trainer"><span class="pre">Trainer</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><span class="pre">NeuralLanguageModel</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_step_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.train.trainer.Trainer" title="banhxeo.train.trainer.Trainer"><span class="pre">Trainer</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="banhxeo.model.neural.html#banhxeo.model.neural.NeuralLanguageModel" title="banhxeo.model.neural.NeuralLanguageModel"><span class="pre">NeuralLanguageModel</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="banhxeo.train.callbacks.html#banhxeo.train.callbacks.TrainerCallback" title="banhxeo.train.callbacks.TrainerCallback"><span class="pre">TrainerCallback</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collate_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the Trainer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> – The <cite>NeuralLanguageModel</cite> to train.</p></li>
-<li><p><strong>config</strong> – The <cite>TrainerConfig</cite> specifying training parameters.</p></li>
-<li><p><strong>train_dataset</strong> – The training <cite>TorchTextDataset</cite>.</p></li>
-<li><p><strong>eval_dataset</strong> – Optional evaluation <cite>TorchTextDataset</cite>.</p></li>
-<li><p><strong>train_step_fn</strong> – A callable that executes a single training step.
-It’s responsible for the forward pass, loss calculation, backward pass,
-and optimizer step (including gradient accumulation if desired).
-See <cite>TrainStepCallable</cite> for signature.</p></li>
-<li><p><strong>eval_step_fn</strong> – An optional callable that executes a single evaluation step.
-See <cite>EvalStepCallable</cite> for signature.</p></li>
-<li><p><strong>device</strong> – The device to train on (‘cuda’, ‘mps’, ‘cpu’, or torch.device object).
-If None, attempts to use GPU, otherwise CPU.</p></li>
-<li><p><strong>callbacks</strong> – An optional list of <cite>TrainerCallback</cite> instances.
-<cite>ProgressCallback</cite> is added by default.</p></li>
-<li><p><strong>collate_fn</strong> – An optional custom collate function for the DataLoaders.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer.get_callbacks_output">
-<span class="sig-name descname"><span class="pre">get_callbacks_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer.get_callbacks_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer.get_callbacks_output" title="Link to this definition"></a></dt>
-<dd><p>Collects and returns outputs from all callbacks that provide them.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary where keys are callback names and values are their outputs
-(obtained via <cite>callback.get_output()</cite>).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer.get_train_dataloader">
-<span class="sig-name descname"><span class="pre">get_train_dataloader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataLoader</span></span></span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer.get_train_dataloader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer.get_train_dataloader" title="Link to this definition"></a></dt>
-<dd><p>Creates and returns the DataLoader for the training set.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer.get_eval_dataloader">
-<span class="sig-name descname"><span class="pre">get_eval_dataloader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataLoader</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer.get_eval_dataloader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer.get_eval_dataloader" title="Link to this definition"></a></dt>
-<dd><p>Creates and returns the DataLoader for the evaluation set, if available.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer.train" title="Link to this definition"></a></dt>
-<dd><p>Runs the main training loop.</p>
-<p>The loop iterates over epochs and batches, calling <cite>train_step_fn</cite> for
-each batch. It handles optimizer creation, logging, callbacks, and
-optional evaluation during training.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary containing training results, potentially including
-outputs from callbacks.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer.evaluate" title="Link to this definition"></a></dt>
-<dd><p>Runs the evaluation loop on the <cite>eval_dataset</cite>.</p>
-<p>If <cite>eval_dataset</cite> or <cite>eval_step_fn</cite> is not provided, evaluation is skipped.
-Sets the model to evaluation mode (<cite>model.eval()</cite>) and disables gradient calculations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary containing evaluation metrics, or None if evaluation
-is skipped. Keys typically include “avg_eval_loss” and other
-metrics returned by <cite>eval_step_fn</cite>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.train.trainer.Trainer.save_model">
-<span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/banhxeo/train/trainer.html#Trainer.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.train.trainer.Trainer.save_model" title="Link to this definition"></a></dt>
-<dd><p>Saves the model, optimizer, scheduler, and trainer configuration.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>output_dir</strong> – The directory where components will be saved.
-It will be created if it doesn’t exist.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-train-trainer-module">
+<h1>banhxeo.train.trainer module<a class="headerlink" href="#banhxeo-train-trainer-module" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.train.config.html" class="btn btn-neutral float-left" title="banhxeo.train.config module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.utils.html" class="btn btn-neutral float-right" title="banhxeo.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

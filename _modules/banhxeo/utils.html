@@ -13,7 +13,7 @@
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -63,7 +63,6 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../banhxeo.html">banhxeo</a></li>
       <li class="breadcrumb-item active">banhxeo.utils</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -76,8 +75,9 @@
   <h1>Source code for banhxeo.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">__main__</span>
 
@@ -114,20 +114,25 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_progress_bar</span><span class="p">():</span>
-    <span class="k">if</span> <span class="n">get_runtime</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">RuntimeEnv</span><span class="o">.</span><span class="n">COLAB</span><span class="p">,</span> <span class="n">RuntimeEnv</span><span class="o">.</span><span class="n">JUPYTER</span><span class="p">]:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<div class="viewcode-block" id="validate_config">
+<a class="viewcode-back" href="../../api/banhxeo.utils.html#banhxeo.utils.validate_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_config</span><span class="p">(</span><span class="n">config_cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_logger</span>
 
-        <span class="k">return</span> <span class="n">tqdm</span>
-    <span class="k">elif</span> <span class="n">get_runtime</span><span class="p">()</span> <span class="o">==</span> <span class="n">RuntimeEnv</span><span class="o">.</span><span class="n">SHELL</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+    <span class="n">current_config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">config_cls</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
+            <span class="n">current_config</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">default_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Ignoring unknown kwarg &#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39; during </span><span class="si">{</span><span class="n">config_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> creation&quot;</span>
+            <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">tqdm</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config_cls</span><span class="p">(</span><span class="o">**</span><span class="n">current_config</span><span class="p">)</span></div>
 
 
-<span class="n">progress_bar</span> <span class="o">=</span> <span class="n">_progress_bar</span><span class="p">()</span>
+
+<span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span>
 </pre></div>
 
            </div>
