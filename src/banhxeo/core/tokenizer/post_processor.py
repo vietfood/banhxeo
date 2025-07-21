@@ -37,9 +37,10 @@ class GeneralPostProcessor(PostProcessor):
         return {key: value[0] for key, value in batch_result.items()}
 
     @abstractmethod
-    def add_tokens(self, token_ids) -> List[int]:
+    def process_tokens(self, token_ids, config) -> List[int]:
         """
         How PostProcessor should implement add specials tokens
+
         Example:
         - For BERT-style, we add "SEP" and "CLS".
         - For GPT-style, we add "BOS" and "EOS".
@@ -54,17 +55,7 @@ class GeneralPostProcessor(PostProcessor):
             token_ids = [
                 token.id for split in tokenized_str.splits for token in split.tokens  # type: ignore
             ]
-
-            if (
-                config.truncation
-                and config.max_length is not None
-                and len(token_ids) > config.max_length - 2
-            ):
-                token_ids = token_ids[: config.max_length - 2]
-
-            if config.add_special_tokens:
-                token_ids = self.add_tokens(token_ids)
-
+            token_ids = self.process_tokens(token_ids, config)
             batch_ids.append(token_ids)
 
         batch_longest = max([len(ids) for ids in batch_ids]) if batch_ids else 0
@@ -107,18 +98,58 @@ class GeneralPostProcessor(PostProcessor):
 
 
 class GPTPostProcessor(GeneralPostProcessor):
-    def _add_tokens(self, token_ids) -> List[int]:
-        return (
-            [self.special_tokens.special_token_idx(self.special_tokens.bos_tok)]
-            + token_ids
-            + [self.special_tokens.special_token_idx(self.special_tokens.eos_tok)]
+    def process_tokens(self, token_ids, config) -> List[int]:
+        truncation_length = (
+            config.max_length - 2 if config.add_special_tokens else config.max_length
         )
+
+        if (
+            config.truncation
+            and config.max_length is not None
+            and len(token_ids) > truncation_length
+        ):
+            if config.truncation_side == "right":
+                token_ids = token_ids[:truncation_length]
+            else:
+                token_ids = token_ids[-(truncation_length):]
+
+        if config.add_special_tokens:
+            token_ids = (
+                [self.special_tokens.special_token_idx(self.special_tokens.bos_tok)]
+                + token_ids
+                + [self.special_tokens.special_token_idx(self.special_tokens.eos_tok)]
+            )
+
+        return token_ids
 
 
 class BertPostProcessor(GeneralPostProcessor):
-    def _add_tokens(self, token_ids) -> List[int]:
-        return (
-            [self.special_tokens.special_token_idx(self.special_tokens.cls_tok)]
-            + token_ids
-            + [self.special_tokens.special_token_idx(self.special_tokens.sep_tok)]
+    def process_tokens(self, token_ids, config) -> List[int]:
+        truncation_length = (
+            config.max_length - 2 if config.add_special_tokens else config.max_length
         )
+
+        if (
+            config.truncation
+            and config.max_length is not None
+            and len(token_ids) > truncation_length
+        ):
+            if config.truncation_side == "right":
+                token_ids = token_ids[:truncation_length]
+            else:
+                token_ids = token_ids[-(truncation_length):]
+
+        if config.add_special_tokens:
+            token_ids = (
+                [self.special_tokens.special_token_idx(self.special_tokens.cls_tok)]
+                + token_ids
+                + [self.special_tokens.special_token_idx(self.special_tokens.sep_tok)]
+            )
+
+        return token_ids
+
+
+POST_PROCESSOR_FACTORY = {
+    "bert": BertPostProcessor,
+    "gpt": GPTPostProcessor,
+}
