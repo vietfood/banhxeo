@@ -1,13 +1,9 @@
 import os
 
-import jax
 import tensorflow as tf
-from jax import extend as jextend
 
 # Set up seed
 DEFAULT_SEED = 1234
-
-BACKEND = jextend.backend.get_backend()
 
 USE_TORCH = True
 
@@ -17,7 +13,11 @@ tf.random.set_seed(DEFAULT_SEED)
 
 # https://docs.jax.dev/en/latest/gpu_performance_tips.html
 os.environ["XLA_FLAGS"] = (
-    "--xla_gpu_triton_gemm_any=True " "--xla_gpu_enable_latency_hiding_scheduler=true "
+    "--xla_gpu_enable_triton_softmax_fusion=true "
+    "--xla_gpu_triton_gemm_any=false "
+    "--xla_gpu_enable_async_collectives=true "
+    "--xla_gpu_enable_latency_hiding_scheduler=true "
+    "--xla_gpu_enable_highest_priority_async_stream=true "
 )
 
 # Copy from: https://github.com/unslothai/unsloth/blob/main/unsloth/__init__.py
