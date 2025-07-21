@@ -1,4 +1,5 @@
 import hashlib
+import json
 import shutil
 import tarfile
 import urllib.request
@@ -137,3 +138,8 @@ def extract_archive(
             filename=archive_file_path,
             extract_dir=dataset_base_path,
         )
+
+
+def load_json(path: Path) -> dict:
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
