@@ -106,6 +106,30 @@ class NormalizedString:
             original_shift=self.original_shift,
         )
 
+    def prepend(self, s: str) -> NormalizedString:
+        start_offset = self.alignments[0][0] if len(self) > 0 else 0
+
+        new_alignments = [(start_offset, start_offset)] * len(s)
+
+        return NormalizedString(
+            original=self.original,
+            normalized=s + self.normalized,
+            alignments=new_alignments + self.alignments,
+            original_shift=self.original_shift,
+        )
+
+    def append(self, s: str) -> NormalizedString:
+        end_offset = self.alignments[-1][1] if len(self) > 0 else 0
+
+        new_alignments = [(end_offset, end_offset)] * len(s)
+
+        return NormalizedString(
+            original=self.original,
+            normalized=self.normalized + s,
+            alignments=self.alignments + new_alignments,
+            original_shift=self.original_shift,
+        )
+
 
 class Normalizer(ABC):
     @abstractmethod
@@ -196,11 +220,21 @@ class NFCNormalizer(Normalizer):
 
 
 class SequenceNormalizer(Normalizer):
-    def __init__(self, sequences: List[Normalizer] | Normalizer):
+    def __init__(self, sequences: List[Normalizer] | Normalizer = []):
         self.sequences = sequences if isinstance(sequences, list) else [sequences]
+
+    def add(self, normalizer: Normalizer):
+        self.sequences.append(normalizer)
 
     def normalize(self, normalized: NormalizedString) -> NormalizedString:
         result = normalized
         for normalizer in self.sequences:
             result = normalizer.normalize(result)
         return result
+
+
+NORMALIZER_FACTORY = {
+    "nfc": NFCNormalizer,
+    "strip": StripNormalizer,
+    "lowercase": LowercaseNormalizer,
+}
