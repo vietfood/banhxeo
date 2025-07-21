@@ -1,15 +1,21 @@
 from __future__ import annotations
 
 import functools
+import heapq
 import itertools
 from collections import Counter, defaultdict
-from typing import Dict, Iterable, List, Tuple, TypeAlias
+from typing import Dict, Iterable, List, Optional, Tuple, TypeAlias
 
-from banhxeo.core.tokenizer import SpecialTokens, Token, default_special_tokens
+import jax
+
+from banhxeo import DEFAULT_SEED
+from banhxeo.core.tokenizer import SpecialTokens, Token
 from banhxeo.core.tokenizer.model import TokenizerModel
 from banhxeo.core.tokenizer.pre_tokenizer import PreTokenizedString
 from banhxeo.utils import progress_bar
+from banhxeo.utils.logging import default_logger
 
+# {"hugs": (15, ["h", "u", "g", "s"])} with 15 is frequency
 BPEWord: TypeAlias = Dict[str, Tuple[int, List[str]]]
 
 
@@ -18,7 +24,7 @@ def get_pair_stats(word_freqs: BPEWord):
 
     for _, (frequency, split) in word_freqs.items():
         # add each pair to pair stats
-        for pair in itertools.pairwise(split):
+        for pair in set(itertools.pairwise(split)):
             pair_stats[pair] += frequency
 
     return pair_stats
@@ -44,55 +50,95 @@ def merge_pair(pair_to_merge: Tuple[str, str], word_freqs: BPEWord):
 
 
 class BPEModel(TokenizerModel):
-    def __init__(self, special_tokens: SpecialTokens):
+    def __init__(
+        self, special_tokens: SpecialTokens, dropout: Optional[float] = None, **kwargs
+    ):
+        self.dropout = dropout
+        if self.dropout:
+            # add random key from jax
+            self.rng = kwargs.get("rng", jax.random.key(DEFAULT_SEED))
+
         self.special_tokens = special_tokens
         self.vocab = defaultdict(int)  # token to id
-        self.merges = []
+        self.inverse_vocab = []  # id to token
+
+        self.merges: Dict[Tuple[str, str], int] = dict()  # merge rules rank
+
+        self.trained = False
 
     @functools.lru_cache(maxsize=None)
-    def _tokenize_word(self, word: str) -> List[str]:
+    def _tokenize_word(self, word: str, is_training: bool = False) -> List[str]:
+        def create_pairs(subwords):
+            return set(itertools.pairwise(subwords))
+
         if not self.merges:
             raise ValueError(
-                "You haven't build Tokenizer. Please use `BPETokenizer.train(...)`"
+                "You haven't build Tokenizer. Please use `BPEModel.train(...)`"
             )
 
-        subwords = list(word) + ["</w>"]
+        # create subwords (by characters)
+        subwords = list(word)
+        if not subwords:
+            return []
+        subwords[-1] = subwords[-1] + "</w>"
 
-        for pair in self.merges:
-            while True:
-                has_merged = False
-                next_subwords = []
-                idx = 0
+        subwords_pairs = create_pairs(subwords)
 
-                # Scan through the current subwords list
-                while idx < len(subwords):
-                    if (
-                        idx < len(subwords) - 1
-                        and (subwords[idx], subwords[idx + 1]) == pair
-                    ):
-                        next_subwords.append("".join(pair))
-                        idx += 2
-                        has_merged = True
-                    else:
-                        next_subwords.append(subwords[idx])
-                        idx += 1
+        if not subwords_pairs:
+            return subwords  # don't merge
 
-                subwords = next_subwords
+        # create heap based on pairs with priority is rank in self.merges
+        heap = []
+        for i, pair in enumerate(itertools.pairwise(subwords)):
+            rank = self.merges.get(pair)
+            if rank is not None:
+                # Store rank, position, and the pair itself.
+                heapq.heappush(heap, (rank, i, pair))
 
-                if not has_merged:
-                    break
+        while heap:
+            rank, pos, pair = heapq.heappop(heap)
+
+            if pos >= len(subwords) - 1 or (subwords[pos], subwords[pos + 1]) != pair:
+                continue
+
+            # perform dropout
+            if self.dropout and is_training:
+                if jax.random.uniform(self.rng) < self.dropout:
+                    continue  # skip this merge
+
+            # perform merge
+            merged_token = "".join(pair)
+            subwords[pos : pos + 2] = [merged_token]
+
+            if pos > 0:
+                rank = self.merges.get(
+                    (previous_merge := (subwords[pos - 1], subwords[pos]))
+                )
+                if rank is not None:
+                    heapq.heappush(heap, (rank, pos - 1, previous_merge))
+
+            if pos < len(subwords) - 1:
+                rank = self.merges.get(
+                    (after_merge := (subwords[pos], subwords[pos + 1]))
+                )
+                if rank is not None:
+                    heapq.heappush(heap, (rank, pos, after_merge))
 
         return subwords
 
-    @classmethod
     def train(
-        cls,
+        self,
         corpus: Iterable[PreTokenizedString],  # already in unique word
-        vocab_size: int,
-        special_tokens: SpecialTokens = default_special_tokens,
         progress: bool = True,
+        **kwargs,
     ):
-        bpe = cls(special_tokens)
+        if self.trained:
+            default_logger.warning("This Tokenized has been trained before. Return")
+            return
+
+        vocab_size = kwargs.get("vocab_size")
+        if vocab_size is None:
+            raise ValueError("Cannot have empty vocab size")
 
         # 1. Preparation
         all_words = [
@@ -107,14 +153,17 @@ class BPEModel(TokenizerModel):
             initial_vocab_chars.update(list(word))
         initial_vocab_chars.add("</w>")
 
-        bpe.vocab = {
-            token: idx for idx, token in enumerate(bpe.special_tokens.special_tokens())
+        self.vocab = {
+            token: idx for idx, token in enumerate(self.special_tokens.special_tokens())
         }
 
-        current_id = len(bpe.vocab)
+        self.inverse_vocab = [token for token in self.special_tokens.special_tokens()]
+
+        current_id = len(self.vocab)
         for char in sorted(list(initial_vocab_chars)):
-            if char not in bpe.vocab:
-                bpe.vocab[char] = current_id
+            if char not in self.vocab:
+                self.vocab[char] = current_id
+                self.inverse_vocab.append(char)
                 current_id += 1
 
         # 2. Main Loop
@@ -124,29 +173,43 @@ class BPEModel(TokenizerModel):
             for word, count in word_counts.items()
         }
 
-        for _ in progress_bar(
-            range(0, (vocab_size - initial_vocab_size)), disable=not progress
-        ):
-            pair_stats = get_pair_stats(word_freqs)
+        rank = 0
+        pair_stats = get_pair_stats(word_freqs)
 
-            if not pair_stats:
+        for _ in progress_bar(
+            range(0, (vocab_size - initial_vocab_size)),
+            desc="Training BPE",
+            disable=not progress,
+        ):
+            if len(pair_stats) == 0:
                 break  # already merge
 
             most_freq_pair = max(pair_stats, key=pair_stats.get)  # type: ignore
-            bpe.merges.append(most_freq_pair)
+            self.merges[most_freq_pair] = rank
+            rank += 1
+
+            # decrease merge pair
 
             merge_pair(most_freq_pair, word_freqs)
-            bpe.vocab["".join(most_freq_pair)] = len(bpe.vocab)
 
-        return bpe
+            merge_token = "".join(most_freq_pair)
+            self.vocab[merge_token] = len(self.vocab)
+            self.inverse_vocab.append(merge_token)
 
-    def tokenize(self, pre_tokenized_str: PreTokenizedString):
+        self.trained = True
+
+    def detokenize(self, token_ids: List[int]) -> List[str]:
+        return [self.inverse_vocab[token_id] for token_id in token_ids]
+
+    def tokenize(
+        self, pre_tokenized_str: PreTokenizedString, is_training: bool = False
+    ):
         """
         Tokenizes a PreTokenizedString in-place using the trained BPE model.
         """
         for split in pre_tokenized_str.splits:
             word = split.normalized.normalized
-            subwords = self._tokenize_word(word)
+            subwords = self._tokenize_word(word, is_training)
             tokens = []
             for subword in subwords:
                 # Assign the original
@@ -168,3 +231,6 @@ class BPEModel(TokenizerModel):
                     )
                 )
             split.tokens = tokens
+
+    @classmethod
+    def from_config(cls, config): ...
