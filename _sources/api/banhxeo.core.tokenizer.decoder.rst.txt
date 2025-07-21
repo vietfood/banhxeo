@@ -1,0 +1,7 @@
+banhxeo.core.tokenizer.decoder module
+=====================================
+
+.. automodule:: banhxeo.core.tokenizer.decoder
+   :members:
+   :undoc-members:
+   :show-inheritance:

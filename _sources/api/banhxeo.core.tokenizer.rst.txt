@@ -13,7 +13,9 @@ Submodules
    :maxdepth: 4
 
    banhxeo.core.tokenizer.bpe
+   banhxeo.core.tokenizer.decoder
    banhxeo.core.tokenizer.model
    banhxeo.core.tokenizer.normalizer
    banhxeo.core.tokenizer.post_processor
    banhxeo.core.tokenizer.pre_tokenizer
+   banhxeo.core.tokenizer.presets
