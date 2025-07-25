@@ -3,18 +3,13 @@ import shutil
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
-import jax
 import polars as pl
 from datasets import Dataset
-from jax import numpy as jnp
-from pydantic import BaseModel, field_validator
 
 from banhxeo import DEFAULT_SEED
 from banhxeo.core.tokenizer import ProcessConfig, Tokenizer
-from banhxeo.data.loader import DataLoader
-from banhxeo.data.transforms import ComposeTransforms, Transforms
 from banhxeo.utils.file import check_md5, download_archive, extract_archive
 from banhxeo.utils.logging import default_logger
 
@@ -33,7 +28,8 @@ class DownloadDatasetFile:
     source: Optional[str] = None
 
 
-class DatasetConfig(BaseModel):
+@dataclass
+class DatasetConfig:
     name: str
 
     # For file-based datasets:
@@ -49,28 +45,6 @@ class DatasetConfig(BaseModel):
 
     # Common
     split: Optional[DatasetSplit] = None  # Keep DatasetSplit if used
-
-
-class TextDatasetConfig(BaseModel):
-    transforms: Union[List[Transforms], ComposeTransforms] = []
-
-    # For classification
-    is_classification: bool = False
-    label_map: Dict[str, int] = {"pos": 1, "neg": 0}
-
-    # For tokenizer
-    tokenizer: Tokenizer
-    encode_config: ProcessConfig
-
-    @field_validator("transforms")
-    @classmethod
-    def ensure_compose_transforms(cls, v):
-        if isinstance(v, list):
-            return ComposeTransforms(v)
-        return v
-
-    class Config:
-        arbitrary_types_allowed = True
 
 
 class BaseTextDataset(metaclass=ABCMeta):
@@ -234,6 +208,39 @@ class BaseTextDataset(metaclass=ABCMeta):
         """Loads dataset-specific data into `self._data`"""
         raise NotImplementedError("Subclasses must implement _build_data()")
 
+    def to_array(
+        self,
+        tokenizer: Tokenizer,
+        return_tensors: Optional[Literal["jax", "np"]] = "jax",
+        max_length: Optional[int] = None,
+        truncation: bool = False,
+        padding: Union[bool, Literal["do_not_pad", "max_length", "longest"]] = False,
+        padding_side: Literal["left", "right"] = "left",
+        truncation_side: Literal["left", "right"] = "right",
+        add_special_tokens: bool = True,
+        is_classification: bool = False,
+        label_map: Dict[str, int] = {"pos": 1, "neg": 0},
+    ):
+        from banhxeo.data.array import ArrayDatasetConfig, ArrayTextDataset
+
+        return ArrayTextDataset(
+            self,
+            config=ArrayDatasetConfig(
+                tokenizer,
+                encode_config=ProcessConfig(
+                    max_length=max_length,
+                    truncation=truncation,
+                    padding=padding,
+                    padding_side=padding_side,
+                    truncation_side=truncation_side,
+                    add_special_tokens=add_special_tokens,
+                ),
+                return_tensors=return_tensors,
+                is_classification=is_classification,
+                label_map=label_map,
+            ),
+        )
+
 
 class HFDataset(BaseTextDataset):
     @classmethod
@@ -304,93 +311,3 @@ class HFDataset(BaseTextDataset):
 
     def __getitem__(self, index):
         return self.get_data()[index]
-
-
-class TextDataset:
-    def __init__(
-        self,
-        base_dataset: BaseTextDataset,
-        config: TextDatasetConfig,
-    ):
-        self.base_dataset = base_dataset
-        self.config = config
-
-    def __len__(self) -> int:
-        return len(self.base_dataset)
-
-    def __getitems__(self, indices: List[int]) -> Dict[str, jax.Array]:
-        batch_texts = []
-        batch_labels = []
-
-        for idx in indices:
-            raw_sample = self.base_dataset[idx]
-            if isinstance(raw_sample, tuple):
-                raw_text, raw_label = raw_sample
-            elif isinstance(raw_sample, dict):
-                raw_text = raw_sample[self.base_dataset.config.text_column]
-                raw_label = (
-                    raw_sample.get(self.base_dataset.config.label_column)
-                    if self.base_dataset.config.label_column
-                    else None
-                )
-            else:  # Assuming raw_sample is just text
-                raw_text = raw_sample
-                raw_label = None
-
-            if not isinstance(raw_text, str):
-                raise ValueError(
-                    f"Expected raw_text to be a string, but got {type(raw_text)} for sample {idx}."
-                )
-
-            text = self.config.transforms(raw_text)  # type: ignore
-
-            batch_texts.append(text)
-            batch_labels.append(raw_label)
-
-        outputs = self.config.tokenizer(
-            batch_texts, return_array=True, **self.config.encode_config.model_dump()
-        )
-
-        if self.config.is_classification:
-            labels = jnp.full(shape=len(batch_labels), fill_value=0, dtype=jnp.int64)
-            for idx, raw_label in enumerate(batch_labels):
-                if raw_label is None:
-                    raise ValueError(
-                        f"Label is None for sample {idx}, but is_classification is True."
-                    )
-                if self.config.label_map:
-                    label_id = self.config.label_map.get(str(raw_label))
-                    if label_id is None:
-                        raise ValueError(
-                            f"Label '{raw_label}' not found in label_map: {self.config.label_map.keys()}"
-                        )
-                elif isinstance(raw_label, int):
-                    label_id = raw_label
-                else:
-                    raise ValueError(
-                        f"Label must be an int, castable to int, or label_map must be provided. Got {raw_label} ({type(raw_label)})"
-                    )
-                labels[idx] = label_id
-
-            return {**outputs, "labels": labels}  # type: ignore
-        else:
-            return outputs  # type: ignore
-
-    def to_loader(
-        self,
-        batch_size: int = 32,
-        shuffle: bool = True,
-        drop_last: bool = True,
-        seed: int = DEFAULT_SEED,
-        num_workers=8,
-        **kwargs,
-    ):
-        return DataLoader(
-            dataset=self,
-            batch_size=batch_size,
-            shuffle=shuffle,
-            drop_last=drop_last,
-            seed=seed,
-            num_workers=num_workers,
-            **kwargs,
-        )

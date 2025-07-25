@@ -23,7 +23,6 @@ IMDB_DATASET_CONFIG = DatasetConfig(
     split=DatasetSplit(train=25000, test=25000),
     text_column="content",
     label_column="label",
-    label_map={"pos": 1, "neg": 0},
 )
 
 

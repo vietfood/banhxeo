@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, Iterator, List
 
 import jax
-from jax import numpy as jnp
+import jax.numpy as jnp
 
 from banhxeo import USE_TORCH
 
