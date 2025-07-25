@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>banhxeo.core.tokenizer.model.word &mdash; banhxeo  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            banhxeo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/modules.html">banhxeo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">banhxeo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../tokenizer.html">banhxeo.core.tokenizer</a></li>
+          <li class="breadcrumb-item"><a href="../model.html">banhxeo.core.tokenizer.model</a></li>
+      <li class="breadcrumb-item active">banhxeo.core.tokenizer.model.word</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for banhxeo.core.tokenizer.model.word</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpecialTokens</span><span class="p">,</span> <span class="n">Token</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenizerModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.pre_tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">PreTokenizedString</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress_bar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils.file</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_logger</span>
+
+
+<div class="viewcode-block" id="WordLevelModel">
+<a class="viewcode-back" href="../../../../../api/banhxeo.core.tokenizer.model.word.html#banhxeo.core.tokenizer.model.word.WordLevelModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">WordLevelModel</span><span class="p">(</span><span class="n">TokenizerModel</span><span class="p">):</span>
+<div class="viewcode-block" id="WordLevelModel.__init__">
+<a class="viewcode-back" href="../../../../../api/banhxeo.core.tokenizer.model.word.html#banhxeo.core.tokenizer.model.word.WordLevelModel.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">special_tokens</span><span class="p">:</span> <span class="n">SpecialTokens</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span> <span class="o">=</span> <span class="n">special_tokens</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># token to id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inverse_vocab</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="WordLevelModel.tokenize">
+<a class="viewcode-back" href="../../../../../api/banhxeo.core.tokenizer.model.word.html#banhxeo.core.tokenizer.model.word.WordLevelModel.tokenize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_tokenized_str</span><span class="p">:</span> <span class="n">PreTokenizedString</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;You haven&#39;t build Tokenizer. Please use `WordLevelModel.train(...)`&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">split</span> <span class="ow">in</span> <span class="n">pre_tokenized_str</span><span class="o">.</span><span class="n">splits</span><span class="p">:</span>
+            <span class="n">vocab_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">split</span><span class="o">.</span><span class="n">normalized</span><span class="o">.</span><span class="n">normalized</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">vocab_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">vocab_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span><span class="o">.</span><span class="n">unk_tok</span><span class="p">]</span>
+
+            <span class="n">split</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">Token</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="n">vocab_id</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="n">split</span><span class="o">.</span><span class="n">normalized</span><span class="o">.</span><span class="n">normalized</span><span class="p">,</span>
+                    <span class="n">offsets</span><span class="o">=</span><span class="p">(</span>
+                        <span class="n">split</span><span class="o">.</span><span class="n">normalized</span><span class="o">.</span><span class="n">alignments</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">split</span><span class="o">.</span><span class="n">normalized</span><span class="o">.</span><span class="n">alignments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="WordLevelModel.detokenize">
+<a class="viewcode-back" href="../../../../../api/banhxeo.core.tokenizer.model.word.html#banhxeo.core.tokenizer.model.word.WordLevelModel.detokenize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">detokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inverse_vocab</span><span class="p">[</span><span class="n">token_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">token_id</span> <span class="ow">in</span> <span class="n">token_ids</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="WordLevelModel.train">
+<a class="viewcode-back" href="../../../../../api/banhxeo.core.tokenizer.model.word.html#banhxeo.core.tokenizer.model.word.WordLevelModel.train">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">corpus</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">PreTokenizedString</span><span class="p">],</span>  <span class="c1"># already in unique word</span>
+        <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trained</span><span class="p">:</span>
+            <span class="n">default_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;This Tokenized has been trained before. Return&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Add special tokens first</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">token</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span><span class="o">.</span><span class="n">special_tokens</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inverse_vocab</span> <span class="o">=</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span><span class="o">.</span><span class="n">special_tokens</span><span class="p">]</span>
+
+        <span class="c1"># Add rest of vocab</span>
+        <span class="n">all_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">split</span><span class="o">.</span><span class="n">normalized</span><span class="o">.</span><span class="n">normalized</span>
+                <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">corpus</span>
+                <span class="k">for</span> <span class="n">split</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">splits</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">current_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">all_words</span><span class="p">)),</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">progress</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Add word to vocabulary&quot;</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_id</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">inverse_vocab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+                <span class="n">current_id</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="WordLevelModel.from_config">
+<a class="viewcode-back" href="../../../../../api/banhxeo.core.tokenizer.model.word.html#banhxeo.core.tokenizer.model.word.WordLevelModel.from_config">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="c1"># TODO:</span>
+        <span class="o">...</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Le Nguyen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

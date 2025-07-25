@@ -88,16 +88,55 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="banhxeo-data-package">
-<h1>banhxeo.data package<a class="headerlink" href="#banhxeo-data-package" title="Link to this heading"></a></h1>
+  <section id="module-banhxeo.data">
+<span id="banhxeo-data-package"></span><h1>banhxeo.data package<a class="headerlink" href="#module-banhxeo.data" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.data.HFDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.data.</span></span><span class="sig-name descname"><span class="pre">HFDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig" title="banhxeo.data.base.DatasetConfig"><span class="pre">DatasetConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#HFDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.HFDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset" title="banhxeo.data.base.BaseTextDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseTextDataset</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.HFDataset.load">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hf_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hf_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'label'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">hf_load_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/base.html#HFDataset.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.HFDataset.load" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.data.IMDBDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.data.</span></span><span class="sig-name descname"><span class="pre">IMDBDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/imdb.html#IMDBDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.IMDBDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset" title="banhxeo.data.base.BaseTextDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseTextDataset</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.IMDBDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/imdb.html#IMDBDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.IMDBDataset.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.data.AmazonReviewFullDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.data.</span></span><span class="sig-name descname"><span class="pre">AmazonReviewFullDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/amazon_review.html#AmazonReviewFullDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.AmazonReviewFullDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset" title="banhxeo.data.base.BaseTextDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseTextDataset</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.data.AmazonReviewFullDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/data/dataset/amazon_review.html#AmazonReviewFullDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.data.AmazonReviewFullDataset.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="banhxeo.data.dataset.html">banhxeo.data.dataset package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="banhxeo.data.dataset.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.dataset.amazon_review.html">banhxeo.data.dataset.amazon_review module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.dataset.imdb.html">banhxeo.data.dataset.imdb module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.dataset.amazon_review.html">banhxeo.data.dataset.amazon_review module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.dataset.amazon_review.html#banhxeo.data.dataset.amazon_review.AmazonReviewFullDataset"><code class="docutils literal notranslate"><span class="pre">AmazonReviewFullDataset</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.dataset.imdb.html">banhxeo.data.dataset.imdb module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.data.dataset.imdb.html#banhxeo.data.dataset.imdb.IMDBDataset"><code class="docutils literal notranslate"><span class="pre">IMDBDataset</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -109,8 +148,76 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.base.html">banhxeo.data.base module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.loader.html">banhxeo.data.loader module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.array.html">banhxeo.data.array module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayDatasetConfig"><code class="docutils literal notranslate"><span class="pre">ArrayDatasetConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayDatasetConfig.tokenizer"><code class="docutils literal notranslate"><span class="pre">ArrayDatasetConfig.tokenizer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayDatasetConfig.encode_config"><code class="docutils literal notranslate"><span class="pre">ArrayDatasetConfig.encode_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayDatasetConfig.return_tensors"><code class="docutils literal notranslate"><span class="pre">ArrayDatasetConfig.return_tensors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayDatasetConfig.is_classification"><code class="docutils literal notranslate"><span class="pre">ArrayDatasetConfig.is_classification</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayDatasetConfig.label_map"><code class="docutils literal notranslate"><span class="pre">ArrayDatasetConfig.label_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayDatasetConfig.__init__"><code class="docutils literal notranslate"><span class="pre">ArrayDatasetConfig.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayTextDataset"><code class="docutils literal notranslate"><span class="pre">ArrayTextDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayTextDataset.__init__"><code class="docutils literal notranslate"><span class="pre">ArrayTextDataset.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayTextDataset.get"><code class="docutils literal notranslate"><span class="pre">ArrayTextDataset.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.array.html#banhxeo.data.array.ArrayTextDataset.to_loader"><code class="docutils literal notranslate"><span class="pre">ArrayTextDataset.to_loader()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.base.html">banhxeo.data.base module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetSplit"><code class="docutils literal notranslate"><span class="pre">DatasetSplit</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetSplit.train"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.train</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetSplit.test"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.test</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetSplit.val"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.val</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetSplit.__init__"><code class="docutils literal notranslate"><span class="pre">DatasetSplit.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DownloadDatasetFile"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DownloadDatasetFile.name"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DownloadDatasetFile.ext"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.ext</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DownloadDatasetFile.source"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.source</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DownloadDatasetFile.__init__"><code class="docutils literal notranslate"><span class="pre">DownloadDatasetFile.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig"><code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.name"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.url"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.url</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.file_info"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.file_info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.md5"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.md5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.hf_path"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.hf_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.hf_name"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.hf_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.text_column"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.text_column</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.label_column"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.label_column</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.split"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.split</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.DatasetConfig.__init__"><code class="docutils literal notranslate"><span class="pre">DatasetConfig.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.__init__"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.get_all_texts"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.get_all_texts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.get_data"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.get_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.BaseTextDataset.to_array"><code class="docutils literal notranslate"><span class="pre">BaseTextDataset.to_array()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.HFDataset"><code class="docutils literal notranslate"><span class="pre">HFDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.base.html#banhxeo.data.base.HFDataset.load"><code class="docutils literal notranslate"><span class="pre">HFDataset.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.data.loader.html">banhxeo.data.loader module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.loader.html#banhxeo.data.loader.NaiveDataLoader"><code class="docutils literal notranslate"><span class="pre">NaiveDataLoader</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.loader.html#banhxeo.data.loader.NaiveDataLoader.__init__"><code class="docutils literal notranslate"><span class="pre">NaiveDataLoader.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.data.loader.html#banhxeo.data.loader.DataLoader"><code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.data.loader.html#banhxeo.data.loader.DataLoader.__init__"><code class="docutils literal notranslate"><span class="pre">DataLoader.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

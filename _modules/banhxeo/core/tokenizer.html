@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>banhxeo.core.tokenizer &mdash; banhxeo  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            banhxeo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">banhxeo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">banhxeo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">banhxeo.core.tokenizer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for banhxeo.core.tokenizer</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.decoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">DECODER_FACTORY</span><span class="p">,</span> <span class="n">Decoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MODEL_FACTORY</span><span class="p">,</span> <span class="n">TokenizerModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.normalizers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NORMALIZER_FACTORY</span><span class="p">,</span>
+    <span class="n">NormalizedString</span><span class="p">,</span>
+    <span class="n">Normalizer</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.post_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">POST_PROCESSOR_FACTORY</span><span class="p">,</span> <span class="n">PostProcessor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.core.tokenizer.pre_tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PRE_TOKENIZER_FACTORY</span><span class="p">,</span>
+    <span class="n">PreTokenizedString</span><span class="p">,</span>
+    <span class="n">PreTokenizer</span><span class="p">,</span>
+    <span class="n">Split</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress_bar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">banhxeo.utils.file</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_json</span>
+
+
+<div class="viewcode-block" id="Tokenizer">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Tokenizer</span><span class="p">:</span>
+<div class="viewcode-block" id="Tokenizer.__init__">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">normalizer</span><span class="p">:</span> <span class="n">Normalizer</span><span class="p">,</span>
+        <span class="n">pre_tokenizer</span><span class="p">:</span> <span class="n">PreTokenizer</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">TokenizerModel</span><span class="p">,</span>
+        <span class="n">post_processor</span><span class="p">:</span> <span class="n">PostProcessor</span><span class="p">,</span>
+        <span class="n">decoder</span><span class="p">:</span> <span class="n">Decoder</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span> <span class="o">=</span> <span class="n">normalizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_tokenizer</span> <span class="o">=</span> <span class="n">pre_tokenizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">=</span> <span class="n">post_processor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">decoder</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">texts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">return_tensors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;jax&quot;</span><span class="p">,</span> <span class="s2">&quot;np&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">truncation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">padding</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;do_not_pad&quot;</span><span class="p">,</span> <span class="s2">&quot;max_length&quot;</span><span class="p">,</span> <span class="s2">&quot;longest&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">False</span>  <span class="c1"># False = &quot;do_not_pad&quot;, True = &quot;longest&quot;</span>
+        <span class="p">),</span>
+        <span class="n">padding_side</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
+        <span class="n">truncation_side</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">add_special_tokens</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">texts</span><span class="p">]</span>
+
+        <span class="n">pre_tokenized_strs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
+            <span class="c1"># Step 1: Normalized string</span>
+            <span class="n">normalized_string</span> <span class="o">=</span> <span class="n">NormalizedString</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">normalized_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">normalized_string</span><span class="p">)</span>
+
+            <span class="c1"># Step 2: Pre Tokenize normalized string</span>
+            <span class="n">pre_tokenized_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_tokenizer</span><span class="o">.</span><span class="n">pre_tokenize</span><span class="p">(</span>
+                <span class="n">PreTokenizedString</span><span class="p">(</span><span class="n">splits</span><span class="o">=</span><span class="p">[</span><span class="n">Split</span><span class="p">(</span><span class="n">normalized</span><span class="o">=</span><span class="n">normalized_string</span><span class="p">)])</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Step 3: Turn pre tokenized to ID</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">pre_tokenized_str</span><span class="p">)</span>
+
+            <span class="n">pre_tokenized_strs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pre_tokenized_str</span><span class="p">)</span>
+
+        <span class="c1"># Step 4: Post process ID tokenized string</span>
+        <span class="n">post_process_config</span> <span class="o">=</span> <span class="n">ProcessConfig</span><span class="p">(</span>
+            <span class="n">max_length</span><span class="o">=</span><span class="n">max_length</span><span class="p">,</span>
+            <span class="n">truncation</span><span class="o">=</span><span class="n">truncation</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+            <span class="n">padding_side</span><span class="o">=</span><span class="n">padding_side</span><span class="p">,</span>
+            <span class="n">truncation_side</span><span class="o">=</span><span class="n">truncation_side</span><span class="p">,</span>
+            <span class="n">add_special_tokens</span><span class="o">=</span><span class="n">add_special_tokens</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">post_process_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_processor</span><span class="o">.</span><span class="n">process_batch</span><span class="p">(</span>
+            <span class="n">pre_tokenized_strs</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">post_process_config</span>
+        <span class="p">)</span>
+
+        <span class="k">match</span> <span class="n">return_tensors</span><span class="p">:</span>
+            <span class="k">case</span> <span class="s2">&quot;jax&quot;</span><span class="p">:</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="n">key</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">post_process_result</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">}</span>
+            <span class="k">case</span> <span class="s2">&quot;np&quot;</span><span class="p">:</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">post_process_result</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">}</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">post_process_result</span>
+
+<div class="viewcode-block" id="Tokenizer.encode">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.encode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">return_tensors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;jax&quot;</span><span class="p">,</span> <span class="s2">&quot;np&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">([</span><span class="n">text</span><span class="p">],</span> <span class="n">return_tensors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Tokenizer.batch_encode">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.batch_encode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">batch_encode</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">return_tensors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;jax&quot;</span><span class="p">,</span> <span class="s2">&quot;np&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;jax&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">return_tensors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Tokenizer.decode">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.decode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">([</span><span class="n">token_ids</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Tokenizer.batch_decode">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.batch_decode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">batch_decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">batch_ids_str</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">detokenize</span><span class="p">(</span><span class="n">token_ids</span><span class="p">)</span> <span class="k">for</span> <span class="n">token_ids</span> <span class="ow">in</span> <span class="n">batch_ids</span><span class="p">]</span>
+        <span class="n">batch_str</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">ids_str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">ids_str</span> <span class="ow">in</span> <span class="n">batch_ids_str</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">batch_str</span></div>
+
+
+<div class="viewcode-block" id="Tokenizer.train">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.train">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">corpus</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">pre_tokenized_corpus</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">(</span>
+            <span class="n">corpus</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Pre-tokenizing text&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="n">progress</span>
+        <span class="p">):</span>
+            <span class="n">normalized_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">NormalizedString</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+            <span class="n">pre_tokenized_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_tokenizer</span><span class="o">.</span><span class="n">pre_tokenize</span><span class="p">(</span>
+                <span class="n">PreTokenizedString</span><span class="p">(</span><span class="n">splits</span><span class="o">=</span><span class="p">[</span><span class="n">Split</span><span class="p">(</span><span class="n">normalized</span><span class="o">=</span><span class="n">normalized_text</span><span class="p">)])</span>
+            <span class="p">)</span>
+            <span class="n">pre_tokenized_corpus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pre_tokenized_text</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">corpus</span><span class="o">=</span><span class="n">pre_tokenized_corpus</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Tokenizer.from_pretrained">
+<a class="viewcode-back" href="../../../api/banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.from_pretrained">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_pretrained</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">build_component</span><span class="p">(</span><span class="n">component_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">factory</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">component_config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">component_config</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">component_config</span>  <span class="c1"># just a regular parameter</span>
+
+            <span class="n">component_type</span> <span class="o">=</span> <span class="n">component_config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+            <span class="n">ComponentClass</span> <span class="o">=</span> <span class="n">factory</span><span class="p">[</span><span class="n">component_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+
+            <span class="n">constructor_params</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">component_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="c1"># This could be a list of sub-components, like in a Sequence.</span>
+                    <span class="n">constructor_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">build_component</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">factory</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span>
+                    <span class="p">]</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">constructor_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">build_component</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">factory</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Just a single value</span>
+                    <span class="n">constructor_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+            <span class="k">return</span> <span class="n">ComponentClass</span><span class="p">(</span><span class="o">**</span><span class="n">constructor_params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Load tokenizer config</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;tokenizer.json&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Path=</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s2"> don&#39;t have tokenizer.json&quot;</span><span class="p">)</span>
+        <span class="n">config_dict</span> <span class="o">=</span> <span class="n">load_json</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+
+        <span class="c1"># Check version</span>
+        <span class="k">assert</span> <span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span>
+
+        <span class="c1"># Load normalizer</span>
+        <span class="n">normalizer</span> <span class="o">=</span> <span class="n">build_component</span><span class="p">(</span><span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;normalizer&quot;</span><span class="p">],</span> <span class="n">NORMALIZER_FACTORY</span><span class="p">)</span>
+
+        <span class="c1"># Load pre-tokenizer</span>
+        <span class="n">pre_tokenizer</span> <span class="o">=</span> <span class="n">build_component</span><span class="p">(</span>
+            <span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;pre_tokenizer&quot;</span><span class="p">],</span> <span class="n">PRE_TOKENIZER_FACTORY</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Load model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">build_component</span><span class="p">(</span><span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">],</span> <span class="n">MODEL_FACTORY</span><span class="p">)</span>
+
+        <span class="c1"># Load post-processor</span>
+        <span class="n">post_processor</span> <span class="o">=</span> <span class="n">build_component</span><span class="p">(</span>
+            <span class="n">config_dict</span><span class="p">[</span><span class="s2">&quot;post_processor&quot;</span><span class="p">],</span> <span class="n">POST_PROCESSOR_FACTORY</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">normalizer</span><span class="o">=</span><span class="n">normalizer</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="n">pre_tokenizer</span><span class="o">=</span><span class="n">pre_tokenizer</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="n">post_processor</span><span class="o">=</span><span class="n">post_processor</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Le Nguyen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

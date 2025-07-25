@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>banhxeo.core.tokenizer.decoder module &mdash; banhxeo  documentation</title>
+  <title>banhxeo.core.tokenizer.decoder package &mdash; banhxeo  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.core.tokenizer.model module" href="banhxeo.core.tokenizer.model.html" />
-    <link rel="prev" title="banhxeo.core.tokenizer.bpe module" href="banhxeo.core.tokenizer.bpe.html" /> 
+    <link rel="next" title="banhxeo.core.tokenizer.model package" href="banhxeo.core.tokenizer.model.html" />
+    <link rel="prev" title="banhxeo.core.tokenizer package" href="banhxeo.core.tokenizer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -80,7 +80,7 @@
           <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
           <li class="breadcrumb-item"><a href="banhxeo.core.html">banhxeo.core package</a></li>
           <li class="breadcrumb-item"><a href="banhxeo.core.tokenizer.html">banhxeo.core.tokenizer package</a></li>
-      <li class="breadcrumb-item active">banhxeo.core.tokenizer.decoder module</li>
+      <li class="breadcrumb-item active">banhxeo.core.tokenizer.decoder package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.core.tokenizer.decoder.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -90,16 +90,74 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="banhxeo-core-tokenizer-decoder-module">
-<h1>banhxeo.core.tokenizer.decoder module<a class="headerlink" href="#banhxeo-core-tokenizer-decoder-module" title="Link to this heading"></a></h1>
+  <section id="module-banhxeo.core.tokenizer.decoder">
+<span id="banhxeo-core-tokenizer-decoder-package"></span><h1>banhxeo.core.tokenizer.decoder package<a class="headerlink" href="#module-banhxeo.core.tokenizer.decoder" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.Decoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.decoder.</span></span><span class="sig-name descname"><span class="pre">Decoder</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#Decoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.Decoder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.Decoder.decode">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#Decoder.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.Decoder.decode" title="Link to this definition"></a></dt>
+<dd><p>Decodes a list of token strings into a single string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.ByteLevelDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.decoder.</span></span><span class="sig-name descname"><span class="pre">ByteLevelDecoder</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#ByteLevelDecoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.ByteLevelDecoder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.decoder.Decoder" title="banhxeo.core.tokenizer.decoder.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Decoder</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.ByteLevelDecoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#ByteLevelDecoder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.ByteLevelDecoder.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.ByteLevelDecoder.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#ByteLevelDecoder.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.ByteLevelDecoder.decode" title="Link to this definition"></a></dt>
+<dd><p>Decodes a list of token strings into a single string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.WhiteSpaceDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.decoder.</span></span><span class="sig-name descname"><span class="pre">WhiteSpaceDecoder</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#WhiteSpaceDecoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.WhiteSpaceDecoder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.decoder.Decoder" title="banhxeo.core.tokenizer.decoder.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Decoder</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.WhiteSpaceDecoder.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#WhiteSpaceDecoder.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.WhiteSpaceDecoder.decode" title="Link to this definition"></a></dt>
+<dd><p>Decodes a list of token strings into a single string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.NLTKDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.decoder.</span></span><span class="sig-name descname"><span class="pre">NLTKDecoder</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#NLTKDecoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.NLTKDecoder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.decoder.Decoder" title="banhxeo.core.tokenizer.decoder.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Decoder</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.NLTKDecoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#NLTKDecoder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.NLTKDecoder.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.decoder.NLTKDecoder.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/decoder.html#NLTKDecoder.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.decoder.NLTKDecoder.decode" title="Link to this definition"></a></dt>
+<dd><p>Decodes a list of token strings into a single string.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.core.tokenizer.bpe.html" class="btn btn-neutral float-left" title="banhxeo.core.tokenizer.bpe module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.core.tokenizer.model.html" class="btn btn-neutral float-right" title="banhxeo.core.tokenizer.model module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="banhxeo.core.tokenizer.html" class="btn btn-neutral float-left" title="banhxeo.core.tokenizer package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="banhxeo.core.tokenizer.model.html" class="btn btn-neutral float-right" title="banhxeo.core.tokenizer.model package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

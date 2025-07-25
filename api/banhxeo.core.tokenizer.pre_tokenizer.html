@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>banhxeo.core.tokenizer.pre_tokenizer module &mdash; banhxeo  documentation</title>
+  <title>banhxeo.core.tokenizer.pre_tokenizer package &mdash; banhxeo  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.core.tokenizer.presets module" href="banhxeo.core.tokenizer.presets.html" />
-    <link rel="prev" title="banhxeo.core.tokenizer.post_processor module" href="banhxeo.core.tokenizer.post_processor.html" /> 
+    <link rel="next" title="banhxeo.core.tokenizer.config module" href="banhxeo.core.tokenizer.config.html" />
+    <link rel="prev" title="banhxeo.core.tokenizer.post_processor package" href="banhxeo.core.tokenizer.post_processor.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -80,7 +80,7 @@
           <li class="breadcrumb-item"><a href="banhxeo.html">banhxeo package</a></li>
           <li class="breadcrumb-item"><a href="banhxeo.core.html">banhxeo.core package</a></li>
           <li class="breadcrumb-item"><a href="banhxeo.core.tokenizer.html">banhxeo.core.tokenizer package</a></li>
-      <li class="breadcrumb-item active">banhxeo.core.tokenizer.pre_tokenizer module</li>
+      <li class="breadcrumb-item active">banhxeo.core.tokenizer.pre_tokenizer package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/banhxeo.core.tokenizer.pre_tokenizer.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -90,16 +90,167 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="banhxeo-core-tokenizer-pre-tokenizer-module">
-<h1>banhxeo.core.tokenizer.pre_tokenizer module<a class="headerlink" href="#banhxeo-core-tokenizer-pre-tokenizer-module" title="Link to this heading"></a></h1>
+  <section id="module-banhxeo.core.tokenizer.pre_tokenizer">
+<span id="banhxeo-core-tokenizer-pre-tokenizer-package"></span><h1>banhxeo.core.tokenizer.pre_tokenizer package<a class="headerlink" href="#module-banhxeo.core.tokenizer.pre_tokenizer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.Split">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">Split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'NormalizedString'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'Optional[List[Token]]'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#Split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.Split" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.Split.normalized">
+<span class="sig-name descname"><span class="pre">normalized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString" title="banhxeo.core.tokenizer.normalizers.NormalizedString"><span class="pre">NormalizedString</span></a></em><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.Split.normalized" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.Split.tokens">
+<span class="sig-name descname"><span class="pre">tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token" title="banhxeo.core.tokenizer.config.Token"><span class="pre">Token</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.Split.tokens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.Split.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString" title="banhxeo.core.tokenizer.normalizers.NormalizedString"><span class="pre">NormalizedString</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token" title="banhxeo.core.tokenizer.config.Token"><span class="pre">Token</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.Split.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">PreTokenizedString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">splits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'List[Split]'</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#PreTokenizedString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString.splits">
+<span class="sig-name descname"><span class="pre">splits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.Split" title="banhxeo.core.tokenizer.pre_tokenizer.Split"><span class="pre">Split</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString.splits" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">splits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.Split" title="banhxeo.core.tokenizer.pre_tokenizer.Split"><span class="pre">Split</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">PreTokenizer</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#PreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer.pre_tokenize">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pre_tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_tokenized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#PreTokenizer.pre_tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer.pre_tokenize" title="Link to this definition"></a></dt>
+<dd><p>Takes a PreTokenizedString and returns a new, further-split PreTokenizedString.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">RegexPreTokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#RegexPreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#RegexPreTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer.pre_tokenize">
+<span class="sig-name descname"><span class="pre">pre_tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_tokenized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#RegexPreTokenizer.pre_tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer.pre_tokenize" title="Link to this definition"></a></dt>
+<dd><p>Takes a PreTokenizedString and returns a new, further-split PreTokenizedString.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">WhiteSpacePreTokenizer</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#WhiteSpacePreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegexPreTokenizer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#WhiteSpacePreTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.PunctuationPreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">PunctuationPreTokenizer</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#PunctuationPreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.PunctuationPreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegexPreTokenizer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.PunctuationPreTokenizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#PunctuationPreTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.PunctuationPreTokenizer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Reference: <a class="reference external" href="https://stackoverflow.com/questions/367155/splitting-a-string-into-words-and-punctuation">https://stackoverflow.com/questions/367155/splitting-a-string-into-words-and-punctuation</a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">NLTKPreTokenizer</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#NLTKPreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">WhiteSpacePreTokenizer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#NLTKPreTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer.pre_tokenize">
+<span class="sig-name descname"><span class="pre">pre_tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_tokenized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#NLTKPreTokenizer.pre_tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer.pre_tokenize" title="Link to this definition"></a></dt>
+<dd><p>Takes a PreTokenizedString and returns a new, further-split PreTokenizedString.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">SequencePreTokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><span class="pre">PreTokenizer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><span class="pre">PreTokenizer</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#SequencePreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><span class="pre">PreTokenizer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><span class="pre">PreTokenizer</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#SequencePreTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><span class="pre">PreTokenizer</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#SequencePreTokenizer.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.add" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.pre_tokenize">
+<span class="sig-name descname"><span class="pre">pre_tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_tokenized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#SequencePreTokenizer.pre_tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.pre_tokenize" title="Link to this definition"></a></dt>
+<dd><p>Takes a PreTokenizedString and returns a new, further-split PreTokenizedString.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.bytes_to_unicode">
+<span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">bytes_to_unicode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#bytes_to_unicode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.bytes_to_unicode" title="Link to this definition"></a></dt>
+<dd><p>Taken from: <a class="reference external" href="https://github.com/openai/gpt-2/blob/master/src/encoder.py">https://github.com/openai/gpt-2/blob/master/src/encoder.py</a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.pre_tokenizer.</span></span><span class="sig-name descname"><span class="pre">ByteLevelPreTokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_prefix_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#ByteLevelPreTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_prefix_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#ByteLevelPreTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer.pre_tokenize">
+<span class="sig-name descname"><span class="pre">pre_tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_tokenized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/pre_tokenizer.html#ByteLevelPreTokenizer.pre_tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer.pre_tokenize" title="Link to this definition"></a></dt>
+<dd><p>Takes a PreTokenizedString and returns a new, further-split PreTokenizedString.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.core.tokenizer.post_processor.html" class="btn btn-neutral float-left" title="banhxeo.core.tokenizer.post_processor module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.core.tokenizer.presets.html" class="btn btn-neutral float-right" title="banhxeo.core.tokenizer.presets module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="banhxeo.core.tokenizer.post_processor.html" class="btn btn-neutral float-left" title="banhxeo.core.tokenizer.post_processor package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="banhxeo.core.tokenizer.config.html" class="btn btn-neutral float-right" title="banhxeo.core.tokenizer.config module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

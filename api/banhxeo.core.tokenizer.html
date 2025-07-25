@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="banhxeo.core.tokenizer.bpe module" href="banhxeo.core.tokenizer.bpe.html" />
+    <link rel="next" title="banhxeo.core.tokenizer.decoder package" href="banhxeo.core.tokenizer.decoder.html" />
     <link rel="prev" title="banhxeo.core package" href="banhxeo.core.html" /> 
 </head>
 
@@ -89,19 +89,265 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="banhxeo-core-tokenizer-package">
-<h1>banhxeo.core.tokenizer package<a class="headerlink" href="#banhxeo-core-tokenizer-package" title="Link to this heading"></a></h1>
+  <section id="module-banhxeo.core.tokenizer">
+<span id="banhxeo-core-tokenizer-package"></span><h1>banhxeo.core.tokenizer package<a class="headerlink" href="#module-banhxeo.core.tokenizer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.</span></span><span class="sig-name descname"><span class="pre">Tokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.Normalizer" title="banhxeo.core.tokenizer.normalizers.Normalizer"><span class="pre">Normalizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><span class="pre">PreTokenizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel" title="banhxeo.core.tokenizer.model.TokenizerModel"><span class="pre">TokenizerModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.PostProcessor" title="banhxeo.core.tokenizer.post_processor.PostProcessor"><span class="pre">PostProcessor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.Decoder" title="banhxeo.core.tokenizer.decoder.Decoder"><span class="pre">Decoder</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.Normalizer" title="banhxeo.core.tokenizer.normalizers.Normalizer"><span class="pre">Normalizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><span class="pre">PreTokenizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel" title="banhxeo.core.tokenizer.model.TokenizerModel"><span class="pre">TokenizerModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.PostProcessor" title="banhxeo.core.tokenizer.post_processor.PostProcessor"><span class="pre">PostProcessor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.Decoder" title="banhxeo.core.tokenizer.decoder.Decoder"><span class="pre">Decoder</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_tensors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'jax'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'np'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'jax'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.encode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.batch_encode">
+<span class="sig-name descname"><span class="pre">batch_encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_tensors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'jax'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'np'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'jax'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.batch_encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.batch_encode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.decode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.batch_decode">
+<span class="sig-name descname"><span class="pre">batch_decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.batch_decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.batch_decode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.train" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="banhxeo.core.tokenizer.Tokenizer.from_pretrained">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pretrained</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer.html#Tokenizer.from_pretrained"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.Tokenizer.from_pretrained" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html">banhxeo.core.tokenizer.decoder package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.Decoder"><code class="docutils literal notranslate"><span class="pre">Decoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.Decoder.decode"><code class="docutils literal notranslate"><span class="pre">Decoder.decode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.ByteLevelDecoder"><code class="docutils literal notranslate"><span class="pre">ByteLevelDecoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.ByteLevelDecoder.__init__"><code class="docutils literal notranslate"><span class="pre">ByteLevelDecoder.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.ByteLevelDecoder.decode"><code class="docutils literal notranslate"><span class="pre">ByteLevelDecoder.decode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.WhiteSpaceDecoder"><code class="docutils literal notranslate"><span class="pre">WhiteSpaceDecoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.WhiteSpaceDecoder.decode"><code class="docutils literal notranslate"><span class="pre">WhiteSpaceDecoder.decode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.NLTKDecoder"><code class="docutils literal notranslate"><span class="pre">NLTKDecoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.NLTKDecoder.__init__"><code class="docutils literal notranslate"><span class="pre">NLTKDecoder.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.NLTKDecoder.decode"><code class="docutils literal notranslate"><span class="pre">NLTKDecoder.decode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.model.html">banhxeo.core.tokenizer.model package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel"><code class="docutils literal notranslate"><span class="pre">TokenizerModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel.tokenize"><code class="docutils literal notranslate"><span class="pre">TokenizerModel.tokenize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel.detokenize"><code class="docutils literal notranslate"><span class="pre">TokenizerModel.detokenize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel.train"><code class="docutils literal notranslate"><span class="pre">TokenizerModel.train()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel.from_config"><code class="docutils literal notranslate"><span class="pre">TokenizerModel.from_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.model.bpe.html">banhxeo.core.tokenizer.model.bpe module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.model.bpe.html#banhxeo.core.tokenizer.model.bpe.get_pair_stats"><code class="docutils literal notranslate"><span class="pre">get_pair_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.model.bpe.html#banhxeo.core.tokenizer.model.bpe.merge_pair"><code class="docutils literal notranslate"><span class="pre">merge_pair()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.model.bpe.html#banhxeo.core.tokenizer.model.bpe.BPEModel"><code class="docutils literal notranslate"><span class="pre">BPEModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.model.word.html">banhxeo.core.tokenizer.model.word module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.model.word.html#banhxeo.core.tokenizer.model.word.WordLevelModel"><code class="docutils literal notranslate"><span class="pre">WordLevelModel</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html">banhxeo.core.tokenizer.normalizers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString"><code class="docutils literal notranslate"><span class="pre">NormalizedString</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.original"><code class="docutils literal notranslate"><span class="pre">NormalizedString.original</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.normalized"><code class="docutils literal notranslate"><span class="pre">NormalizedString.normalized</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.alignments"><code class="docutils literal notranslate"><span class="pre">NormalizedString.alignments</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.original_shift"><code class="docutils literal notranslate"><span class="pre">NormalizedString.original_shift</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.from_str"><code class="docutils literal notranslate"><span class="pre">NormalizedString.from_str()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.slice"><code class="docutils literal notranslate"><span class="pre">NormalizedString.slice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.filter"><code class="docutils literal notranslate"><span class="pre">NormalizedString.filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.transform"><code class="docutils literal notranslate"><span class="pre">NormalizedString.transform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.prepend"><code class="docutils literal notranslate"><span class="pre">NormalizedString.prepend()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.append"><code class="docutils literal notranslate"><span class="pre">NormalizedString.append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString.__init__"><code class="docutils literal notranslate"><span class="pre">NormalizedString.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.Normalizer"><code class="docutils literal notranslate"><span class="pre">Normalizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.Normalizer.normalize"><code class="docutils literal notranslate"><span class="pre">Normalizer.normalize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.StripNormalizer"><code class="docutils literal notranslate"><span class="pre">StripNormalizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.StripNormalizer.__init__"><code class="docutils literal notranslate"><span class="pre">StripNormalizer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.StripNormalizer.normalize"><code class="docutils literal notranslate"><span class="pre">StripNormalizer.normalize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.LowercaseNormalizer"><code class="docutils literal notranslate"><span class="pre">LowercaseNormalizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.LowercaseNormalizer.normalize"><code class="docutils literal notranslate"><span class="pre">LowercaseNormalizer.normalize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NFCNormalizer"><code class="docutils literal notranslate"><span class="pre">NFCNormalizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NFCNormalizer.normalize"><code class="docutils literal notranslate"><span class="pre">NFCNormalizer.normalize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.SequenceNormalizer"><code class="docutils literal notranslate"><span class="pre">SequenceNormalizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.SequenceNormalizer.__init__"><code class="docutils literal notranslate"><span class="pre">SequenceNormalizer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.SequenceNormalizer.add"><code class="docutils literal notranslate"><span class="pre">SequenceNormalizer.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.SequenceNormalizer.normalize"><code class="docutils literal notranslate"><span class="pre">SequenceNormalizer.normalize()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html">banhxeo.core.tokenizer.post_processor package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.PostProcessor"><code class="docutils literal notranslate"><span class="pre">PostProcessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.PostProcessor.process"><code class="docutils literal notranslate"><span class="pre">PostProcessor.process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.PostProcessor.process_batch"><code class="docutils literal notranslate"><span class="pre">PostProcessor.process_batch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor"><code class="docutils literal notranslate"><span class="pre">GeneralPostProcessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.__init__"><code class="docutils literal notranslate"><span class="pre">GeneralPostProcessor.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process"><code class="docutils literal notranslate"><span class="pre">GeneralPostProcessor.process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process_tokens"><code class="docutils literal notranslate"><span class="pre">GeneralPostProcessor.process_tokens()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process_batch"><code class="docutils literal notranslate"><span class="pre">GeneralPostProcessor.process_batch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GPTPostProcessor"><code class="docutils literal notranslate"><span class="pre">GPTPostProcessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GPTPostProcessor.process_tokens"><code class="docutils literal notranslate"><span class="pre">GPTPostProcessor.process_tokens()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.BertPostProcessor"><code class="docutils literal notranslate"><span class="pre">BertPostProcessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.BertPostProcessor.process_tokens"><code class="docutils literal notranslate"><span class="pre">BertPostProcessor.process_tokens()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html">banhxeo.core.tokenizer.pre_tokenizer package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.Split"><code class="docutils literal notranslate"><span class="pre">Split</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.Split.normalized"><code class="docutils literal notranslate"><span class="pre">Split.normalized</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.Split.tokens"><code class="docutils literal notranslate"><span class="pre">Split.tokens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.Split.__init__"><code class="docutils literal notranslate"><span class="pre">Split.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><code class="docutils literal notranslate"><span class="pre">PreTokenizedString</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString.splits"><code class="docutils literal notranslate"><span class="pre">PreTokenizedString.splits</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString.__init__"><code class="docutils literal notranslate"><span class="pre">PreTokenizedString.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><code class="docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer.pre_tokenize"><code class="docutils literal notranslate"><span class="pre">PreTokenizer.pre_tokenize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer"><code class="docutils literal notranslate"><span class="pre">RegexPreTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">RegexPreTokenizer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer.pre_tokenize"><code class="docutils literal notranslate"><span class="pre">RegexPreTokenizer.pre_tokenize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer"><code class="docutils literal notranslate"><span class="pre">WhiteSpacePreTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">WhiteSpacePreTokenizer.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PunctuationPreTokenizer"><code class="docutils literal notranslate"><span class="pre">PunctuationPreTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PunctuationPreTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">PunctuationPreTokenizer.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer"><code class="docutils literal notranslate"><span class="pre">NLTKPreTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">NLTKPreTokenizer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer.pre_tokenize"><code class="docutils literal notranslate"><span class="pre">NLTKPreTokenizer.pre_tokenize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer"><code class="docutils literal notranslate"><span class="pre">SequencePreTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">SequencePreTokenizer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.add"><code class="docutils literal notranslate"><span class="pre">SequencePreTokenizer.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer.pre_tokenize"><code class="docutils literal notranslate"><span class="pre">SequencePreTokenizer.pre_tokenize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.bytes_to_unicode"><code class="docutils literal notranslate"><span class="pre">bytes_to_unicode()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer"><code class="docutils literal notranslate"><span class="pre">ByteLevelPreTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">ByteLevelPreTokenizer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer.pre_tokenize"><code class="docutils literal notranslate"><span class="pre">ByteLevelPreTokenizer.pre_tokenize()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.bpe.html">banhxeo.core.tokenizer.bpe module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html">banhxeo.core.tokenizer.decoder module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.model.html">banhxeo.core.tokenizer.model module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.normalizer.html">banhxeo.core.tokenizer.normalizer module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html">banhxeo.core.tokenizer.post_processor module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html">banhxeo.core.tokenizer.pre_tokenizer module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html">banhxeo.core.tokenizer.presets module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.config.html">banhxeo.core.tokenizer.config module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token"><code class="docutils literal notranslate"><span class="pre">Token</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token.id"><code class="docutils literal notranslate"><span class="pre">Token.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token.value"><code class="docutils literal notranslate"><span class="pre">Token.value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token.offsets"><code class="docutils literal notranslate"><span class="pre">Token.offsets</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token.__init__"><code class="docutils literal notranslate"><span class="pre">Token.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens"><code class="docutils literal notranslate"><span class="pre">SpecialTokens</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.pad_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.pad_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.unk_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.unk_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.bos_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.bos_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.eos_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.eos_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.cls_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.cls_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.sep_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.sep_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.mask_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.mask_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.resv_tok"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.resv_tok</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.special_tokens"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.special_tokens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.special_token_idx"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.special_token_idx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens.__init__"><code class="docutils literal notranslate"><span class="pre">SpecialTokens.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig"><code class="docutils literal notranslate"><span class="pre">ProcessConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.max_length"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.max_length</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.truncation"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.truncation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.padding"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.padding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.padding_side"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.padding_side</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.truncation_side"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.truncation_side</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.add_special_tokens"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.add_special_tokens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.dict"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessConfig.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html">banhxeo.core.tokenizer.presets module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.SimpleTokenizer"><code class="docutils literal notranslate"><span class="pre">SimpleTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.SimpleTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">SimpleTokenizer.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.NLTKTokenizer"><code class="docutils literal notranslate"><span class="pre">NLTKTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.NLTKTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">NLTKTokenizer.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.GPTTokenizer"><code class="docutils literal notranslate"><span class="pre">GPTTokenizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.GPTTokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">GPTTokenizer.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -112,7 +358,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="banhxeo.core.html" class="btn btn-neutral float-left" title="banhxeo.core package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="banhxeo.core.tokenizer.bpe.html" class="btn btn-neutral float-right" title="banhxeo.core.tokenizer.bpe module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="banhxeo.core.tokenizer.decoder.html" class="btn btn-neutral float-right" title="banhxeo.core.tokenizer.decoder package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

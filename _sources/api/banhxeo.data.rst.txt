@@ -20,5 +20,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   banhxeo.data.array
    banhxeo.data.base
    banhxeo.data.loader

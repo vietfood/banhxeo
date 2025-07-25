@@ -1,5 +1,5 @@
-banhxeo.core.tokenizer.post\_processor module
-=============================================
+banhxeo.core.tokenizer.post\_processor package
+==============================================
 
 .. automodule:: banhxeo.core.tokenizer.post_processor
    :members:
