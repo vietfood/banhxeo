@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import functools
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Literal, Optional, Tuple, Union
+from typing import Any, Dict, Iterable, List, Literal, Optional, Union
 
-from banhxeo.core.tokenizer.decoder import Decoder
+from banhxeo.core.tokenizer.config import ProcessConfig
+from banhxeo.core.tokenizer.decoder import DECODER_FACTORY, Decoder
 from banhxeo.core.tokenizer.model import MODEL_FACTORY, TokenizerModel
-from banhxeo.core.tokenizer.normalizer import (
+from banhxeo.core.tokenizer.normalizers import (
     NORMALIZER_FACTORY,
     NormalizedString,
     Normalizer,
@@ -19,83 +18,8 @@ from banhxeo.core.tokenizer.pre_tokenizer import (
     PreTokenizer,
     Split,
 )
+from banhxeo.utils import progress_bar
 from banhxeo.utils.file import load_json
-
-
-@dataclass
-class Token:
-    id: int
-    value: str
-    offsets: Tuple[int, int]
-
-
-@dataclass
-class SpecialTokens:
-    pad_tok: str = "<PAD>"
-    unk_tok: str = "<UNK>"
-    bos_tok: str = "<BOS>"
-    eos_tok: str = "<EOS>"
-
-    # BERT/Seq2Seq specific
-    cls_tok: str = "<CLS>"
-    sep_tok: str = "<SEP>"
-    mask_tok: str = "<MASK>"
-    resv_tok: str = "<RESV>"
-
-    @functools.lru_cache(maxsize=None)
-    def special_tokens(self) -> List[str]:
-        """Returns a list of all configured special tokens in a conventional order.
-        0. `pad_tok`
-        1. `unk_tok`
-        2. `cls_tok`
-        3. `eos_tok`
-        4. `sep_tok`
-        5. `mask_tok`
-        6. `bos_tok`
-        7. `resv_tok`
-        """
-        ordered_tokens = [
-            self.pad_tok,
-            self.unk_tok,
-            self.cls_tok,
-            self.eos_tok,
-            self.sep_tok,
-            self.mask_tok,
-            self.bos_tok,
-            self.resv_tok,
-        ]
-
-        # Avoid duplicate (in case user sets, e.g., bos_tok = sep_tok)
-        final_tokens = []
-        seen = set()
-        for token in ordered_tokens:
-            if token not in seen:
-                final_tokens.append(token)
-                seen.add(token)
-        return final_tokens
-
-    def special_token_idx(self, token: str) -> int:  # noqa: D102
-        try:
-            return self.special_tokens().index(token)
-        except ValueError:
-            raise ValueError(
-                f"Token '{token}' is not a configured special token in this VocabConfig."
-            )
-
-
-default_special_tokens = SpecialTokens()
-
-
-@dataclass
-class ProcessConfig:
-    max_length: Optional[int] = None
-    truncation: bool = False
-    padding: Union[bool, Literal["do_not_pad", "max_length", "longest"]] = (
-        False  # False = "do_not_pad", True = "longest"
-    )
-    padding_side: Literal["left", "right"] = "left"
-    truncation_side: Literal["left", "right"] = "right"
-    add_special_tokens: bool = True
 
 
 class Tokenizer:
@@ -164,13 +88,15 @@ class Tokenizer:
                 import jax.numpy as jnp
 
                 return {
-                    key: jnp.array(value) for key, value in post_process_result.items()
+                    key: jnp.array(value, dtype=jnp.int64)
+                    for key, value in post_process_result.items()
                 }
             case "np":
                 import numpy as np
 
                 return {
-                    key: np.array(value) for key, value in post_process_result.items()
+                    key: np.array(value, dtype=np.int64)
+                    for key, value in post_process_result.items()
                 }
             case _:
                 return post_process_result
@@ -180,7 +106,7 @@ class Tokenizer:
         text: str,
         return_tensors: Optional[Literal["jax", "np"]] = "jax",
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> Any:
         results = self.__call__([text], return_tensors, **kwargs)
         return results["input_ids"][0]
 
@@ -189,7 +115,7 @@ class Tokenizer:
         texts: List[str],
         return_tensors: Optional[Literal["jax", "np"]] = "jax",
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> Any:
         results = self.__call__(texts, return_tensors, **kwargs)
         return results["input_ids"]
 
@@ -205,7 +131,9 @@ class Tokenizer:
 
     def train(self, corpus: Iterable[str], progress: bool = True):
         pre_tokenized_corpus = []
-        for text in corpus:
+        for text in progress_bar(
+            corpus, desc="Pre-tokenizing text", disable=not progress
+        ):
             normalized_text = self.normalizer.normalize(NormalizedString.from_str(text))
             pre_tokenized_text = self.pre_tokenizer.pre_tokenize(
                 PreTokenizedString(splits=[Split(normalized=normalized_text)])

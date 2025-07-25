@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from typing import Iterable
-
-from banhxeo.core.tokenizer import SpecialTokens, Tokenizer, default_special_tokens
+from banhxeo.core.tokenizer import Tokenizer
+from banhxeo.core.tokenizer.config import SpecialTokens, default_special_tokens
 from banhxeo.core.tokenizer.decoder import ByteLevelDecoder, NLTKDecoder
 from banhxeo.core.tokenizer.model import BPEModel, WordLevelModel
-from banhxeo.core.tokenizer.normalizer import (
+from banhxeo.core.tokenizer.normalizers import (
     NFCNormalizer,
     SequenceNormalizer,
     StripNormalizer,

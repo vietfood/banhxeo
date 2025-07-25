@@ -6,8 +6,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Optional
 
-from banhxeo.core.tokenizer import Token
-from banhxeo.core.tokenizer.normalizer import NormalizedString
+from banhxeo.core.tokenizer.config import Token
+from banhxeo.core.tokenizer.normalizers import NormalizedString
 from banhxeo.utils.logging import default_logger
 
 

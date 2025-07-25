@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 
-from banhxeo.core.tokenizer import ProcessConfig, SpecialTokens
+from banhxeo.core.tokenizer.config import ProcessConfig, SpecialTokens
 from banhxeo.core.tokenizer.pre_tokenizer import PreTokenizedString
 
 
@@ -94,24 +94,23 @@ class GeneralPostProcessor(PostProcessor):
             padding_ids.append(token_ids)
             attention_masks.append(attention_mask)
 
-        return {"input_ids": padding_ids, "attention_masks": attention_masks}
+        return {"input_ids": padding_ids, "attention_mask": attention_masks}
 
 
 class GPTPostProcessor(GeneralPostProcessor):
     def process_tokens(self, token_ids, config) -> List[int]:
-        truncation_length = (
-            config.max_length - 2 if config.add_special_tokens else config.max_length
-        )
+        if config.max_length is not None:
+            truncation_length = (
+                config.max_length - 2
+                if config.add_special_tokens
+                else config.max_length
+            )
 
-        if (
-            config.truncation
-            and config.max_length is not None
-            and len(token_ids) > truncation_length
-        ):
-            if config.truncation_side == "right":
-                token_ids = token_ids[:truncation_length]
-            else:
-                token_ids = token_ids[-(truncation_length):]
+            if config.truncation and len(token_ids) > truncation_length:
+                if config.truncation_side == "right":
+                    token_ids = token_ids[:truncation_length]
+                else:
+                    token_ids = token_ids[-(truncation_length):]
 
         if config.add_special_tokens:
             token_ids = (
@@ -125,19 +124,22 @@ class GPTPostProcessor(GeneralPostProcessor):
 
 class BertPostProcessor(GeneralPostProcessor):
     def process_tokens(self, token_ids, config) -> List[int]:
-        truncation_length = (
-            config.max_length - 2 if config.add_special_tokens else config.max_length
-        )
+        if config.max_length is not None:
+            truncation_length = (
+                config.max_length - 2
+                if config.add_special_tokens
+                else config.max_length
+            )
 
-        if (
-            config.truncation
-            and config.max_length is not None
-            and len(token_ids) > truncation_length
-        ):
-            if config.truncation_side == "right":
-                token_ids = token_ids[:truncation_length]
-            else:
-                token_ids = token_ids[-(truncation_length):]
+            if (
+                config.truncation
+                and config.max_length is not None
+                and len(token_ids) > truncation_length
+            ):
+                if config.truncation_side == "right":
+                    token_ids = token_ids[:truncation_length]
+                else:
+                    token_ids = token_ids[-(truncation_length):]
 
         if config.add_special_tokens:
             token_ids = (

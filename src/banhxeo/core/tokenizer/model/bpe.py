@@ -9,13 +9,13 @@ from typing import Dict, Iterable, List, Optional, Tuple, TypeAlias
 import jax
 
 from banhxeo import DEFAULT_SEED
-from banhxeo.core.tokenizer import SpecialTokens, Token
+from banhxeo.core.tokenizer.config import SpecialTokens, Token
 from banhxeo.core.tokenizer.model import TokenizerModel
 from banhxeo.core.tokenizer.pre_tokenizer import PreTokenizedString
 from banhxeo.utils import progress_bar
 from banhxeo.utils.logging import default_logger
 
-# {"hugs": (15, ["h", "u", "g", "s"])} with 15 is frequency
+# {"hugs": (15, ["h", "u", "g", "s"])} in which 15 is the frequency
 BPEWord: TypeAlias = Dict[str, Tuple[int, List[str]]]
 
 
@@ -154,10 +154,10 @@ class BPEModel(TokenizerModel):
         initial_vocab_chars.add("</w>")
 
         self.vocab = {
-            token: idx for idx, token in enumerate(self.special_tokens.special_tokens())
+            token: idx for idx, token in enumerate(self.special_tokens.special_tokens)
         }
 
-        self.inverse_vocab = [token for token in self.special_tokens.special_tokens()]
+        self.inverse_vocab = [token for token in self.special_tokens.special_tokens]
 
         current_id = len(self.vocab)
         for char in sorted(list(initial_vocab_chars)):
@@ -188,9 +188,8 @@ class BPEModel(TokenizerModel):
             self.merges[most_freq_pair] = rank
             rank += 1
 
-            # decrease merge pair
-
             merge_pair(most_freq_pair, word_freqs)
+            # TODO: Finish BPE algorithm
 
             merge_token = "".join(most_freq_pair)
             self.vocab[merge_token] = len(self.vocab)
@@ -233,4 +232,6 @@ class BPEModel(TokenizerModel):
             split.tokens = tokens
 
     @classmethod
-    def from_config(cls, config): ...
+    def from_config(cls, config):
+        # TODO:
+        ...

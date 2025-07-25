@@ -39,10 +39,6 @@ class NormalizedString:
     def __len__(self):
         return len(self.normalized)
 
-    @property
-    def original_offset(self) -> Tuple[int, int]:
-        return (self.original_shift, self.original_shift + len(self.original))
-
     @classmethod
     def from_str(cls, s: str) -> NormalizedString:
         return cls(

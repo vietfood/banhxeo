@@ -49,3 +49,10 @@ class NLTKDecoder(Decoder):
             return "".join(tokens)
         else:
             return self._detokenizer.detokenize(tokens)
+
+
+DECODER_FACTORY = {
+    "bytelevel": ByteLevelDecoder,
+    "nltk": NLTKDecoder,
+    "whitespace": WhiteSpaceDecoder,
+}

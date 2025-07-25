@@ -1,39 +1,19 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from collections import defaultdict
 from typing import Iterable, List
 
-from banhxeo.core.tokenizer import SpecialTokens, Token
-from banhxeo.core.tokenizer.bpe import BPEModel
+from banhxeo.core.tokenizer.config import SpecialTokens, Token
+from banhxeo.core.tokenizer.model import TokenizerModel
 from banhxeo.core.tokenizer.pre_tokenizer import PreTokenizedString
 from banhxeo.utils import progress_bar
 from banhxeo.utils.file import default_logger
 
 
-class TokenizerModel(ABC):
-    @abstractmethod
-    def tokenize(self, pre_tokenized_str: PreTokenizedString): ...
-
-    @abstractmethod
-    def detokenize(self, token_ids: List[int]) -> List[str]: ...
-
-    @abstractmethod
-    def train(
-        self,
-        corpus: Iterable[PreTokenizedString],
-        progress: bool = True,
-        **kwargs,
-    ): ...
-
-    @abstractmethod
-    @classmethod
-    def from_config(cls, config): ...
-
-
 class WordLevelModel(TokenizerModel):
     def __init__(self, special_tokens: SpecialTokens):
         self.special_tokens = special_tokens
+
         self.vocab = defaultdict(int)  # token to id
         self.inverse_vocab = []
 
@@ -76,10 +56,10 @@ class WordLevelModel(TokenizerModel):
 
         # Add special tokens first
         self.vocab = {
-            token: idx for idx, token in enumerate(self.special_tokens.special_tokens())
+            token: idx for idx, token in enumerate(self.special_tokens.special_tokens)
         }
 
-        self.inverse_vocab = [token for token in self.special_tokens.special_tokens()]
+        self.inverse_vocab = [token for token in self.special_tokens.special_tokens]
 
         # Add rest of vocab
         all_words = set(
@@ -91,7 +71,9 @@ class WordLevelModel(TokenizerModel):
         )
 
         current_id = len(self.vocab)
-        for word in progress_bar(sorted(list(all_words)), disable=not progress):
+        for word in progress_bar(
+            sorted(list(all_words)), disable=not progress, desc="Add word to vocabulary"
+        ):
             if word not in self.vocab:
                 self.vocab[word] = current_id
                 self.inverse_vocab.append(word)
@@ -101,7 +83,5 @@ class WordLevelModel(TokenizerModel):
 
     @classmethod
     def from_config(cls, config):
-        pass
-
-
-MODEL_FACTORY = {"word": WordLevelModel, "bpe": BPEModel}
+        # TODO:
+        ...
