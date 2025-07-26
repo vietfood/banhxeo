@@ -15,5 +15,5 @@ Subpackages
    banhxeo.core
    banhxeo.data
    banhxeo.model
-   banhxeo.train
+   banhxeo.trainer
    banhxeo.utils

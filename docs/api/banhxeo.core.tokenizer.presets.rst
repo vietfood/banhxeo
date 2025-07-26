@@ -1,7 +1,7 @@
-banhxeo.model.classic.word2vec module
+banhxeo.core.tokenizer.presets module
 =====================================
 
-.. automodule:: banhxeo.model.classic.word2vec
+.. automodule:: banhxeo.core.tokenizer.presets
    :members:
    :undoc-members:
    :show-inheritance:
