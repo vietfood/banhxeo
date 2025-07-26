@@ -4,7 +4,7 @@ import unicodedata
 
 import pytest
 
-from banhxeo.core.tokenizer.normalizer import (
+from banhxeo.core.tokenizer.normalizers import (
     LowercaseNormalizer,
     NFCNormalizer,
     NormalizedString,
