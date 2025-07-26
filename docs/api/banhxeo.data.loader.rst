@@ -1,7 +1,7 @@
-banhxeo.data.config module
+banhxeo.data.loader module
 ==========================
 
-.. automodule:: banhxeo.data.config
+.. automodule:: banhxeo.data.loader
    :members:
    :undoc-members:
    :show-inheritance:
