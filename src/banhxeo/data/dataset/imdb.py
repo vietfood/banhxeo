@@ -1,5 +1,4 @@
 import concurrent.futures
-
 from glob import glob
 from pathlib import Path
 from typing import Dict, Optional
@@ -7,11 +6,14 @@ from typing import Dict, Optional
 import polars as pl
 
 from banhxeo import DEFAULT_SEED
-from banhxeo.data.base import BaseTextDataset
-from banhxeo.data.config import DatasetConfig, DatasetSplit, DownloadDatasetFile
+from banhxeo.data.base import (
+    BaseTextDataset,
+    DatasetConfig,
+    DatasetSplit,
+    DownloadDatasetFile,
+)
 from banhxeo.utils import progress_bar
-from banhxeo.utils.logging import DEFAULT_LOGGER
-
+from banhxeo.utils.logging import default_logger
 
 IMDB_DATASET_CONFIG = DatasetConfig(
     name="IMDB",
@@ -21,7 +23,6 @@ IMDB_DATASET_CONFIG = DatasetConfig(
     split=DatasetSplit(train=25000, test=25000),
     text_column="content",
     label_column="label",
-    label_map={"pos": 1, "neg": 0},
 )
 
 
@@ -38,13 +39,12 @@ class IMDBDataset(BaseTextDataset):
         self._data = self._build_data()
 
     def _read_file_data(self, file_path: str) -> Optional[Dict]:
-        """Reads a single file and returns its data, or None on error."""
         try:
             p = Path(file_path)
 
             name_split = p.stem.split("_")
             if len(name_split) != 2:
-                DEFAULT_LOGGER.warning(
+                default_logger.warning(
                     f"Skipping file with unexpected name format: {p.name}"
                 )
                 return None
@@ -64,10 +64,10 @@ class IMDBDataset(BaseTextDataset):
             }
 
         except FileNotFoundError:
-            DEFAULT_LOGGER.warning(f"File not found: {file_path}")
+            default_logger.warning(f"File not found: {file_path}")
             return None
         except Exception as e:
-            DEFAULT_LOGGER.error(f"Cannot reading file {file_path}: {e}")
+            default_logger.error(f"Cannot reading file {file_path}: {e}")
             return None
 
     def _read_data_folder(self, folder):
@@ -75,7 +75,7 @@ class IMDBDataset(BaseTextDataset):
         file_paths = list(glob(f"{folder}/*.txt"))
 
         if not file_paths:
-            DEFAULT_LOGGER.warning(f"No .txt files found in {folder}")
+            default_logger.warning(f"No .txt files found in {folder}")
             return []
 
         with concurrent.futures.ThreadPoolExecutor(
@@ -99,7 +99,7 @@ class IMDBDataset(BaseTextDataset):
                     if result:
                         results.append(result)
                 except Exception as e:
-                    DEFAULT_LOGGER.error(
+                    default_logger.error(
                         f"Error processing file {path} in thread pool: {e}"
                     )
 
@@ -112,12 +112,12 @@ class IMDBDataset(BaseTextDataset):
         split_path = data_path / self.split_name
         for label in ["pos", "neg"]:
             folder_path = split_path / label
-            DEFAULT_LOGGER.info(f"Reading data from: {folder_path}")
+            default_logger.info(f"Reading data from: {folder_path}")
             if folder_path.is_dir():
                 folder_data = self._read_data_folder(str(folder_path))
                 all_data.extend(folder_data)
             else:
-                DEFAULT_LOGGER.debug(f"Directory not found: {folder_path}")
+                default_logger.debug(f"Directory not found: {folder_path}")
 
         if not all_data:
             return pl.DataFrame({})
@@ -136,7 +136,5 @@ class IMDBDataset(BaseTextDataset):
         return df
 
     def __getitem__(self, index: int):
-        if self._data is None:
-            raise IndexError("Dataset not loaded properly.")
-        row = self._data.row(index, named=True)
+        row = self.get_data().row(index, named=True)
         return row

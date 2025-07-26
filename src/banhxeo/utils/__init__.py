@@ -1,7 +1,8 @@
 import os
 import sys
-
 from enum import Enum, auto
+
+from tqdm.auto import tqdm
 
 import __main__
 
@@ -32,17 +33,19 @@ def get_runtime() -> RuntimeEnv:
             return RuntimeEnv.IPYTHON
 
 
-def _progress_bar():
-    if get_runtime() in [RuntimeEnv.COLAB, RuntimeEnv.JUPYTER]:
-        from tqdm.notebook import tqdm
+def validate_config(config_cls, **kwargs):
+    from banhxeo.utils.logging import default_logger
 
-        return tqdm
-    elif get_runtime() == RuntimeEnv.SHELL:
-        from tqdm import tqdm
+    current_config = dict()
+    for k, v in kwargs.items():
+        if k in config_cls.model_fields:
+            current_config[k] = v
+        else:
+            default_logger.warning(
+                f"Ignoring unknown kwarg '{k}' during {config_cls.__name__} creation"
+            )
 
-        return tqdm
-    else:
-        raise ValueError()
+    return config_cls(**current_config)
 
 
-progress_bar = _progress_bar()
+progress_bar = tqdm

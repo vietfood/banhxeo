@@ -19,59 +19,54 @@ Our core philosophy revolves around three pillars:
 
 1.  **Simplicity:** We strive for a clean, modular, and Pythonic codebase. Configurations are explicit, and APIs are designed to be intuitive.
 2.  **From-Scratch Learning:** Many fundamental algorithms and model architectures are built with minimal reliance on high-level abstractions from other large libraries. This transparency is key for genuine understanding. If you've ever wondered "How does an N-gram model *actually* count things?" or "What are the layers inside a basic MLP for text classification?", Banhxeo is for you.
-3.  **Practical Efficiency:** We use PyTorch as the backbone for our neural network models, allowing you to train and run models with decent speed, especially if you have a GPU.
+3.  **Practical Efficiency:** We use Jax/Flax (Jax is really cool btw) as the backbone for our neural network models, allowing you to train and run models with decent speed, especially if you have a GPU (and TPU, maybe 😊).
 
 ## 🚀 Getting Started
 
 1. **Installation:**
 
 ```bash
-# Install with pip (we recommend using uv to manage environment)
+# Install with pip 
 pip install banhxeo 
-# Or build by your self
+# Or build by your self (we recommend using uv to manage environment)
 git clone https://github.com/vietfood/banhxeo.git
 cd banhxeo
 uv sync
 ```
 2. **Examples**
 
-- [x] [N-gram example](./examples/n_gram.ipynb)
-- [x] [MLP example](https://colab.research.google.com/drive/1d8Yw_Go6FmAoJdXRTaHVsDJasZMEiv41?usp=sharing)
+- [ ] [N-gram example]()
+- [ ] [MLP example]()
 - [ ] RNN/LSTM example
+- [ ] GPT-2 example
 
 3. **API References**
 
 >[!NOTE]
->https://vietfood.github.io/banhxeo/api/modules.html
+>In constructions
 
 ## 🗺️ Roadmap
 
 Banhxeo is an ongoing project. Here's a glimpse of where we're headed. We welcome contributions and ideas!
 
-- [ ] `Vocabulary` system
-    - [x] Basic system
-    - [ ] Maybe there is something more
 - [ ] `Tokenizer` system
-    - [x] Basic system
+    - [x] Basic system (Normalizer -> PreTokenizer -> Model -> PostProcessor)
     - [x] NLTK Tokenizer wrapper
-    - [ ] HuggingFace Tokenizer wrapper
-    - [ ] BPE from scratch (Greedy and Dynamic version, maybe ?)
-- [x] Flexible `TextDataset` base class with Hugging Face integration.
-- [x] `TorchDataset` wrapper for PyTorch `DataLoader`.
+    - [ ] HuggingFace Tokenizer wrapper (we have HuggingFace Toeknizer at home)
+    - [x] BPE from scratch (Greedy version)
 -  [x] Initial Models:
-    - [x] N-gram
-    - [x] MLP for text classification
-    - [x] RNN
-    - [x] LSTM
+    - [ ] MLP for text classification
+    - [ ] RNN
+    - [ ] LSTM
     - [ ] GPT-2
-    - [x] Word2Vec
-- [x] `Trainer` class:
-   - [x] User-defined training step.
-   - [x] Callback system for logging (console, file, W&B).
-   - [x] Checkpointing.
-- [x] Comprehensive documentation for all core modules (50%)
+    - [ ] Word2Vec
+- [ ] `Trainer` class:
+   - [ ] User-defined training step.
+   - [ ] Callback system for logging (console, file, W&B).
+   - [ ] Checkpointing.
 - [ ] More examples and tutorials for common NLP tasks.
 - [ ] Add test (Important)
+    - [ ] Tokenizer Test (50%)
 
 ## 🤝 Contributing
 

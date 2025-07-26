@@ -1,20 +1,29 @@
 import hashlib
+import json
 import shutil
 import tarfile
 import urllib.request
 import zipfile
-
 from pathlib import Path
 from typing import Optional
 
 from banhxeo.utils import progress_bar
-from banhxeo.utils.logging import DEFAULT_LOGGER
-
+from banhxeo.utils.logging import default_logger
 
 USER_AGENT = "vietfood/banhxeo"
 
 
 def download_archive(source: Optional[str], url: str, archive_file_path: Path):
+    """Download an archive file from a given URL or Google Drive.
+
+    Args:
+        source (Optional[str]): Source type, e.g., 'drive' for Google Drive, or None for direct URL.
+        url (str): The URL to download the archive from.
+        archive_file_path (Path): The local path where the archive will be saved.
+
+    Raises:
+        Any exception raised by gdown or urllib.request on download failure.
+    """
     if source == "drive":
         import gdown
 
@@ -44,20 +53,30 @@ def download_archive(source: Optional[str], url: str, archive_file_path: Path):
 
 
 def check_md5(md5: Optional[str], name: str, archive_file_path: Path):
+    """Check the MD5 checksum of a file, optionally prompting the user if not provided.
+
+    Args:
+        md5 (Optional[str]): The expected MD5 checksum. If None, user is prompted to continue.
+        name (str): Name of the dataset (for logging).
+        archive_file_path (Path): Path to the archive file to check.
+
+    Raises:
+        ValueError: If the user aborts or if the MD5 does not match.
+    """
     if not md5:
-        DEFAULT_LOGGER.warning(
+        default_logger.warning(
             f"MD5 checksum not provided for dataset {name}. Extraction is potentially unsafe."
         )
         accept = input("Do you want to continue (yes/no): ").strip().lower()
         if accept != "yes":
             if archive_file_path.is_file():
                 archive_file_path.unlink()
-                DEFAULT_LOGGER.warning(f"Removed {str(archive_file_path)}")
+                default_logger.warning(f"Removed {str(archive_file_path)}")
             raise ValueError(
                 f"Extraction aborted by user for dataset {str(archive_file_path)}."
             )
     else:
-        DEFAULT_LOGGER.info(f"Verifying MD5 for {str(archive_file_path)}...")
+        default_logger.info(f"Verifying MD5 for {str(archive_file_path)}...")
 
         with archive_file_path.open(mode="rb") as f:
             file_hash = hashlib.md5()
@@ -67,12 +86,12 @@ def check_md5(md5: Optional[str], name: str, archive_file_path: Path):
 
         if archive_md5 != md5:
             archive_file_path.unlink()
-            DEFAULT_LOGGER.warning(f"Removed corrupted file {str(archive_file_path)}")
+            default_logger.warning(f"Removed corrupted file {str(archive_file_path)}")
             raise ValueError(
                 f"MD5 mismatch for {str(archive_file_path)}. Expected {md5}, got {archive_md5}. File may be corrupted."
             )
 
-        DEFAULT_LOGGER.info("MD5 checksum verified.")
+        default_logger.info("MD5 checksum verified.")
 
 
 def extract_archive(
@@ -81,6 +100,17 @@ def extract_archive(
     dataset_base_path: Path,
     extracted_data_dir_path: Path,
 ):
+    """Extract an archive file to a target directory.
+
+    Args:
+        ext (str): Archive extension, e.g., 'zip', 'tar.gz', or others supported by shutil.
+        archive_file_path (Path): Path to the archive file.
+        dataset_base_path (Path): Base directory to extract files into.
+        extracted_data_dir_path (Path): Path to the extracted data directory (for logging).
+
+    Raises:
+        Any exception raised by zipfile, tarfile, or shutil on extraction failure.
+    """
     if ext == "zip":
         with zipfile.ZipFile(
             archive_file_path,
@@ -101,10 +131,15 @@ def extract_archive(
             ):
                 tar.extract(path=dataset_base_path, member=member)
     else:
-        DEFAULT_LOGGER.warning(
+        default_logger.warning(
             f"Use shutil to extract {extracted_data_dir_path.name}, this will be very slow"
         )
         shutil.unpack_archive(
             filename=archive_file_path,
             extract_dir=dataset_base_path,
         )
+
+
+def load_json(path: Path) -> dict:
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)

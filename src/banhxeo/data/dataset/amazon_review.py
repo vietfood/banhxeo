@@ -3,9 +3,12 @@ from typing import Optional
 import polars as pl
 
 from banhxeo import DEFAULT_SEED
-from banhxeo.data.base import BaseTextDataset
-from banhxeo.data.config import DatasetConfig, DatasetSplit, DownloadDatasetFile
-
+from banhxeo.data.base import (
+    BaseTextDataset,
+    DatasetConfig,
+    DatasetSplit,
+    DownloadDatasetFile,
+)
 
 AMAZON_REVIEW_FULL_CONFIG = DatasetConfig(
     name="AmazonReview",
@@ -50,7 +53,5 @@ class AmazonReviewFullDataset(BaseTextDataset):
         return df
 
     def __getitem__(self, index: int):
-        if self._data is None:
-            raise IndexError("Dataset not loaded properly.")
-        row = self._data.row(index, named=True)
+        row = self.get_data().row(index, named=True)
         return row
