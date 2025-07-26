@@ -2,6 +2,7 @@ from typing import List, Literal
 
 import einops
 import jax
+import jax.nn as jnn
 from flax import linen as nn
 from jax import numpy as jnp
 from jaxtyping import Integer
@@ -69,7 +70,7 @@ class MLP(nn.Module):
 
         for hidden_dim in self.hidden_sizes:
             x = nn.Dense(hidden_dim)(x)
-            x = getattr(nn, self.activation_fn.lower())(x)
+            x = getattr(jnn, self.activation_fn.lower())(x)
             if self.dropout_rate > 0:
                 x = nn.Dropout(rate=self.dropout_rate)(x, deterministic=not dropout)
 
