@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="banhxeo.utils.file module" href="banhxeo.utils.file.html" />
-    <link rel="prev" title="banhxeo.data.loader module" href="banhxeo.data.loader.html" /> 
+    <link rel="prev" title="banhxeo.trainer package" href="banhxeo.trainer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,6 +53,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.trainer.html">banhxeo.trainer package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -88,78 +90,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.utils">
-<span id="banhxeo-utils-package"></span><h1>banhxeo.utils package<a class="headerlink" href="#module-banhxeo.utils" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.utils.RuntimeEnv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.utils.</span></span><span class="sig-name descname"><span class="pre">RuntimeEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils.html#RuntimeEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.RuntimeEnv" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>An enumeration.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.utils.RuntimeEnv.JUPYTER">
-<span class="sig-name descname"><span class="pre">JUPYTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#banhxeo.utils.RuntimeEnv.JUPYTER" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.utils.RuntimeEnv.SHELL">
-<span class="sig-name descname"><span class="pre">SHELL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#banhxeo.utils.RuntimeEnv.SHELL" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.utils.RuntimeEnv.IPYTHON">
-<span class="sig-name descname"><span class="pre">IPYTHON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#banhxeo.utils.RuntimeEnv.IPYTHON" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="banhxeo.utils.RuntimeEnv.COLAB">
-<span class="sig-name descname"><span class="pre">COLAB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#banhxeo.utils.RuntimeEnv.COLAB" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="banhxeo.utils.get_runtime">
-<span class="sig-prename descclassname"><span class="pre">banhxeo.utils.</span></span><span class="sig-name descname"><span class="pre">get_runtime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#banhxeo.utils.RuntimeEnv" title="banhxeo.utils.RuntimeEnv"><span class="pre">RuntimeEnv</span></a></span></span><a class="reference internal" href="../_modules/banhxeo/utils.html#get_runtime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.get_runtime" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="banhxeo.utils.validate_config">
-<span class="sig-prename descclassname"><span class="pre">banhxeo.utils.</span></span><span class="sig-name descname"><span class="pre">validate_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_cls</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/utils.html#validate_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.utils.validate_config" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+  <section id="banhxeo-utils-package">
+<h1>banhxeo.utils package<a class="headerlink" href="#banhxeo-utils-package" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.utils.file.html">banhxeo.utils.file module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.utils.file.html#banhxeo.utils.file.download_archive"><code class="docutils literal notranslate"><span class="pre">download_archive()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.utils.file.html#banhxeo.utils.file.check_md5"><code class="docutils literal notranslate"><span class="pre">check_md5()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.utils.file.html#banhxeo.utils.file.extract_archive"><code class="docutils literal notranslate"><span class="pre">extract_archive()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.utils.file.html#banhxeo.utils.file.load_json"><code class="docutils literal notranslate"><span class="pre">load_json()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="banhxeo.utils.logging.html">banhxeo.utils.logging module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.PrintLogger"><code class="docutils literal notranslate"><span class="pre">PrintLogger</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.PrintLogger.template"><code class="docutils literal notranslate"><span class="pre">PrintLogger.template</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.PrintLogger.info"><code class="docutils literal notranslate"><span class="pre">PrintLogger.info()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.PrintLogger.debug"><code class="docutils literal notranslate"><span class="pre">PrintLogger.debug()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.PrintLogger.exception"><code class="docutils literal notranslate"><span class="pre">PrintLogger.exception()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.PrintLogger.error"><code class="docutils literal notranslate"><span class="pre">PrintLogger.error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.PrintLogger.warning"><code class="docutils literal notranslate"><span class="pre">PrintLogger.warning()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger"><code class="docutils literal notranslate"><span class="pre">Logger</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger.__init__"><code class="docutils literal notranslate"><span class="pre">Logger.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger.info"><code class="docutils literal notranslate"><span class="pre">Logger.info()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger.debug"><code class="docutils literal notranslate"><span class="pre">Logger.debug()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger.exception"><code class="docutils literal notranslate"><span class="pre">Logger.exception()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger.error"><code class="docutils literal notranslate"><span class="pre">Logger.error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger.warning"><code class="docutils literal notranslate"><span class="pre">Logger.warning()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.utils.logging.html#banhxeo.utils.logging.Logger.check_and_raise"><code class="docutils literal notranslate"><span class="pre">Logger.check_and_raise()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.utils.file.html">banhxeo.utils.file module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="banhxeo.utils.logging.html">banhxeo.utils.logging module</a></li>
 </ul>
 </div>
 </section>
@@ -169,7 +107,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="banhxeo.data.loader.html" class="btn btn-neutral float-left" title="banhxeo.data.loader module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="banhxeo.trainer.html" class="btn btn-neutral float-left" title="banhxeo.trainer package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="banhxeo.utils.file.html" class="btn btn-neutral float-right" title="banhxeo.utils.file module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

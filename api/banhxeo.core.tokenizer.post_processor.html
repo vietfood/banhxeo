@@ -53,6 +53,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.trainer.html">banhxeo.trainer package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -90,90 +92,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.core.tokenizer.post_processor">
-<span id="banhxeo-core-tokenizer-post-processor-package"></span><h1>banhxeo.core.tokenizer.post_processor package<a class="headerlink" href="#module-banhxeo.core.tokenizer.post_processor" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.PostProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.post_processor.</span></span><span class="sig-name descname"><span class="pre">PostProcessor</span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#PostProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.PostProcessor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.PostProcessor.process">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenized_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig" title="banhxeo.core.tokenizer.config.ProcessConfig"><span class="pre">ProcessConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#PostProcessor.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.PostProcessor.process" title="Link to this definition"></a></dt>
-<dd><p>Turn PreTokenizedString (with tokens) into dictionary
-{‘input_ids’: […], ‘attention_mask’: […]}</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.PostProcessor.process_batch">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenized_strs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig" title="banhxeo.core.tokenizer.config.ProcessConfig"><span class="pre">ProcessConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#PostProcessor.process_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.PostProcessor.process_batch" title="Link to this definition"></a></dt>
-<dd><p>Batch version of process method</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.GeneralPostProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.post_processor.</span></span><span class="sig-name descname"><span class="pre">GeneralPostProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#GeneralPostProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.post_processor.PostProcessor" title="banhxeo.core.tokenizer.post_processor.PostProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">PostProcessor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#GeneralPostProcessor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process">
-<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenized_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig" title="banhxeo.core.tokenizer.config.ProcessConfig"><span class="pre">ProcessConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#GeneralPostProcessor.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process" title="Link to this definition"></a></dt>
-<dd><p>Turn PreTokenizedString (with tokens) into dictionary
-{‘input_ids’: […], ‘attention_mask’: […]}</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process_tokens">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#GeneralPostProcessor.process_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process_tokens" title="Link to this definition"></a></dt>
-<dd><p>How PostProcessor should implement add specials tokens</p>
-<p>Example:
-- For BERT-style, we add “SEP” and “CLS”.
-- For GPT-style, we add “BOS” and “EOS”.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process_batch">
-<span class="sig-name descname"><span class="pre">process_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenized_strs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig" title="banhxeo.core.tokenizer.config.ProcessConfig"><span class="pre">ProcessConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#GeneralPostProcessor.process_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor.process_batch" title="Link to this definition"></a></dt>
-<dd><p>Batch version of process method</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.GPTPostProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.post_processor.</span></span><span class="sig-name descname"><span class="pre">GPTPostProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#GPTPostProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.GPTPostProcessor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor" title="banhxeo.core.tokenizer.post_processor.GeneralPostProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeneralPostProcessor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.GPTPostProcessor.process_tokens">
-<span class="sig-name descname"><span class="pre">process_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#GPTPostProcessor.process_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.GPTPostProcessor.process_tokens" title="Link to this definition"></a></dt>
-<dd><p>How PostProcessor should implement add specials tokens</p>
-<p>Example:
-- For BERT-style, we add “SEP” and “CLS”.
-- For GPT-style, we add “BOS” and “EOS”.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.BertPostProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.post_processor.</span></span><span class="sig-name descname"><span class="pre">BertPostProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#BertPostProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.BertPostProcessor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor" title="banhxeo.core.tokenizer.post_processor.GeneralPostProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeneralPostProcessor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.post_processor.BertPostProcessor.process_tokens">
-<span class="sig-name descname"><span class="pre">process_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/post_processor.html#BertPostProcessor.process_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.post_processor.BertPostProcessor.process_tokens" title="Link to this definition"></a></dt>
-<dd><p>How PostProcessor should implement add specials tokens</p>
-<p>Example:
-- For BERT-style, we add “SEP” and “CLS”.
-- For GPT-style, we add “BOS” and “EOS”.</p>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-core-tokenizer-post-processor-package">
+<h1>banhxeo.core.tokenizer.post_processor package<a class="headerlink" href="#banhxeo-core-tokenizer-post-processor-package" title="Link to this heading"></a></h1>
 </section>
 
 

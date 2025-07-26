@@ -19,8 +19,7 @@ Dependencies
 ------------
 
 Banhxeo requires Python 3.9+ and the following dependencies:
-    - Pytorch, Numpy
-    - Pydantic
+    - Jax, Numpy
     - Tqdm
     - Datasets (Hugging Face) and HF-Xet
     - Einops
@@ -40,7 +39,8 @@ Or all dependencies including optional ones:
 
     pip install "banhxeo[all]"
 
-Current optionals are:
-    - **Extras**: NLTK, Plotly, Rich (`pip install banhxeo[extras]`).
+Current options are:
+    - **Extras**: NLTK (`pip install banhxeo[extras]`).
     - **Docs**: sphinx, sphinx-rtd-theme (for building documentation) (`pip install banhxeo[docs]`).
     - **Test**: pytest, pytest-cov (for testing) (`pip install banhxeo[test]`).
+    - **Perf** (recommend for DataLoader in Torch but really heavy): Torch, Tensorflow, Tensorflow-datasets (`pip install banhxeo[perf]`)

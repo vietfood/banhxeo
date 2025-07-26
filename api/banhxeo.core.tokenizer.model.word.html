@@ -53,6 +53,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="banhxeo.core.html">banhxeo.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.trainer.html">banhxeo.trainer package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -91,39 +93,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.core.tokenizer.model.word">
-<span id="banhxeo-core-tokenizer-model-word-module"></span><h1>banhxeo.core.tokenizer.model.word module<a class="headerlink" href="#module-banhxeo.core.tokenizer.model.word" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.model.word.WordLevelModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.tokenizer.model.word.</span></span><span class="sig-name descname"><span class="pre">WordLevelModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/model/word.html#WordLevelModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.model.word.WordLevelModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel" title="banhxeo.core.tokenizer.model.TokenizerModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenizerModel</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.model.word.WordLevelModel.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/model/word.html#WordLevelModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.model.word.WordLevelModel.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.model.word.WordLevelModel.tokenize">
-<span class="sig-name descname"><span class="pre">tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_tokenized_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/model/word.html#WordLevelModel.tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.model.word.WordLevelModel.tokenize" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.model.word.WordLevelModel.detokenize">
-<span class="sig-name descname"><span class="pre">detokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/model/word.html#WordLevelModel.detokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.model.word.WordLevelModel.detokenize" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.model.word.WordLevelModel.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString" title="banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><span class="pre">PreTokenizedString</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/model/word.html#WordLevelModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.model.word.WordLevelModel.train" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.tokenizer.model.word.WordLevelModel.from_config">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/model/word.html#WordLevelModel.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.tokenizer.model.word.WordLevelModel.from_config" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-core-tokenizer-model-word-module">
+<h1>banhxeo.core.tokenizer.model.word module<a class="headerlink" href="#banhxeo-core-tokenizer-model-word-module" title="Link to this heading"></a></h1>
 </section>
 
 

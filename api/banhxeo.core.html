@@ -53,6 +53,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="banhxeo.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">banhxeo.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.data.html">banhxeo.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.model.html">banhxeo.model package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="banhxeo.trainer.html">banhxeo.trainer package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.utils.html">banhxeo.utils package</a></li>
 </ul>
 </li>
@@ -88,102 +90,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-banhxeo.core">
-<span id="banhxeo-core-package"></span><h1>banhxeo.core package<a class="headerlink" href="#module-banhxeo.core" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.GPTTokenizer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.</span></span><span class="sig-name descname"><span class="pre">GPTTokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SpecialTokens(pad_tok='&lt;PAD&gt;',</span> <span class="pre">unk_tok='&lt;UNK&gt;',</span> <span class="pre">bos_tok='&lt;BOS&gt;',</span> <span class="pre">eos_tok='&lt;EOS&gt;',</span> <span class="pre">cls_tok='&lt;CLS&gt;',</span> <span class="pre">sep_tok='&lt;SEP&gt;',</span> <span class="pre">mask_tok='&lt;MASK&gt;',</span> <span class="pre">resv_tok='&lt;RESV&gt;')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/presets.html#GPTTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.GPTTokenizer" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer" title="banhxeo.core.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.GPTTokenizer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SpecialTokens(pad_tok='&lt;PAD&gt;',</span> <span class="pre">unk_tok='&lt;UNK&gt;',</span> <span class="pre">bos_tok='&lt;BOS&gt;',</span> <span class="pre">eos_tok='&lt;EOS&gt;',</span> <span class="pre">cls_tok='&lt;CLS&gt;',</span> <span class="pre">sep_tok='&lt;SEP&gt;',</span> <span class="pre">mask_tok='&lt;MASK&gt;',</span> <span class="pre">resv_tok='&lt;RESV&gt;')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/presets.html#GPTTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.GPTTokenizer.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="banhxeo.core.NLTKTokenizer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">banhxeo.core.</span></span><span class="sig-name descname"><span class="pre">NLTKTokenizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SpecialTokens(pad_tok='&lt;PAD&gt;',</span> <span class="pre">unk_tok='&lt;UNK&gt;',</span> <span class="pre">bos_tok='&lt;BOS&gt;',</span> <span class="pre">eos_tok='&lt;EOS&gt;',</span> <span class="pre">cls_tok='&lt;CLS&gt;',</span> <span class="pre">sep_tok='&lt;SEP&gt;',</span> <span class="pre">mask_tok='&lt;MASK&gt;',</span> <span class="pre">resv_tok='&lt;RESV&gt;')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/presets.html#NLTKTokenizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.NLTKTokenizer" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer" title="banhxeo.core.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="banhxeo.core.NLTKTokenizer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens" title="banhxeo.core.tokenizer.config.SpecialTokens"><span class="pre">SpecialTokens</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">SpecialTokens(pad_tok='&lt;PAD&gt;',</span> <span class="pre">unk_tok='&lt;UNK&gt;',</span> <span class="pre">bos_tok='&lt;BOS&gt;',</span> <span class="pre">eos_tok='&lt;EOS&gt;',</span> <span class="pre">cls_tok='&lt;CLS&gt;',</span> <span class="pre">sep_tok='&lt;SEP&gt;',</span> <span class="pre">mask_tok='&lt;MASK&gt;',</span> <span class="pre">resv_tok='&lt;RESV&gt;')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/banhxeo/core/tokenizer/presets.html#NLTKTokenizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#banhxeo.core.NLTKTokenizer.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+  <section id="banhxeo-core-package">
+<h1>banhxeo.core package<a class="headerlink" href="#banhxeo-core-package" title="Link to this heading"></a></h1>
 <section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="banhxeo.core.tokenizer.html">banhxeo.core.tokenizer package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer"><code class="docutils literal notranslate"><span class="pre">Tokenizer</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.__init__"><code class="docutils literal notranslate"><span class="pre">Tokenizer.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.encode"><code class="docutils literal notranslate"><span class="pre">Tokenizer.encode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.batch_encode"><code class="docutils literal notranslate"><span class="pre">Tokenizer.batch_encode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.decode"><code class="docutils literal notranslate"><span class="pre">Tokenizer.decode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.batch_decode"><code class="docutils literal notranslate"><span class="pre">Tokenizer.batch_decode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.train"><code class="docutils literal notranslate"><span class="pre">Tokenizer.train()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.html#banhxeo.core.tokenizer.Tokenizer.from_pretrained"><code class="docutils literal notranslate"><span class="pre">Tokenizer.from_pretrained()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html">banhxeo.core.tokenizer.decoder package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.Decoder"><code class="docutils literal notranslate"><span class="pre">Decoder</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.ByteLevelDecoder"><code class="docutils literal notranslate"><span class="pre">ByteLevelDecoder</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.WhiteSpaceDecoder"><code class="docutils literal notranslate"><span class="pre">WhiteSpaceDecoder</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html#banhxeo.core.tokenizer.decoder.NLTKDecoder"><code class="docutils literal notranslate"><span class="pre">NLTKDecoder</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.decoder.html">banhxeo.core.tokenizer.decoder package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.model.html">banhxeo.core.tokenizer.model package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#banhxeo.core.tokenizer.model.TokenizerModel"><code class="docutils literal notranslate"><span class="pre">TokenizerModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.model.html#submodules">Submodules</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html">banhxeo.core.tokenizer.normalizers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NormalizedString"><code class="docutils literal notranslate"><span class="pre">NormalizedString</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.Normalizer"><code class="docutils literal notranslate"><span class="pre">Normalizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.StripNormalizer"><code class="docutils literal notranslate"><span class="pre">StripNormalizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.LowercaseNormalizer"><code class="docutils literal notranslate"><span class="pre">LowercaseNormalizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.NFCNormalizer"><code class="docutils literal notranslate"><span class="pre">NFCNormalizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html#banhxeo.core.tokenizer.normalizers.SequenceNormalizer"><code class="docutils literal notranslate"><span class="pre">SequenceNormalizer</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html">banhxeo.core.tokenizer.post_processor package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.PostProcessor"><code class="docutils literal notranslate"><span class="pre">PostProcessor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GeneralPostProcessor"><code class="docutils literal notranslate"><span class="pre">GeneralPostProcessor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.GPTPostProcessor"><code class="docutils literal notranslate"><span class="pre">GPTPostProcessor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html#banhxeo.core.tokenizer.post_processor.BertPostProcessor"><code class="docutils literal notranslate"><span class="pre">BertPostProcessor</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html">banhxeo.core.tokenizer.pre_tokenizer package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.Split"><code class="docutils literal notranslate"><span class="pre">Split</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizedString"><code class="docutils literal notranslate"><span class="pre">PreTokenizedString</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PreTokenizer"><code class="docutils literal notranslate"><span class="pre">PreTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.RegexPreTokenizer"><code class="docutils literal notranslate"><span class="pre">RegexPreTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.WhiteSpacePreTokenizer"><code class="docutils literal notranslate"><span class="pre">WhiteSpacePreTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.PunctuationPreTokenizer"><code class="docutils literal notranslate"><span class="pre">PunctuationPreTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.NLTKPreTokenizer"><code class="docutils literal notranslate"><span class="pre">NLTKPreTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.SequencePreTokenizer"><code class="docutils literal notranslate"><span class="pre">SequencePreTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.bytes_to_unicode"><code class="docutils literal notranslate"><span class="pre">bytes_to_unicode()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html#banhxeo.core.tokenizer.pre_tokenizer.ByteLevelPreTokenizer"><code class="docutils literal notranslate"><span class="pre">ByteLevelPreTokenizer</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.normalizers.html">banhxeo.core.tokenizer.normalizers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.post_processor.html">banhxeo.core.tokenizer.post_processor package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.pre_tokenizer.html">banhxeo.core.tokenizer.pre_tokenizer package</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="banhxeo.core.tokenizer.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html">banhxeo.core.tokenizer.config module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.Token"><code class="docutils literal notranslate"><span class="pre">Token</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.SpecialTokens"><code class="docutils literal notranslate"><span class="pre">SpecialTokens</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.config.html#banhxeo.core.tokenizer.config.ProcessConfig"><code class="docutils literal notranslate"><span class="pre">ProcessConfig</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html">banhxeo.core.tokenizer.presets module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.SimpleTokenizer"><code class="docutils literal notranslate"><span class="pre">SimpleTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.NLTKTokenizer"><code class="docutils literal notranslate"><span class="pre">NLTKTokenizer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html#banhxeo.core.tokenizer.presets.GPTTokenizer"><code class="docutils literal notranslate"><span class="pre">GPTTokenizer</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.config.html">banhxeo.core.tokenizer.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="banhxeo.core.tokenizer.presets.html">banhxeo.core.tokenizer.presets module</a></li>
 </ul>
 </li>
 </ul>
