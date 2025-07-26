@@ -20,16 +20,14 @@ dependencies = [
     "jaxtyping>=0.2.36",
     "numpy",
     "polars",
-    "tensorflow>=2.19.0",
-    "tensorflow-datasets>=4.9.9",
-    "torch>=2.0.1",
     "tqdm",
 ]
 
 [project.optional-dependencies]
 docs = ["sphinx>=7.4.7", "sphinx-book-theme>=1.1.4", "sphinx-rtd-theme>=3.0.2"]
 test = ["pytest>=8.3.5", "pytest-cov>=6.1.1"]
-extras = ["nltk>=3.9.1", "plotly>=6.0.1", "rich>=14.0.0"]
+extras = ["nltk>=3.9.1"]
+perf = ["tensorflow>=2.19.0", "tensorflow-datasets>=4.9.9", "torch>=2.0.1"]
 
 [build-system]
 requires = ["hatchling"]
