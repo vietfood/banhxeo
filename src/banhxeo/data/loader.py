@@ -11,6 +11,30 @@ try:
     import torch
     from torch.utils.data import DataLoader as TorchDataLoader
     from torch.utils.data import Dataset as TorchDataset
+
+    class TorchDummyDataset(TorchDataset):  # type: ignore
+        """Dummy dataset to let's DataLoader work with our TextDataset"""
+
+        def __init__(self, length):
+            self.length = length
+
+        def __len__(self):
+            return self.length
+
+        def __getitem__(self, index):
+            return index
+
+    class TorchCollator:
+        """
+        A picklable collator that calls the __getitems__ method of the original dataset.
+        """
+
+        def __init__(self, dataset):
+            self.dataset = dataset
+
+        def __call__(self, indices: List[int]) -> Dict[str, Any]:
+            return self.dataset.__getitems__(indices)
+
 except ImportError:
     if USE_TORCH:
         raise ImportError(
@@ -23,7 +47,7 @@ except ImportError:
 
 
 def _torch_collate_fn(dataset):
-    def collate_fn(indices: List[int]) -> Dict[str, jax.Array]:
+    def collate_fn(indices: List[int]) -> Dict[str, Any]:
         return dataset.__getitems__(indices)
 
     return collate_fn
@@ -109,21 +133,8 @@ class DataLoader:
         self.dataset = dataset
 
         if USE_TORCH:
-
-            class TorchDummyDataset(TorchDataset):  # type: ignore
-                """Dummy dataset to let's DataLoader work with our TextDataset"""
-
-                def __init__(self, length):
-                    self.length = length
-
-                def __len__(self):
-                    return self.length
-
-                def __getitem__(self, index):
-                    return index
-
             adapter = TorchDummyDataset(len(dataset))
-            collate_fn = _torch_collate_fn(dataset)
+            collate_fn = TorchCollator(dataset)
 
             generator = torch.Generator()  # type: ignore
             generator.manual_seed(seed)

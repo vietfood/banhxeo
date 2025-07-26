@@ -26,8 +26,9 @@ class SpecialTokens:
     resv_tok: str = "<RESV>"
 
     @functools.cached_property
-    def special_tokens(self) -> List[str]:
+    def tokens(self) -> List[str]:
         """Returns a list of all configured special tokens in a conventional order.
+
         0. `pad_tok`
         1. `unk_tok`
         2. `cls_tok`
@@ -59,11 +60,19 @@ class SpecialTokens:
 
     def special_token_idx(self, token: str) -> int:  # noqa: D102
         try:
-            return self.special_tokens.index(token)
+            return self.tokens.index(token)
         except ValueError:
             raise ValueError(
                 f"Token '{token}' is not a configured special token in this VocabConfig."
             )
+
+    @property
+    def pad_id(self):
+        return self.special_token_idx(self.pad_tok)
+
+    @property
+    def unk_id(self):
+        return self.special_token_idx(self.unk_tok)
 
 
 default_special_tokens = SpecialTokens()

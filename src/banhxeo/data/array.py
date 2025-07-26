@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, List, Literal, Optional, Union
+from typing import Any, Dict, Iterable, Literal, Optional, Union
 
 from banhxeo import DEFAULT_SEED
 from banhxeo.core.tokenizer import ProcessConfig, Tokenizer
@@ -92,11 +92,11 @@ class ArrayTextDataset:
             if self.config.return_tensors == "jax":
                 import jax.numpy as jnp
 
-                labels = jnp.array(labels, dtype=jnp.int64)
+                labels = jnp.array(labels, dtype=jnp.int32)
             elif self.config.return_tensors == "np":
                 import numpy as np
 
-                labels = np.array(labels, dtype=np.int64)
+                labels = np.array(labels, dtype=np.int32)
 
             return {**outputs, "labels": labels}  # type: ignore
         else:

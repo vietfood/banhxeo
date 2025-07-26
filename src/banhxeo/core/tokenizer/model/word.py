@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections import defaultdict
 from typing import Iterable, List
 
 from banhxeo.core.tokenizer.config import SpecialTokens, Token
@@ -11,14 +10,6 @@ from banhxeo.utils.file import default_logger
 
 
 class WordLevelModel(TokenizerModel):
-    def __init__(self, special_tokens: SpecialTokens):
-        self.special_tokens = special_tokens
-
-        self.vocab = defaultdict(int)  # token to id
-        self.inverse_vocab = []
-
-        self.trained = False
-
     def tokenize(self, pre_tokenized_str: PreTokenizedString):
         if not self.vocab:
             raise ValueError(
@@ -56,10 +47,10 @@ class WordLevelModel(TokenizerModel):
 
         # Add special tokens first
         self.vocab = {
-            token: idx for idx, token in enumerate(self.special_tokens.special_tokens)
+            token: idx for idx, token in enumerate(self.special_tokens.tokens)
         }
 
-        self.inverse_vocab = [token for token in self.special_tokens.special_tokens]
+        self.inverse_vocab = [token for token in self.special_tokens.tokens]
 
         # Add rest of vocab
         all_words = set(
