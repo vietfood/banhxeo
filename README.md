@@ -11,14 +11,14 @@ Just like its namesake – a delicious, crispy Vietnamese savory pancake that's 
 *   **Efficient (Just Enough):** While our primary goal is learning, we leverage PyTorch for neural models to ensure reasonable performance for your experiments and projects.
 *   **Educational at Heart:** Banhxeo is designed for learners, educators, and anyone curious about how NLP models work. We encourage you to dive into the code, experiment, and build your understanding.
 
-Think of Banhxeo as your kitchen for cooking up NLP models. We provide the basic ingredients (core components like tokenizers, vocabularies) and some foundational recipes (N-grams, MLPs, and more to come!). You're encouraged to get your hands dirty, modify the recipes, and even create your own!
+Think of Banhxeo as your kitchen for cooking up NLP models. We provide the basic ingredients (core components like tokenizers) and some foundational recipes (MLPs, GPT-2, and more to come!). You're encouraged to get your hands dirty, modify the recipes, and even create your own!
 
 ## ✨ Philosophy
 
 Our core philosophy revolves around three pillars:
 
 1.  **Simplicity:** We strive for a clean, modular, and Pythonic codebase. Configurations are explicit, and APIs are designed to be intuitive.
-2.  **From-Scratch Learning:** Many fundamental algorithms and model architectures are built with minimal reliance on high-level abstractions from other large libraries. This transparency is key for genuine understanding. If you've ever wondered "How does an N-gram model *actually* count things?" or "What are the layers inside a basic MLP for text classification?", Banhxeo is for you.
+2.  **From-Scratch Learning:** Many fundamental algorithms and model architectures are built with minimal reliance on high-level abstractions from other large libraries. This transparency is key for genuine understanding. 
 3.  **Practical Efficiency:** We use Jax/Flax (Jax is really cool btw) as the backbone for our neural network models, allowing you to train and run models with decent speed, especially if you have a GPU (and TPU, maybe 😊).
 
 ## 🚀 Getting Started
@@ -35,9 +35,7 @@ uv sync
 ```
 2. **Examples**
 
-- [ ] [N-gram example]()
-- [ ] [MLP example]()
-- [ ] RNN/LSTM example
+- [x] [MLP example](examples/mlp.ipynb)
 - [ ] GPT-2 example
 
 3. **API References**
@@ -50,23 +48,16 @@ uv sync
 Banhxeo is an ongoing project. Here's a glimpse of where we're headed. We welcome contributions and ideas!
 
 - [ ] `Tokenizer` system
-    - [x] Basic system (Normalizer -> PreTokenizer -> Model -> PostProcessor)
+    - [x] Basic system (Normalizer -> PreTokenizer -> Model -> PostProcessor -> Decoder) (HuggingFace Tokenizer at home)
     - [x] NLTK Tokenizer wrapper
-    - [ ] HuggingFace Tokenizer wrapper (we have HuggingFace Toeknizer at home)
-    - [x] BPE from scratch (Greedy version)
+    - [ ] BPE from scratch (Greedy version) (50%)
 -  [x] Initial Models:
-    - [ ] MLP for text classification
-    - [ ] RNN
-    - [ ] LSTM
+    - [x] MLP for text classification
     - [ ] GPT-2
-    - [ ] Word2Vec
 - [ ] `Trainer` class:
    - [ ] User-defined training step.
    - [ ] Callback system for logging (console, file, W&B).
    - [ ] Checkpointing.
-- [ ] More examples and tutorials for common NLP tasks.
-- [ ] Add test (Important)
-    - [ ] Tokenizer Test (50%)
 
 ## 🤝 Contributing
 
