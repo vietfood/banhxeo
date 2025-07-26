@@ -1,7 +1,7 @@
-banhxeo.model.base module
+banhxeo.data.array module
 =========================
 
-.. automodule:: banhxeo.model.base
+.. automodule:: banhxeo.data.array
    :members:
    :undoc-members:
    :show-inheritance:

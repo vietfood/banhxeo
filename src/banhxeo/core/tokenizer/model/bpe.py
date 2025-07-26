@@ -53,18 +53,14 @@ class BPEModel(TokenizerModel):
     def __init__(
         self, special_tokens: SpecialTokens, dropout: Optional[float] = None, **kwargs
     ):
+        super().__init__(special_tokens=special_tokens)
+
         self.dropout = dropout
         if self.dropout:
             # add random key from jax
             self.rng = kwargs.get("rng", jax.random.key(DEFAULT_SEED))
 
-        self.special_tokens = special_tokens
-        self.vocab = defaultdict(int)  # token to id
-        self.inverse_vocab = []  # id to token
-
         self.merges: Dict[Tuple[str, str], int] = dict()  # merge rules rank
-
-        self.trained = False
 
     @functools.lru_cache(maxsize=None)
     def _tokenize_word(self, word: str, is_training: bool = False) -> List[str]:
@@ -154,10 +150,10 @@ class BPEModel(TokenizerModel):
         initial_vocab_chars.add("</w>")
 
         self.vocab = {
-            token: idx for idx, token in enumerate(self.special_tokens.special_tokens)
+            token: idx for idx, token in enumerate(self.special_tokens.tokens)
         }
 
-        self.inverse_vocab = [token for token in self.special_tokens.special_tokens]
+        self.inverse_vocab = [token for token in self.special_tokens.tokens]
 
         current_id = len(self.vocab)
         for char in sorted(list(initial_vocab_chars)):

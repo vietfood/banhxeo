@@ -37,6 +37,16 @@ class Tokenizer:
         self.post_processor = post_processor
         self.decoder = decoder
 
+    @property
+    def vocab_size(self) -> int:
+        if (vocab := self.model.get_vocab()) is None:
+            raise ValueError("Vocabulary is None")
+        return len(vocab)
+
+    @property
+    def special_tokens(self):
+        return self.model.special_tokens
+
     def __call__(
         self,
         texts: Union[str, List[str]],
@@ -88,14 +98,14 @@ class Tokenizer:
                 import jax.numpy as jnp
 
                 return {
-                    key: jnp.array(value, dtype=jnp.int64)
+                    key: jnp.array(value, dtype=jnp.int32)
                     for key, value in post_process_result.items()
                 }
             case "np":
                 import numpy as np
 
                 return {
-                    key: np.array(value, dtype=np.int64)
+                    key: np.array(value, dtype=np.int32)
                     for key, value in post_process_result.items()
                 }
             case _:

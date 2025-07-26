@@ -6,11 +6,10 @@ banhxeo.core package
    :undoc-members:
    :show-inheritance:
 
-Submodules
-----------
+Subpackages
+-----------
 
 .. toctree::
    :maxdepth: 4
 
    banhxeo.core.tokenizer
-   banhxeo.core.vocabulary
