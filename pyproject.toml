@@ -27,7 +27,12 @@ dependencies = [
 docs = ["sphinx>=7.4.7", "sphinx-book-theme>=1.1.4", "sphinx-rtd-theme>=3.0.2"]
 test = ["pytest>=8.3.5", "pytest-cov>=6.1.1"]
 extras = ["nltk>=3.9.1"]
-perf = ["tensorflow>=2.19.0", "tensorflow-datasets>=4.9.9", "torch>=2.0.1"]
+perf = [
+    "tensorflow>=2.19.0",
+    "tensorflow-datasets>=4.9.9",
+    "torch>=2.0.1",
+    "triton; sys_platform=='linux'",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -47,7 +52,7 @@ select = ["E", "F", "I"]
 
 # On top of the Google convention, disable `D417`, which requires
 # documentation for every function parameter.
-ignore = ["D417", "E501", "D104", "D100"]
+ignore = ["D417", "E501", "D104", "D100", "F722", "F821"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
