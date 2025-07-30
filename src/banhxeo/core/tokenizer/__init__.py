@@ -132,10 +132,28 @@ class Tokenizer:
     def decode(self, token_ids: List[int], **kwargs):
         return self.batch_decode([token_ids])[0]
 
-    def batch_decode(self, batch_ids: List[List[int]], **kwargs):
-        batch_ids_str = [self.model.detokenize(token_ids) for token_ids in batch_ids]
+    def batch_decode(
+        self,
+        batch_ids: List[List[int]],
+        skip_special_tokens: bool = True,  # A common and useful parameter
+        **kwargs,
+    ):
+        batch_tokens = [self.model.detokenize(token_ids) for token_ids in batch_ids]
+
+        cleaned_batch_tokens = []
+        special_tokens_to_skip = set(self.model.special_tokens.tokens)
+
+        for tokens in batch_tokens:
+            if skip_special_tokens:
+                cleaned_tokens = [
+                    tok for tok in tokens if tok not in special_tokens_to_skip
+                ]
+                cleaned_batch_tokens.append(cleaned_tokens)
+            else:
+                cleaned_batch_tokens.append(tokens)
+
         batch_str = [
-            self.decoder.decode(ids_str, **kwargs) for ids_str in batch_ids_str
+            self.decoder.decode(tokens, **kwargs) for tokens in cleaned_batch_tokens
         ]
         return batch_str
 

@@ -17,9 +17,15 @@ from banhxeo.utils.logging import default_logger
 
 # {"hugs": (15, ["h", "u", "g", "s"])} in which 15 is the frequency
 BPEWord: TypeAlias = Dict[str, Tuple[int, List[str]]]
+# ("h", "ug")
+WordPair: TypeAlias = Tuple[str, str]
+# {("h", "u"): 15}
+PairStats: TypeAlias = defaultdict[WordPair, int]
+# Store word and its coresponding frequency
+PairHeap: TypeAlias = List[Tuple[int, WordPair]]
 
 
-def get_pair_stats(word_freqs: BPEWord):
+def get_pair_stats(word_freqs: BPEWord) -> Tuple[PairStats, PairHeap]:
     pair_stats = defaultdict(int)
 
     for _, (frequency, split) in word_freqs.items():
@@ -27,39 +33,78 @@ def get_pair_stats(word_freqs: BPEWord):
         for pair in set(itertools.pairwise(split)):
             pair_stats[pair] += frequency
 
-    return pair_stats
+    # Then create a heap based on pair_stats
+    pair_heap = [(-freq, pair) for pair, freq in pair_stats.items()]
+    heapq.heapify(pair_heap)
+
+    return pair_stats, pair_heap
 
 
-def merge_pair(pair_to_merge: Tuple[str, str], word_freqs: BPEWord):
-    new_symbol = "".join(pair_to_merge)
-    for word, (frequency, split) in word_freqs.items():
-        if pair_to_merge[0] not in split or pair_to_merge[1] not in split:
-            continue
+def merge_pair(
+    pair_to_merge: WordPair,
+    word_freqs: BPEWord,
+    inverted_word_freqs: defaultdict[WordPair, list],
+    pair_stats: PairStats,
+    pair_heap: PairHeap,
+):
+    p1, p2 = pair_to_merge
+    new_symbol = p1 + p2
 
-        new_split = []
-        idx = 0
-        while idx < len(split):
-            if (idx < len(split) - 1) and (split[idx], split[idx + 1]) == pair_to_merge:
-                new_split.append(new_symbol)
-                idx += 2
+    changes = defaultdict(int)
+
+    for word in inverted_word_freqs[pair_to_merge]:
+        freq, split = word_freqs[word]
+
+        i = 0
+        new_word_split = []
+        while i < len(split):
+            if i < len(split) - 1 and (split[i], split[i + 1]) == pair_to_merge:
+                # Update pair stats
+                # Left side:
+                if i > 0:
+                    prev = split[i - 1]
+                    changes[(prev, p1)] -= freq
+                    changes[(prev, new_symbol)] += freq
+                # Right side:
+                if i < len(split) - 2:
+                    nxt = split[i + 2]
+                    changes[(p2, nxt)] -= freq
+                    changes[(new_symbol, nxt)] += freq
+
+                new_word_split.append(new_symbol)
+                i += 2
             else:
-                new_split.append(split[idx])
-                idx += 1
+                new_word_split.append(split[i])
+                i += 1
 
-        word_freqs[word] = (frequency, new_split)
+        word_freqs[word] = (freq, new_word_split)
+
+    for pair, delta in changes.items():
+        pair_stats[pair] += delta
+        heapq.heappush(pair_heap, (-pair_stats[pair], pair))
+
+    # Remove the merge from stats
+    del pair_stats[pair_to_merge]
+    # Also remove from inverted word freqs
+    del inverted_word_freqs[pair_to_merge]
 
 
 class BPEModel(TokenizerModel):
     def __init__(
-        self, special_tokens: SpecialTokens, dropout: Optional[float] = None, **kwargs
+        self,
+        special_tokens: SpecialTokens,
+        dropout: Optional[float] = None,
+        add_boundary_word: Optional[str] = None,
+        **kwargs,
     ):
         super().__init__(special_tokens=special_tokens)
 
         self.dropout = dropout
         if self.dropout:
             # add random key from jax
-            self.rng = kwargs.get("rng", jax.random.key(DEFAULT_SEED))
+            self.rng = jax.random.key(kwargs.get("seed", DEFAULT_SEED))
 
+        self.boundary_word = add_boundary_word if add_boundary_word else "</w>"
         self.merges: Dict[Tuple[str, str], int] = dict()  # merge rules rank
 
     @functools.lru_cache(maxsize=None)
@@ -76,7 +121,8 @@ class BPEModel(TokenizerModel):
         subwords = list(word)
         if not subwords:
             return []
-        subwords[-1] = subwords[-1] + "</w>"
+        if self.boundary_word:
+            subwords.append(self.boundary_word)
 
         subwords_pairs = create_pairs(subwords)
 
@@ -129,7 +175,7 @@ class BPEModel(TokenizerModel):
         **kwargs,
     ):
         if self.trained:
-            default_logger.warning("This Tokenized has been trained before. Return")
+            default_logger.warning("This Tokenizer has been trained before. Return")
             return
 
         vocab_size = kwargs.get("vocab_size")
@@ -147,12 +193,13 @@ class BPEModel(TokenizerModel):
         initial_vocab_chars = set()
         for word in word_counts:
             initial_vocab_chars.update(list(word))
-        initial_vocab_chars.add("</w>")
+
+        if self.boundary_word:
+            initial_vocab_chars.add(self.boundary_word)
 
         self.vocab = {
             token: idx for idx, token in enumerate(self.special_tokens.tokens)
         }
-
         self.inverse_vocab = [token for token in self.special_tokens.tokens]
 
         current_id = len(self.vocab)
@@ -164,13 +211,24 @@ class BPEModel(TokenizerModel):
 
         # 2. Main Loop
         initial_vocab_size = len(initial_vocab_chars)
-        word_freqs = {
-            word + "</w>": (count, list(word) + ["</w>"])
-            for word, count in word_counts.items()
-        }
+
+        # building word freqs and its inverted version
+        word_freqs = {}
+        inverted_word_freqs = defaultdict(list)
+
+        for word, count in word_counts.items():
+            word_key = word
+            split = list(word)
+            if self.boundary_word:
+                word_key += self.boundary_word
+                split += [self.boundary_word]
+
+            word_freqs[word_key] = (count, split)
+            for pair in itertools.pairwise(split):
+                inverted_word_freqs[pair].append(word_key)
 
         rank = 0
-        pair_stats = get_pair_stats(word_freqs)
+        pair_stats, pair_heap = get_pair_stats(word_freqs)
 
         for _ in progress_bar(
             range(0, (vocab_size - initial_vocab_size)),
@@ -180,14 +238,33 @@ class BPEModel(TokenizerModel):
             if len(pair_stats) == 0:
                 break  # already merge
 
-            most_freq_pair = max(pair_stats, key=pair_stats.get)  # type: ignore
+            # pop most frequent pair
+            most_freq_pair = None
+            while pair_heap:
+                nfreq, most_freq_pair = heapq.heappop(pair_heap)
+                if (freq := pair_stats.get(most_freq_pair)) is None or freq != -nfreq:
+                    continue
+                else:
+                    break
+
+            if most_freq_pair is None:
+                default_logger.warning("There is no pair to merge. Stop process")
+                break
+
+            # Add to merges dict
             self.merges[most_freq_pair] = rank
             rank += 1
 
-            merge_pair(most_freq_pair, word_freqs)
-            # TODO: Finish BPE algorithm
+            # Merge all pairs and update current stats
+            merge_pair(
+                most_freq_pair, word_freqs, inverted_word_freqs, pair_stats, pair_heap
+            )
 
-            merge_token = "".join(most_freq_pair)
+            # Add new pair with new frequency
+            new_pair = "".join(most_freq_pair)
+
+            # Add to vocab and inverse vocab
+            merge_token = new_pair
             self.vocab[merge_token] = len(self.vocab)
             self.inverse_vocab.append(merge_token)
 
