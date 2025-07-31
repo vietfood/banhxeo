@@ -1,0 +1,17 @@
+banhxeo.core.layer package
+==========================
+
+.. automodule:: banhxeo.core.layer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   banhxeo.core.layer.attention
+   banhxeo.core.layer.cell
+   banhxeo.core.layer.mlp

@@ -1,0 +1,7 @@
+banhxeo.core.layer.mlp module
+=============================
+
+.. automodule:: banhxeo.core.layer.mlp
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+banhxeo.model.rnn module
+========================
+
+.. automodule:: banhxeo.model.rnn
+   :members:
+   :undoc-members:
+   :show-inheritance:

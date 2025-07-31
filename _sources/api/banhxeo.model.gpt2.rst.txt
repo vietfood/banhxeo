@@ -1,0 +1,7 @@
+banhxeo.model.gpt2 module
+=========================
+
+.. automodule:: banhxeo.model.gpt2
+   :members:
+   :undoc-members:
+   :show-inheritance:

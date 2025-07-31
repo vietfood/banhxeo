@@ -12,4 +12,5 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   banhxeo.core.layer
    banhxeo.core.tokenizer
