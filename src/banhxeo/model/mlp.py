@@ -21,8 +21,8 @@ class MLP(nn.Module):
     @nn.compact
     def __call__(
         self,
-        input_ids: Integer[jax.Array, "batch seq"],  # noqa: F722
-        attention_mask: Integer[jax.Array, "batch seq"],  # noqa: F722
+        input_ids: Integer[jax.Array, "batch seq"],
+        attention_mask: Integer[jax.Array, "batch seq"],
         dropout: bool = True,
     ):
         embeddings = nn.Embed(
@@ -32,9 +32,7 @@ class MLP(nn.Module):
         )(input_ids)
 
         # attention_mask: (batch_size, seq_len) -> (batch_size, seq_len, 1) for broadcasting
-        mask_expanded = einops.rearrange(
-            attention_mask, "batch seq -> batch seq 1"
-        ).astype(jnp.float32)
+        mask_expanded = attention_mask[:, None].astype(jnp.float32)
 
         match self.aggregate_strategy:
             case "mean":
