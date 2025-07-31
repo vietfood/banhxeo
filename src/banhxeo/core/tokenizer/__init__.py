@@ -132,10 +132,28 @@ class Tokenizer:
     def decode(self, token_ids: List[int], **kwargs):
         return self.batch_decode([token_ids])[0]
 
-    def batch_decode(self, batch_ids: List[List[int]], **kwargs):
-        batch_ids_str = [self.model.detokenize(token_ids) for token_ids in batch_ids]
+    def batch_decode(
+        self,
+        batch_ids: List[List[int]],
+        skip_special_tokens: bool = True,  # A common and useful parameter
+        **kwargs,
+    ):
+        batch_tokens = [self.model.detokenize(token_ids) for token_ids in batch_ids]
+
+        cleaned_batch_tokens = []
+        special_tokens_to_skip = set(self.model.special_tokens.tokens)
+
+        for tokens in batch_tokens:
+            if skip_special_tokens:
+                cleaned_tokens = [
+                    tok for tok in tokens if tok not in special_tokens_to_skip
+                ]
+                cleaned_batch_tokens.append(cleaned_tokens)
+            else:
+                cleaned_batch_tokens.append(tokens)
+
         batch_str = [
-            self.decoder.decode(ids_str, **kwargs) for ids_str in batch_ids_str
+            self.decoder.decode(tokens, **kwargs) for tokens in cleaned_batch_tokens
         ]
         return batch_str
 
@@ -154,60 +172,5 @@ class Tokenizer:
 
     @classmethod
     def from_pretrained(cls, path: Path | str):
-        def build_component(component_config: dict, factory: dict):
-            if not isinstance(component_config, dict) or "type" not in component_config:
-                return component_config  # just a regular parameter
-
-            component_type = component_config["type"]
-            ComponentClass = factory[component_type.lower()]
-
-            constructor_params = {}
-            for key, value in component_config.items():
-                if key == "type":
-                    continue
-                if isinstance(value, list):
-                    # This could be a list of sub-components, like in a Sequence.
-                    constructor_params[key] = [
-                        build_component(item, factory) for item in value
-                    ]
-                elif isinstance(value, dict):
-                    constructor_params[key] = build_component(value, factory)
-                else:  # Just a single value
-                    constructor_params[key] = value
-
-            return ComponentClass(**constructor_params)
-
-        if isinstance(path, str):
-            path = Path(path)
-
-        # Load tokenizer config
-        config_path = path / "tokenizer.json"
-        if not config_path.is_file():
-            raise ValueError(f"Path={path.as_posix()} don't have tokenizer.json")
-        config_dict = load_json(config_path)
-
-        # Check version
-        assert config_dict["version"] == "1.0"
-
-        # Load normalizer
-        normalizer = build_component(config_dict["normalizer"], NORMALIZER_FACTORY)
-
-        # Load pre-tokenizer
-        pre_tokenizer = build_component(
-            config_dict["pre_tokenizer"], PRE_TOKENIZER_FACTORY
-        )
-
-        # Load model
-        model = build_component(config_dict["model"], MODEL_FACTORY)
-
-        # Load post-processor
-        post_processor = build_component(
-            config_dict["post_processor"], POST_PROCESSOR_FACTORY
-        )
-
-        return cls(
-            normalizer=normalizer,  # type: ignore
-            pre_tokenizer=pre_tokenizer,  # type: ignore
-            model=model,  # type: ignore
-            post_processor=post_processor,  # type: ignore
-        )
+        # TODO
+        ...

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Iterable, List
 
-from banhxeo.core.tokenizer.config import SpecialTokens, Token
+from banhxeo.core.tokenizer.config import Token
 from banhxeo.core.tokenizer.model import TokenizerModel
 from banhxeo.core.tokenizer.pre_tokenizer import PreTokenizedString
 from banhxeo.utils import progress_bar
