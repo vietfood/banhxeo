@@ -1,3 +1,6 @@
+>[!WARNING]
+> Currently, I don't want to do this project anymore.
+
 # 🥞 Banhxeo: A Simple, Efficient (Enough), and Educational NLP Library
 
 > [!WARNING] 
