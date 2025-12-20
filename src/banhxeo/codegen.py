@@ -56,7 +56,6 @@ class TritonCodegen:
                     BinaryOps.ADD: "+",
                     BinaryOps.SUB: "-",
                     BinaryOps.MUL: "*",
-                    BinaryOps.DIV: "/",
                 }
                 body_code.append(f"    {name} = {src0} {op_map[buf.op]} {src1}")
             elif isinstance(buf.op, UnaryOps):
