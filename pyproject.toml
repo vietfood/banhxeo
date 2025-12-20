@@ -5,7 +5,7 @@ authors = [{ name = "Le Nguyen", email = "lenguyen18072003@gmail.com" }]
 license = { text = "MIT License" }
 readme = "README.md"
 keywords = ["llm", "deep learning", "torch", "triton"]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 
 dependencies = [
     "datasets",
