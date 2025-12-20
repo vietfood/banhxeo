@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Tuple, Type, Union
 
-from banhxeo import Tensor
+from src.banhxeo import Tensor
 
 
 class Function:

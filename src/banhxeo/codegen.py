@@ -3,7 +3,7 @@ from typing import List
 import triton
 import triton.language as tl
 
-from banhxeo.core.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
+from src.banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
 
 
 class TritonCodegen:

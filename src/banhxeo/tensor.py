@@ -8,9 +8,9 @@ from typing import ClassVar, List, Optional, Tuple, Union
 import numpy as np
 import torch
 
-from banhxeo.codegen import TritonCodegen
-from banhxeo.core.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
-from banhxeo.helpers import DEBUG
+from src.banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
+from src.banhxeo.codegen import TritonCodegen
+from src.banhxeo.helpers import DEBUG
 
 
 class Tensor:
