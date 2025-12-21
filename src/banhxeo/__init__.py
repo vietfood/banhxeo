@@ -1,3 +1,3 @@
-from .tensor import Tensor
+from banhxeo.tensor import Tensor
 
 __all__ = ["Tensor"]

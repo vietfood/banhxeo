@@ -1,10 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Literal, Optional
 
-import triton
-import triton.language as tl
-
-from src.banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
+from banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
 
 
 @dataclass

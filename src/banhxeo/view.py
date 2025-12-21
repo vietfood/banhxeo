@@ -100,7 +100,7 @@ class View:
 
         return View(tuple(target_shape), tuple(target_stride))
 
-    def slice(self, args: Tuple[Tuple[int, ...]]) -> "View":
+    def slice(self, args: Tuple[Tuple[int, ...], ...]) -> "View":
         """
         * We assume args passed to slice is a tuple of (start, end) ranges for each dimension, e.g., ((0, 2), (1, 3)).
         * Right now we don't take account of step size

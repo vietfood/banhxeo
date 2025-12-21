@@ -8,10 +8,10 @@ from typing import ClassVar, List, Optional, Tuple, Union
 import numpy as np
 import torch
 
-from src.banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, MovementOps, UnaryOps
-from src.banhxeo.codegen import TritonCodegen
-from src.banhxeo.helpers import DEBUG
-from src.banhxeo.view import View
+from banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, MovementOps, UnaryOps
+from banhxeo.codegen import TritonCodegen
+from banhxeo.helpers import DEBUG
+from banhxeo.view import View
 
 
 class Tensor:
@@ -36,19 +36,38 @@ class Tensor:
                 LoadOps.FROM_CPU, view=View.create(shape=(len(data),)), args=[data]
             )
 
+    def _broadcasted(self, other):
+        if self.lazydata.view.shape == other.lazydata.view.shape:
+            return self, other
+
+        try:
+            out_shape = tuple(
+                max(s, o)
+                for s, o in zip(self.lazydata.view.shape, other.lazydata.view.shape)
+            )
+            return self.expand(out_shape), other.expand(out_shape)
+        except Exception:
+            # This is naive. A real implementation handles (3, 1) + (3,) -> (3, 3)
+            # For now, assume users are explicit or shapes match well enough
+            # For example, (3, 1) and (1, 3)
+            raise ValueError(
+                f"Cannot broadcast {self.lazydata.view.shape} and {other.lazydata.view.shape}"
+            )
+
     def __add__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
-        out_lazy = self.lazydata.compute_ops(BinaryOps.ADD, other.lazydata)
-        return Tensor(out_lazy)
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOps.ADD, y.lazydata))
 
     def __mul__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
-        return Tensor(self.lazydata.compute_ops(BinaryOps.MUL, other.lazydata))
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOps.MUL, y.lazydata))
 
     def __sub__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
-        out_lazy = self.lazydata.compute_ops(BinaryOps.SUB, other.lazydata)
-        return Tensor(out_lazy)
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOps.SUB, y.lazydata))
 
     def log(self):
         return Tensor(self.lazydata.compute_ops(UnaryOps.LOG2))
@@ -65,8 +84,11 @@ class Tensor:
     def permute(self, new_axis: Tuple[int, ...]):
         return Tensor(self.lazydata.movement_ops(MovementOps.PERMUTE, new_axis))
 
-    def slice(self, args: Tuple[Tuple[int, ...]]):
+    def slice(self, args: Tuple[Tuple[int, ...], ...]):
         return Tensor(self.lazydata.movement_ops(MovementOps.SLICE, args))
+
+    def expand(self, shape: Tuple[int, ...]):
+        return Tensor(self.lazydata.movement_ops(MovementOps.EXPAND, shape))
 
     def schedule(self):
         topo = []
@@ -140,7 +162,7 @@ class Tensor:
 
             N = math.prod(self.lazydata.view.shape)  # total size
             self.lazydata.realized = torch.empty(N, device="cuda", dtype=torch.float32)
-            BLOCK_SIZE = 1024
+            BLOCK_SIZE = 1024  # hardcode block size
             grid = (math.ceil(N / BLOCK_SIZE),)
             triton_kernel[grid](
                 *input_tensors, self.lazydata.realized, N, BLOCK_SIZE=BLOCK_SIZE

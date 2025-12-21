@@ -3,7 +3,7 @@ from typing import Any, Optional, Tuple, Union
 
 import torch
 
-from src.banhxeo.view import View
+from banhxeo.view import View
 
 
 class UnaryOps(Enum):
@@ -49,7 +49,7 @@ class LazyBuffer:
         self.realized: Optional[torch.Tensor] = None
 
     def __repr__(self):
-        return f"<LB {(self.op, self.realized, len(self.src), self.args)}>"
+        return f"<LazyBuffer (op={self.op}, realized={self.realized}, src={self.src}, args={self.args})>"
 
     def compute_ops(self, op, *others: "LazyBuffer"):
         if isinstance(op, BinaryOps):
@@ -67,6 +67,8 @@ class LazyBuffer:
             new_view = self.view.permute(args[0])
         elif op == MovementOps.SLICE:
             new_view = self.view.slice(args[0])
+        elif op == MovementOps.EXPAND:
+            new_view = self.view.broadcast_to(args[0])
         else:
             # current view
             new_view = self.view
