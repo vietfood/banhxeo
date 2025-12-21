@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import List, Literal, Optional
 
-from banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
+import torch
+
+from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, UnaryOp
 
 
 @dataclass
@@ -10,6 +12,48 @@ class InputArgument:
     type: Optional[Literal["ptr", "const"]] = None
     # shape, stride
     metadata: Optional[List[str]] = None
+
+
+class TorchInterpreter:
+    def __init__(self, schedule: List[LazyBuffer]):
+        self.schedule = schedule
+
+    def run(self):
+        for buf in self.schedule:
+            # allodate all buffers (because this is interpreter)
+            buf.allocate()
+            assert buf.realized is not None, "Allocation failed"
+            if isinstance(buf.op, LoadOp):
+                # CONST and FROM_CPU are already handled by allocate() implicitly.
+                if buf.op == LoadOp.VIEW:
+                    assert buf.src[0].realized is not None
+                    # we only change shape and stride of current data
+                    buf.realized.data = buf.src[0].realized.data.as_strided(
+                        size=buf.view.shape,
+                        stride=buf.view.strides,
+                        storage_offset=buf.view.offset,
+                    )
+            elif isinstance(buf.op, BinaryOp):
+                # as it should be
+                assert buf.src[0].realized is not None
+                assert buf.src[1].realized is not None
+                op_map = {
+                    BinaryOp.ADD: torch.add,
+                    BinaryOp.SUB: torch.sub,
+                    BinaryOp.MUL: torch.mul,
+                }
+                buf.realized.data = op_map[buf.op](
+                    buf.src[0].realized.data, buf.src[1].realized.data
+                )
+            elif isinstance(buf.op, UnaryOp):
+                assert buf.src[0].realized is not None
+                op_map = {
+                    UnaryOp.LOG2: torch.log2,
+                    UnaryOp.EXP2: torch.exp2,
+                    UnaryOp.SIN: torch.sin,
+                    UnaryOp.SQRT: torch.sqrt,
+                }
+                buf.realized.data = op_map[buf.op](buf.src[0].realized.data)
 
 
 class TritonCodegen:
@@ -26,13 +70,13 @@ class TritonCodegen:
     def get_var_name(self, buf: LazyBuffer) -> str:
         if buf not in self.var_names:
             # If it's a LoadOp, it needs a variable name that corresponds to a kernel argument
-            if isinstance(buf.op, LoadOps):
+            if isinstance(buf.op, LoadOp):
                 name = f"in_{len(self.input_args)}"
-                if buf.op == LoadOps.FROM_CPU:  # assume load from CPU is linearly
+                if buf.op == LoadOp.FROM_CPU:  # assume load from CPU is linearly
                     self.input_args.append(InputArgument(buf, "ptr"))
-                elif buf.op == LoadOps.CONST:
+                elif buf.op == LoadOp.CONST:
                     self.input_args.append(InputArgument(buf, "const"))
-                elif buf.op == LoadOps.VIEW:
+                elif buf.op == LoadOp.VIEW:
                     self.input_args.append(
                         InputArgument(buf, None, ["shape", "stride"])
                     )
@@ -68,7 +112,7 @@ class TritonCodegen:
         children = [b for b in self.schedule if buf in b.src]
 
         # Only materialize if it has multiple children or non-VIEW children
-        if len(children) == 1 and children[0].op == LoadOps.VIEW:
+        if len(children) == 1 and children[0].op == LoadOp.VIEW:
             return False
 
         return True
@@ -79,33 +123,33 @@ class TritonCodegen:
         for buf in self.schedule:
             name = self.get_var_name(buf)
 
-            if isinstance(buf.op, LoadOps):
+            if isinstance(buf.op, LoadOp):
                 if self.should_materialize(buf):
-                    if buf.op == LoadOps.CONST:
+                    if buf.op == LoadOp.CONST:
                         # hardcode value
                         body_code.append(f"    {name} = {name}_const")
-                    elif buf.op == LoadOps.FROM_CPU:
+                    elif buf.op == LoadOp.FROM_CPU:
                         body_code.append(
                             f"    {name} = tl.load({name}_ptr + linear_offsets, mask=linear_mask)"
                         )
-                    elif buf.op == LoadOps.VIEW:
+                    elif buf.op == LoadOp.VIEW:
                         body_code.append(self.render_indexing(buf))
-            elif isinstance(buf.op, BinaryOps):
+            elif isinstance(buf.op, BinaryOp):
                 src0 = self.get_var_name(buf.src[0])
                 src1 = self.get_var_name(buf.src[1])
                 op_map = {
-                    BinaryOps.ADD: "+",
-                    BinaryOps.SUB: "-",
-                    BinaryOps.MUL: "*",
+                    BinaryOp.ADD: "+",
+                    BinaryOp.SUB: "-",
+                    BinaryOp.MUL: "*",
                 }
                 body_code.append(f"    {name} = {src0} {op_map[buf.op]} {src1}")
-            elif isinstance(buf.op, UnaryOps):
+            elif isinstance(buf.op, UnaryOp):
                 src0 = self.get_var_name(buf.src[0])
                 op_map = {
-                    UnaryOps.LOG2: "tl.log2",
-                    UnaryOps.EXP2: "tl.exp2",
-                    UnaryOps.SIN: "tl.sin",
-                    UnaryOps.SQRT: "tl.sqrt",
+                    UnaryOp.LOG2: "tl.log2",
+                    UnaryOp.EXP2: "tl.exp2",
+                    UnaryOp.SIN: "tl.sin",
+                    UnaryOp.SQRT: "tl.sqrt",
                 }
                 body_code.append(f"    {name} = {op_map[buf.op]}({src0})")
 

@@ -67,7 +67,7 @@ LazyBuffer(op=ADD, src=[LazyBuffer(...), LazyBuffer(...)])
 
 Only when you call `.realize()` does it:
 - Topologically sort the graph
-- Generate a fused Triton kernel
+- Generate a Triton kernel
 - Execute on GPU
 
 **Why?** Kernel fusion. `(x + y) * z` becomes ONE kernel, not three.
@@ -78,38 +78,32 @@ Only when you call `.realize()` does it:
 - [x] Lazy evaluation with computation graphs
 - [x] View operations: `permute, slice, expand` (zero-copy!)
 - [x] Broadcasting (naive but works)
-- [x] Triton codegen for GPU execution
+- [x] Triton codegen for GPU execution and Pytorch for CPU execution (correctness validation only, don't use this backend)
 
 ## Roadmap
 
-### v0.2 - More Ops
-- [ ] Reshape
-- [ ] Matmul (the big one)
-- [ ] Reduce ops: `sum, max, min, mean`
-- [ ] Comparison ops: `<, >, ==`
-- [ ] Where/masking operations
+### v0.2: First Matmul
+- [ ] Solve the Reshape Boss: Implement the contiguous() check and the reshape logic.
+- [ ] Naive Matmul: Don't try to build a cuBLAS competitor. Write a simple Triton kernel that just works. (Block size 32, no fancy pipe-lining).
+- [ ] The MLP Forward Pass: Manually construct the weights for a small linear layer and run x @ W + b. Verify the numbers against PyTorch.
 
-### v0.3 - Optimization
-- [ ] Kernel fusion optimization passes
-- [ ] Memory planning and reuse
-- [ ] Better broadcasting rules
-- [ ] Constant folding
+### v0.3: Autograd Engine
 
-### v0.4 - Autograd Engine
-- [ ] Backward pass implementation
-- [ ] Gradient accumulation
-- [ ] `Tensor.backward()` API
-- [ ] Simple MLP training example
+- [ ] Reduce Ops: sum and max.
+- [ ] Broadcasting: need this for bias addition.
+- [ ] Backward Ops: Implement mul_backward, add_backward, matmul_backward.
 
-### v0.5 - Real Neural Networks
-- [ ] Conv2d (im2col approach)
-- [ ] Pooling operations
-- [ ] Batch normalization
+### v0.4 - More Ops
+- [ ] nn.Linear: Wrap Matmul + Add in a class.
+- [ ] ReLU: Simple elementwise.
+- [ ] LogSoftmax: Stability is key here.
 
-### v1.0 - The Dream
-- [ ] Train a CNN on MNIST
-- [ ] Benchmark against PyTorch
-- [ ] Full documentation with tutorials
+### v0.5 - The Dream
+
+- [ ] Data Loading: Just load the numpy arrays for MNIST (Maybe use Pytorch DataLoader).
+- [ ] The CNN: Implement Conv2d. *Note*: Use im2col (unfold) to turn convolution into a MatMul. It's slower than custom Conv2D (or WinoGrad algorithm) but reuses Matmul kernel.
+- [ ] Training: Run the loop.
+
 
 ## Installation
 

@@ -19,6 +19,7 @@ dependencies = [
     "tqdm",
     "torch",
     "triton; sys_platform=='linux'",
+    "pytest>=8.3.5",
 ]
 
 [project.optional-dependencies]

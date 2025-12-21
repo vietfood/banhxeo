@@ -8,11 +8,6 @@ class View:
     strides: Tuple[int, ...]
     offset: int = 0
 
-    def contiguous(self):
-        # force the view to be contiguous
-        if not self.is_contiguous():
-            self.strides = self.create(self.shape).strides
-
     def is_contiguous(self) -> bool:
         if len(self.shape) == 0 or sum(self.shape) == 0:
             return False

@@ -7,7 +7,7 @@ import pytest
 import torch
 
 from banhxeo import Tensor
-from banhxeo.buffer import MovementOps
+from banhxeo.buffer import MovementOp
 from banhxeo.view import View
 
 
@@ -40,7 +40,7 @@ class TestMovementOps:
         result = out.realize()
 
         # Verify against PyTorch
-        torch_t = torch.tensor(data, device="cuda").reshape(2, 3)
+        torch_t = torch.tensor(data, device="cpu").reshape(2, 3)
         torch_out = torch_t.permute(1, 0).contiguous()
 
         assert torch.allclose(result, torch_out), "Permute logic is wrong."
@@ -61,7 +61,7 @@ class TestMovementOps:
         result = out.realize()
 
         # PyTorch verification
-        pt = torch.tensor(data, device="cuda").reshape(3, 4)
+        pt = torch.tensor(data, device="cpu").reshape(3, 4)
         pt_out = pt.permute(1, 0)[0:2, 0:2].contiguous()
 
         assert torch.allclose(result, pt_out), "Slice+Permute composition failed."
@@ -79,7 +79,7 @@ class TestMovementOps:
         result = out.realize()
 
         # PyTorch verification
-        pt = torch.tensor(data, device="cuda").reshape(3, 1)
+        pt = torch.tensor(data, device="cpu").reshape(3, 1)
         pt_out = pt.expand(3, 4).contiguous()
 
         assert torch.allclose(result, pt_out), "Expand logic failed."
@@ -90,7 +90,7 @@ class TestMovementOps:
         t = Tensor(data)  # Shape (4,)
 
         # Call RESHAPE op directly
-        out_lazy = t.lazydata.movement_ops(MovementOps.RESHAPE, (2, 2))
+        out_lazy = t.lazydata.movement_ops(MovementOp.RESHAPE, (2, 2))
         out = Tensor(out_lazy)
 
         # Expectation: Currently implementation returns self.view for RESHAPE
@@ -104,7 +104,7 @@ class TestMovementOps:
         t = Tensor(data)  # Shape (1,)
 
         # Call PAD op directly
-        out_lazy = t.lazydata.movement_ops(MovementOps.PAD, ((0, 1),))
+        out_lazy = t.lazydata.movement_ops(MovementOp.PAD, ((0, 1),))
         out = Tensor(out_lazy)
 
         # Expectation: Currently implementation returns self.view for PAD
