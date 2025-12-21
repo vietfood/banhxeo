@@ -1,7 +1,9 @@
 from enum import Enum, auto
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Tuple, Union
 
 import torch
+
+from src.banhxeo.view import View
 
 
 class UnaryOps(Enum):
@@ -22,14 +24,25 @@ class LoadOps(Enum):
     FROM_CPU = auto()
 
 
-type Ops = Union[LoadOps, UnaryOps, BinaryOps]
+class MovementOps(Enum):
+    RESHAPE = auto()
+    PERMUTE = auto()
+    EXPAND = auto()
+    PAD = auto()
+    SLICE = auto()
+
+
+type Op = Union[LoadOps, UnaryOps, BinaryOps, MovementOps]
 
 
 class LazyBuffer:
-    def __init__(self, op: Ops, src: List["LazyBuffer"] = [], args: Any = None):
+    def __init__(
+        self, op: Op, view: View, src: Tuple["LazyBuffer", ...] = (), args: Any = None
+    ):
         self.op = op
         self.src = src
         self.args = args
+        self.view = view
 
         # If we computed this already, store the data here
         self.realized: Optional[torch.Tensor] = None
@@ -37,16 +50,24 @@ class LazyBuffer:
     def __repr__(self):
         return f"<LB {(self.op, self.realized, len(self.src), self.args)}>"
 
-    def build(self, op, *others: "LazyBuffer"):
-        # we build graph here
+    def compute_ops(self, op, *others: "LazyBuffer"):
         if isinstance(op, BinaryOps):
             assert len(others) == 1
-            return LazyBuffer(op, src=[self, others[0]])
+            return LazyBuffer(op, src=(self, others[0]), view=self.view)
         elif isinstance(op, UnaryOps):
             assert len(others) == 0
-            return LazyBuffer(
-                op,
-                src=[self],
-            )
+            return LazyBuffer(op, src=(self,), view=self.view)
+
+    def movement_ops(self, op, *args: Tuple[int, ...]):
+        if not isinstance(op, MovementOps):
+            raise ValueError("This function accepts MovementOps only")
+
+        if op == MovementOps.PERMUTE:
+            new_view = self.view.permute(args[0])
+        elif op == MovementOps.SLICE:
+            new_view = self.view.slice(args[0])
         else:
-            pass  # for LoadOps, it's a leaf
+            # current view
+            new_view = self.view
+
+        return LazyBuffer(op, src=(self,), view=new_view)

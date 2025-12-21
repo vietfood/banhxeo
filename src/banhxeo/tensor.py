@@ -8,9 +8,10 @@ from typing import ClassVar, List, Optional, Tuple, Union
 import numpy as np
 import torch
 
-from src.banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
+from src.banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, MovementOps, UnaryOps
 from src.banhxeo.codegen import TritonCodegen
 from src.banhxeo.helpers import DEBUG
+from src.banhxeo.view import View
 
 
 class Tensor:
@@ -27,35 +28,42 @@ class Tensor:
         if isinstance(data, LazyBuffer):
             self.lazydata = data
         elif isinstance(data, (int, float)):
-            self.lazydata = LazyBuffer(LoadOps.CONST, args=[data])
+            self.lazydata = LazyBuffer(
+                LoadOps.CONST, view=View.create(shape=(1,)), args=[data]
+            )
         elif isinstance(data, (List, Tuple, np.ndarray)):
-            self.lazydata = LazyBuffer(LoadOps.FROM_CPU, args=[data])
+            self.lazydata = LazyBuffer(
+                LoadOps.FROM_CPU, view=View.create(shape=(len(data),)), args=[data]
+            )
 
     def __add__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
-        out_lazy = self.lazydata.build(BinaryOps.ADD, other.lazydata)
+        out_lazy = self.lazydata.compute_ops(BinaryOps.ADD, other.lazydata)
         return Tensor(out_lazy)
 
     def __mul__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
-        return Tensor(self.lazydata.build(BinaryOps.MUL, other.lazydata))
+        return Tensor(self.lazydata.compute_ops(BinaryOps.MUL, other.lazydata))
 
     def __sub__(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
-        out_lazy = self.lazydata.build(BinaryOps.SUB, other.lazydata)
+        out_lazy = self.lazydata.compute_ops(BinaryOps.SUB, other.lazydata)
         return Tensor(out_lazy)
 
     def log(self):
-        return Tensor(self.lazydata.build(UnaryOps.LOG2))
+        return Tensor(self.lazydata.compute_ops(UnaryOps.LOG2))
 
     def exp(self):
-        return Tensor(self.lazydata.build(UnaryOps.EXP2))
+        return Tensor(self.lazydata.compute_ops(UnaryOps.EXP2))
 
     def sin(self):
-        return Tensor(self.lazydata.build(UnaryOps.SIN))
+        return Tensor(self.lazydata.compute_ops(UnaryOps.SIN))
 
     def sqrt(self):
-        return Tensor(self.lazydata.build(UnaryOps.SQRT))
+        return Tensor(self.lazydata.compute_ops(UnaryOps.SQRT))
+
+    def permute(self, new_axis: Tuple[int, ...]):
+        return Tensor(self.lazydata.movement_ops(MovementOps.PERMUTE, new_axis))
 
     def schedule(self):
         topo = []
@@ -71,7 +79,6 @@ class Tensor:
         build_topo(self.lazydata)
         return topo
 
-    # This is where we actually run the compiler!
     def realize(self):
         # First we use toposort to linearize the graph
         linear_graph = self.schedule()
@@ -112,17 +119,14 @@ class Tensor:
         # prepare input tensors
         input_tensors = []
         N = 0
-        for buf in codegen.schedule:
-            if buf.op == LoadOps.FROM_CPU:
+        for buf, arg_type in codegen.input_args:
+            if arg_type == "ptr":
                 t = torch.tensor(buf.args[0], dtype=torch.float32, device="cuda")
                 input_tensors.append(t)
                 N = len(t)
-            elif buf.op == LoadOps.CONST:
-                t = torch.full(
-                    buf.args[1], buf.args[0], dtype=torch.float32, device="cuda"
-                )
-                input_tensors.append(t)
-                N = len(t)
+            elif arg_type == "const":
+                # append const directly
+                input_tensors.append(buf.args[0])
 
         self.lazydata.realized = torch.empty(N, device="cuda", dtype=torch.float32)
         BLOCK_SIZE = 1024
