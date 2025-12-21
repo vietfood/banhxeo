@@ -1,71 +1,177 @@
->[!IMPORTANT]
-> Currently, I don't want to do this project anymore.
-
-# 🥞 Banhxeo: A Simple, Efficient (Enough), and Educational NLP Library
+# 🥞 banhxeo: A Simple, Efficient (Enough), and Educational Tensor Framework
 
 > [!WARNING] 
 > Banhxeo cannot be used (and will never be used) for production.
 
-**Welcome to Banhxeo!**
+> [!NOTE]
+> "Like a perfect Vietnamese crepe - crispy on the outside, efficient on the inside"
 
-Just like its namesake – a delicious, crispy Vietnamese savory pancake that's delightful to make and eat – Banhxeo aims to be an NLP library that's:
+Banhxeo is a minimalist deep learning framework built from scratch to understand how modern ML frameworks actually work. Inspired by [Tinygrad](https://github.com/tinygrad/tinygrad) and the philosophy that **the best way to learn is to build**, this project strips away all the magic and shows you the raw mechanics of lazy evaluation, automatic differentiation, and GPU kernel generation.
 
-*   **Simple & Understandable:** I believe in clarity. Many core NLP concepts and models are implemented from scratch (or close to it!) so you can see exactly what's going on under the hood. No black boxes here!
-*   **Efficient (Just Enough):** While our primary goal is learning, we leverage PyTorch for neural models to ensure reasonable performance for your experiments and projects.
-*   **Educational at Heart:** Banhxeo is designed for learners, educators, and anyone curious about how NLP models work. We encourage you to dive into the code, experiment, and build your understanding.
+**Current Status:** A week of commited - Basic tensor operations working with Triton codegen 🚀
 
-Think of Banhxeo as your kitchen for cooking up NLP models. We provide the basic ingredients (core components like tokenizers) and some foundational recipes (MLPs, GPT-2, and more to come!). You're encouraged to get your hands dirty, modify the recipes, and even create your own!
+## Why Banhxeo?
 
-## ✨ Philosophy
+Because reading PyTorch source code is like trying to understand a compiler by staring at assembly. Banhxeo is:
 
-Our core philosophy revolves around three pillars:
+- **Tiny** (~1000 LOC): Small enough to understand in an afternoon
+- **Educational**: Every line exists to teach, not to handle edge cases from 2015
+- **Lazy**: Builds a computation graph, compiles to Triton kernels on-the-fly
+- **Transparent**: No hidden optimizations, no magic, just pure computation
 
-1.  **Simplicity:** We strive for a clean, modular, and Pythonic codebase. Configurations are explicit, and APIs are designed to be intuitive.
-2.  **From-Scratch Learning:** Many fundamental algorithms and model architectures are built with minimal reliance on high-level abstractions from other large libraries. This transparency is key for genuine understanding. 
-3.  **Practical Efficiency:** We use Jax/Flax (Jax is really cool btw) as the backbone for our neural network models, allowing you to train and run models with decent speed, especially if you have a GPU (and TPU, maybe 😊).
+## Quick Example
 
-## 🚀 Getting Started
+```python
+from banhxeo import Tensor
 
-1. **Installation:**
+# Create tensors (lazy - nothing computed yet)
+x = Tensor([1.0, 2.0, 3.0, 4.0])
+y = Tensor([2.0, 3.0, 4.0, 5.0])
+
+# Build computation graph
+z = (x + y) * x.sin()  # Still lazy!
+
+# Execute: generates Triton kernel and runs on GPU
+result = z.realize()
+print(result)  # tensor([...])
+```
+
+Set `DEBUG=1` to see the generated Triton kernel:
+```bash
+DEBUG=1 python your_script.py
+```
+
+## Architecture in 60 Seconds
+
+```
+Tensor → LazyBuffer → Computation Graph → Triton Codegen → GPU Kernel
+```
+
+1. **Tensor**: User-facing API, operator overloading
+2. **LazyBuffer**: Lazy computation graph node (op, src, view)
+3. **View**: Stride-based memory layout (enables zero-copy reshape/slice)
+4. **Codegen**: Walks the graph, emits Triton code
+5. **realize()**: Compiles kernel, allocates output, executes
+
+### The Core Trick: Lazy Evaluation
+
+Instead of computing immediately:
+```python
+x + y  # PyTorch: allocates memory, runs kernel
+```
+
+Banhxeo builds a graph:
+```python
+LazyBuffer(op=ADD, src=[LazyBuffer(...), LazyBuffer(...)])
+```
+
+Only when you call `.realize()` does it:
+- Topologically sort the graph
+- Generate a Triton kernel
+- Execute on GPU
+
+**Why?** Kernel fusion. `(x + y) * z` becomes ONE kernel, not three.
+
+## Current Features
+
+- [x] Basic ops: `+, -, *, log, exp, sin, sqrt`
+- [x] Lazy evaluation with computation graphs
+- [x] View operations: `permute, slice, expand` (zero-copy!)
+- [x] Broadcasting (naive but works)
+- [x] Triton codegen for GPU execution and Pytorch for CPU execution (correctness validation only, don't use this backend)
+
+## Roadmap
+
+### v0.2: First Matmul
+- [ ] Solve the Reshape Boss: Implement the contiguous() check and the reshape logic.
+- [ ] Naive Matmul: Don't try to build a cuBLAS competitor. Write a simple Triton kernel that just works. (Block size 32, no fancy pipe-lining).
+- [ ] The MLP Forward Pass: Manually construct the weights for a small linear layer and run x @ W + b. Verify the numbers against PyTorch.
+
+### v0.3: Autograd Engine
+
+- [ ] Reduce Ops: sum and max.
+- [ ] Broadcasting: need this for bias addition.
+- [ ] Backward Ops: Implement mul_backward, add_backward, matmul_backward.
+
+### v0.4 - More Ops
+- [ ] nn.Linear: Wrap Matmul + Add in a class.
+- [ ] ReLU: Simple elementwise.
+- [ ] LogSoftmax: Stability is key here.
+
+### v0.5 - The Dream
+
+- [ ] Data Loading: Just load the numpy arrays for MNIST (Maybe use Pytorch DataLoader).
+- [ ] The CNN: Implement Conv2d. *Note*: Use im2col (unfold) to turn convolution into a MatMul. It's slower than custom Conv2D (or WinoGrad algorithm) but reuses Matmul kernel.
+- [ ] Training: Run the loop.
+
+
+## Installation
+
+From source:
 
 ```bash
-# Install with pip 
-pip install banhxeo 
-# Or build by your self (we recommend using uv to manage environment)
-git clone https://github.com/vietfood/banhxeo.git
+# Clone the repo
+git clone https://github.com/lenguyen1807/banhxeo
 cd banhxeo
-uv sync
+
+# Install dependencies
+uv sync && source .venv/bin/activate
+
+# Run tests (when they exist)
+python -m pytest tests/
 ```
-2. **Examples**
 
-- [x] [MLP example](examples/mlp.ipynb)
-- [ ] GPT-2 example
+From Pip:
 
-3. **API References**
+```bash
+pip install banhxeo
+```
 
->[!NOTE]
->In constructions
+**Requirements:**
+- Python 3.10+
+- CUDA-capable GPU (for Triton)
+- PyTorch (just for tensors/CUDA, not autograd)
+- Triton
 
-## 🗺️ Roadmap
+## Learn By Doing
 
-Banhxeo is an ongoing project. Here's a glimpse of where we're headed. We welcome contributions and ideas!
+Want to understand something? Break it:
 
-- [ ] `Tokenizer` system
-    - [x] Basic system (Normalizer -> PreTokenizer -> Model -> PostProcessor -> Decoder) (HuggingFace Tokenizer at home)
-    - [x] NLTK Tokenizer wrapper
-    - [ ] BPE from scratch (Greedy version) (50%)
--  [x] Initial Models:
-    - [x] MLP for text classification
-    - [ ] GPT-2
-- [ ] `Trainer` class:
-   - [ ] User-defined training step.
-   - [ ] Callback system for logging (console, file, W&B).
-   - [ ] Checkpointing.
+```python
+# What happens if you slice incorrectly?
+x = Tensor([1, 2, 3])
+x.slice(((0, 10),))  # IndexError - read the traceback
 
-## 🤝 Contributing
+# How does broadcasting work?
+x = Tensor([[1, 2, 3]])  # shape (1, 3)
+y = Tensor([[1], [2]])   # shape (2, 1)
+z = x + y                # shape (2, 3) - how?
+```
 
-We'd love for you to contribute to Banhxeo! Whether it's fixing a bug, adding a new model, improving documentation, or suggesting an idea, your help is welcome.
+Set `DEBUG=1` and watch the generated kernels. Modify `codegen.py` and see what breaks.
 
-## 📜 License
+## Why "Banhxeo"?
 
-Banhxeo is licensed under the [MIT License](LICENSE).
+It's a Vietnamese crispy pancake. Like this framework:
+- Thin and crispy (minimal LOC)
+- Made fresh to order (compilation)
+- Surprisingly satisfying (when it works)
+
+Plus, every ML framework needs a food name. It's the law.
+
+## Resources to Pair With This Code
+
+- [Tinygrad](https://github.com/tinygrad/tinygrad) - The OG minimalist Tensor framework
+- [Micrograd](https://github.com/karpathy/micrograd) - Karpathy's autograd in 100 lines
+- [Triton Tutorials](https://triton-lang.org/main/getting-started/tutorials/) - GPU kernel language
+- A good AI partner (Opus 4.5 or Gemini 3.0 Pro maybe)
+
+## License
+
+MIT - Do whatever you want. If you learn something, that's payment enough.
+
+---
+
+*Built with curiosity and coffee in Hanoi* ☕
+
+**Remember:** The goal isn't to build production software. It's to understand the magic. Read every line. Break things. Fix them. That's how you learn.
