@@ -10,7 +10,7 @@ from src.banhxeo.buffer import BinaryOps, LazyBuffer, LoadOps, UnaryOps
 @dataclass
 class InputArgument:
     buf: LazyBuffer
-    type: Literal["ptr", "const"]
+    type: Optional[Literal["ptr", "const"]] = None
     # shape, stride
     metadata: Optional[List[str]] = None
 
@@ -31,12 +31,14 @@ class TritonCodegen:
             # If it's a LoadOp, it needs a variable name that corresponds to a kernel argument
             if isinstance(buf.op, LoadOps):
                 name = f"in_{len(self.input_args)}"
-                if buf.op == LoadOps.FROM_CPU:
-                    self.input_args.append(
-                        InputArgument(buf, "ptr", ["shape", "stride"])
-                    )
+                if buf.op == LoadOps.FROM_CPU:  # assume load from CPU is linearly
+                    self.input_args.append(InputArgument(buf, "ptr"))
                 elif buf.op == LoadOps.CONST:
                     self.input_args.append(InputArgument(buf, "const"))
+                elif buf.op == LoadOps.VIEW:
+                    self.input_args.append(
+                        InputArgument(buf, None, ["shape", "stride"])
+                    )
                 self.var_names[buf] = name
             else:
                 self.var_names[buf] = f"temp_{len(self.var_names)}"
@@ -52,9 +54,9 @@ class TritonCodegen:
             # offset += idx_i * stride_i
             code.extend(
                 [
-                    f"   {name}_idx_{i} = {name}_idx % {name}_shape_{i}",
-                    f"   {name}_idx = {name}_idx // {name}_shape_{i}",
-                    f"   {name}_offset += {name}_idx_{i} * {name}_stride_{i}",
+                    f"    {name}_idx_{i} = {name}_idx % {name}_shape_{i}",
+                    f"    {name}_idx = {name}_idx // {name}_shape_{i}",
+                    f"    {name}_offset += {name}_idx_{i} * {name}_stride_{i}",
                 ]
             )
         return chr(10).join(
@@ -64,6 +66,16 @@ class TritonCodegen:
             ]
         )
 
+    def should_materialize(self, buf):
+        # Count children (buffers that use this as src)
+        children = [b for b in self.schedule if buf in b.src]
+
+        # Only materialize if it has multiple children or non-VIEW children
+        if len(children) == 1 and children[0].op == LoadOps.VIEW:
+            return False
+
+        return True
+
     def generate(self):
         # define the body and identify inputs
         body_code = []
@@ -71,15 +83,16 @@ class TritonCodegen:
             name = self.get_var_name(buf)
 
             if isinstance(buf.op, LoadOps):
-                if buf.op == LoadOps.CONST:
-                    # hardcode value
-                    body_code.append(f"    {name} = {name}_const")
-                elif buf.op == LoadOps.FROM_CPU:
-                    body_code.append(
-                        f"    {name} = tl.load({name}_ptr + linear_offsets, mask=linear_mask)"
-                    )
-                elif buf.op == LoadOps.VIEW:
-                    body_code.append(self.render_indexing(buf))
+                if self.should_materialize(buf):
+                    if buf.op == LoadOps.CONST:
+                        # hardcode value
+                        body_code.append(f"    {name} = {name}_const")
+                    elif buf.op == LoadOps.FROM_CPU:
+                        body_code.append(
+                            f"    {name} = tl.load({name}_ptr + linear_offsets, mask=linear_mask)"
+                        )
+                    elif buf.op == LoadOps.VIEW:
+                        body_code.append(self.render_indexing(buf))
             elif isinstance(buf.op, BinaryOps):
                 src0 = self.get_var_name(buf.src[0])
                 src1 = self.get_var_name(buf.src[1])
@@ -100,13 +113,21 @@ class TritonCodegen:
                 body_code.append(f"    {name} = {op_map[buf.op]}({src0})")
 
         args_sig = []
-        for buf, sig, metadata in self.input_args:
-            args_sig.append(f"{self.get_var_name(buf)}_{sig}")
+        for args in self.input_args:
+            buf = args.buf
+            sig = args.type
+            metadata = args.metadata
+
+            if sig is not None:
+                args_sig.append(f"{self.get_var_name(buf)}_{sig}")
+
             if metadata is not None:
                 for m in metadata:
                     args_sig.extend(
-                        [f"{self.get_var_name(buf)}_{m}_{i}"]
-                        for i in range(len(buf.shape))
+                        [
+                            f"{self.get_var_name(buf)}_{m}_{i}"
+                            for i in range(len(buf.view.shape))
+                        ]
                     )  # note that we assume shape len always equals to strides len
 
         kernel_def = [

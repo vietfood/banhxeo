@@ -59,7 +59,7 @@ class LazyBuffer:
             assert len(others) == 0
             return LazyBuffer(op, src=(self,), view=self.view)
 
-    def movement_ops(self, op, *args: Tuple[int, ...]):
+    def movement_ops(self, op, *args):
         if not isinstance(op, MovementOps):
             raise ValueError("This function accepts MovementOps only")
 
@@ -71,10 +71,10 @@ class LazyBuffer:
             # current view
             new_view = self.view
 
-        # If this is already a VIEW, just update my view and keep the same source!
+        # if this is already a VIEW, just update its view and keep the same source
         if self.op == LoadOps.VIEW:
             return LazyBuffer(LoadOps.VIEW, src=self.src, view=new_view)
 
-        # We treat the MovementOp as a new LoadOp
-        # It loads the same pointer as its parent, but using its own view.
+        # we treat the MovementOp as a new LoadOp
+        # it loads the same pointer as its parent, but using its own view.
         return LazyBuffer(LoadOps.VIEW, src=(self,), view=new_view)

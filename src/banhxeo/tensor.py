@@ -65,6 +65,9 @@ class Tensor:
     def permute(self, new_axis: Tuple[int, ...]):
         return Tensor(self.lazydata.movement_ops(MovementOps.PERMUTE, new_axis))
 
+    def slice(self, args: Tuple[Tuple[int, ...]]):
+        return Tensor(self.lazydata.movement_ops(MovementOps.SLICE, args))
+
     def schedule(self):
         topo = []
         visited = set()
@@ -112,33 +115,37 @@ class Tensor:
 
             spec.loader.exec_module(mod)
             triton_kernel = mod.generated_kernel
+
+            # prepare input tensors
+            input_tensors = []
+            N = 0
+            for arg in codegen.input_args:
+                buf = arg.buf
+                arg_type = arg.type
+                metadata = arg.metadata
+
+                if arg_type == "ptr":
+                    t = torch.tensor(buf.args[0], dtype=torch.float32, device="cuda")
+                    input_tensors.append(t)
+                elif arg_type == "const":
+                    # append const directly
+                    input_tensors.append(buf.args[0])
+
+                if metadata is not None:
+                    for m in metadata:
+                        if m == "shape":
+                            input_tensors.extend(buf.view.shape)
+                        elif m == "stride":
+                            input_tensors.extend(buf.view.strides)
+
+            N = math.prod(self.lazydata.view.shape)  # total size
+            self.lazydata.realized = torch.empty(N, device="cuda", dtype=torch.float32)
+            BLOCK_SIZE = 1024
+            grid = (math.ceil(N / BLOCK_SIZE),)
+            triton_kernel[grid](
+                *input_tensors, self.lazydata.realized, N, BLOCK_SIZE=BLOCK_SIZE
+            )
+            return self.lazydata.realized.view(self.lazydata.view.shape)
         finally:
             # Clean up the temp file
             os.remove(temp_path)
-
-        # prepare input tensors
-        input_tensors = []
-        N = 0
-        for buf, arg_type, metadata in codegen.input_args:
-            if arg_type == "ptr":
-                t = torch.tensor(buf.args[0], dtype=torch.float32, device="cuda")
-                input_tensors.append(t)
-            elif arg_type == "const":
-                # append const directly
-                input_tensors.append(buf.args[0])
-
-            if metadata is not None:
-                for m in metadata:
-                    if m == "shape":
-                        input_tensors.extend(buf.view.shape)
-                    elif m == "stride":
-                        input_tensors.extend(buf.view.strides)
-
-        N = math.prod(self.lazydata.view.shape)  # total size
-        self.lazydata.realized = torch.empty(N, device="cuda", dtype=torch.float32)
-        BLOCK_SIZE = 1024
-        grid = (math.ceil(N / BLOCK_SIZE),)
-        triton_kernel[grid](
-            *input_tensors, self.lazydata.realized, N, BLOCK_SIZE=BLOCK_SIZE
-        )
-        return self.lazydata.realized

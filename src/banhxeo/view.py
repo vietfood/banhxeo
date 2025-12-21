@@ -1,4 +1,3 @@
-import functools
 from dataclasses import dataclass
 from typing import Optional, Tuple
 
@@ -21,7 +20,6 @@ class View:
         return self.strides == self.create(self.shape).strides
 
     @staticmethod
-    @functools.lru_cache(maxsize=None)
     def create(
         shape, stride: Optional[Tuple[int, ...]] = None, offset: Optional[int] = None
     ) -> "View":
@@ -55,11 +53,10 @@ class View:
                 return False
         return True
 
-    @functools.lru_cache(maxsize=None)
     def broadcast_to(self, target_shape: Tuple[int, ...]) -> "View":
         """
-        Broadcasts this view to a new target shape.
-        Example: self=(3,1), target=(3,4) -> shape=(3,4), strides=(1,0)
+        * Broadcasts this view to a new target shape.
+        * Example: self=(3,1), target=(3,4) -> shape=(3,4), strides=(1,0)
         """
         assert self.can_broadcast(target_shape)
 
@@ -85,31 +82,6 @@ class View:
 
         return View(target_shape, tuple(new_strides))
 
-    @functools.lru_cache(maxsize=None)
-    def compute_offset(self, indices: Tuple[int, ...]) -> int:
-        """
-        Return real offset in memory buffer of current indices
-        """
-        if len(self.shape) != len(indices):
-            raise ValueError(f"Indices {indices} doesn't match with shape {self.shape}")
-
-        result = self.offset
-        for i in range(len(indices)):
-            idx = indices[i]
-            if indices[i] < 0:
-                # for this, we would take index i "backward"
-                # for example shape (2, 3) and i is (1, -1)
-                # then real indices will be (1, 2)
-                idx = self.shape[i] + indices[i]
-            if idx >= self.shape[i] or idx < 0:
-                raise ValueError(
-                    f"Index {indices[i]} is out of bounds for axis {i} with size {self.shape[i]}"
-                )
-            result += idx * self.strides[i]
-
-        return result
-
-    @functools.lru_cache(maxsize=None)
     def permute(self, new_axis: Tuple[int, ...]) -> "View":
         if len(new_axis) != len(self.shape):
             raise ValueError(
@@ -128,10 +100,36 @@ class View:
 
         return View(tuple(target_shape), tuple(target_stride))
 
-    @functools.lru_cache(maxsize=None)
-    def slice(self, args: Tuple[int, ...]) -> "View":
+    def slice(self, args: Tuple[Tuple[int, ...]]) -> "View":
+        """
+        * We assume args passed to slice is a tuple of (start, end) ranges for each dimension, e.g., ((0, 2), (1, 3)).
+        * Right now we don't take account of step size
+        """
         if len(self.shape) != len(args):
             raise ValueError(
                 f"Slice arguments {args} is not match with size of shape {self.shape}"
             )
-        # TODO: Implement slice
+
+        if not all([len(arg) <= 2 for arg in args]):
+            raise ValueError(
+                f"Each argument of slice {args} must have size between 2 and 1"
+            )
+
+        new_shape = []
+        new_offset = self.offset
+
+        for i, arg in enumerate(args):
+            if len(arg) == 1:
+                start, end = 0, arg[0]
+            elif len(arg) == 2:
+                start, end = arg[0], arg[1]
+            else:
+                start, end = 0, self.shape[i]
+
+            if start < 0 or end > self.shape[i] or start > end:
+                raise ValueError(f"Slice {start}:{end} out of bounds...")
+
+            new_shape.append(end - start)
+            new_offset += start * self.strides[i]
+
+        return View(tuple(new_shape), self.strides, new_offset)
