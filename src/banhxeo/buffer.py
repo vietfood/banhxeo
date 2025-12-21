@@ -21,6 +21,7 @@ class BinaryOps(Enum):
 
 class LoadOps(Enum):
     CONST = auto()
+    VIEW = auto()
     FROM_CPU = auto()
 
 
@@ -70,4 +71,10 @@ class LazyBuffer:
             # current view
             new_view = self.view
 
-        return LazyBuffer(op, src=(self,), view=new_view)
+        # If this is already a VIEW, just update my view and keep the same source!
+        if self.op == LoadOps.VIEW:
+            return LazyBuffer(LoadOps.VIEW, src=self.src, view=new_view)
+
+        # We treat the MovementOp as a new LoadOp
+        # It loads the same pointer as its parent, but using its own view.
+        return LazyBuffer(LoadOps.VIEW, src=(self,), view=new_view)

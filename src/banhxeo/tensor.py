@@ -119,15 +119,22 @@ class Tensor:
         # prepare input tensors
         input_tensors = []
         N = 0
-        for buf, arg_type in codegen.input_args:
+        for buf, arg_type, metadata in codegen.input_args:
             if arg_type == "ptr":
                 t = torch.tensor(buf.args[0], dtype=torch.float32, device="cuda")
                 input_tensors.append(t)
-                N = len(t)
             elif arg_type == "const":
                 # append const directly
                 input_tensors.append(buf.args[0])
 
+            if metadata is not None:
+                for m in metadata:
+                    if m == "shape":
+                        input_tensors.extend(buf.view.shape)
+                    elif m == "stride":
+                        input_tensors.extend(buf.view.strides)
+
+        N = math.prod(self.lazydata.view.shape)  # total size
         self.lazydata.realized = torch.empty(N, device="cuda", dtype=torch.float32)
         BLOCK_SIZE = 1024
         grid = (math.ceil(N / BLOCK_SIZE),)
