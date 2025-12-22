@@ -24,7 +24,7 @@ class TorchInterpreter:
             buf.allocate()
             assert buf.realized is not None, "Allocation failed"
             if isinstance(buf.op, LoadOp):
-                # CONST and FROM_CPU are already handled by allocate() implicitly.
+                # CONST, DEFAULT, FROM_CPU are already handled by allocate() implicitly.
                 if buf.op == LoadOp.VIEW:
                     assert buf.src[0].realized is not None
                     # we only change shape and stride of current data
@@ -72,7 +72,9 @@ class TritonCodegen:
             # If it's a LoadOp, it needs a variable name that corresponds to a kernel argument
             if isinstance(buf.op, LoadOp):
                 name = f"in_{len(self.input_args)}"
-                if buf.op == LoadOp.FROM_CPU:  # assume load from CPU is linearly
+                if buf.op == LoadOp.FROM_CPU or buf.op == LoadOp.DEFAULT:
+                    # assume LoadOp.FROM_CPU is linearly
+                    # note that DEFAULT create an empty Tensor so we assume it is a pointer too
                     self.input_args.append(InputArgument(buf, "ptr"))
                 elif buf.op == LoadOp.CONST:
                     self.input_args.append(InputArgument(buf, "const"))

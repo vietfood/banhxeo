@@ -26,6 +26,7 @@ class LoadOp(Enum):
     CONST = auto()
     VIEW = auto()
     FROM_CPU = auto()
+    DEFAULT = auto()
 
 
 class MovementOp(Enum):
@@ -58,11 +59,12 @@ class RawBuffer:
         dtype: torch.dtype = torch.float32,
     ):
         if data is None:
-            assert shape is not None, "Cannot allocate empty buffer without shape"
+            assert shape is not None  # This should be handle by Tensor
             buf_data = torch.empty(shape, dtype=dtype)
         else:
             if isinstance(data, (List, Tuple)):
                 # wrap torch Tensor
+                # we assume 1D Tensor as default
                 buf_data = torch.tensor(data, dtype=dtype)
             elif isinstance(data, np.ndarray):
                 # better method for numpy array

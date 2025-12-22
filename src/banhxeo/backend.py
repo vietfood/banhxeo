@@ -33,10 +33,8 @@ class Backend:
 
 class CPUBackend(Backend):
     def exec(self, output: LazyBuffer):
-        # First we use toposort to linearize the graph
         linear_graph = self.schedule(output)
-
-        # we then interpret Torch directly (instead of compiling)
+        # we then interpret to Pytorch directly (instead of compiling)
         interpreter = TorchInterpreter(linear_graph)
         interpreter.run()
 
@@ -46,18 +44,23 @@ class CUDABackend(Backend):
     Use TritonCodegen
     """
 
-    def exec(self, output: LazyBuffer):
+    def gencode(self, output: LazyBuffer):
         # First we use toposort to linearize the graph
         linear_graph = self.schedule(output)
 
         # we then generate Triton code
-        codegen = TritonCodegen(linear_graph)
-        src = codegen.generate()
+        generator = TritonCodegen(linear_graph)
+        src = generator.generate()
 
         if DEBUG >= 1:
             print("--- GENERATED TRITON KERNEL ---")
             print(src)
             print("-------------------------------")
+
+        return src, generator
+
+    def exec(self, output: LazyBuffer):
+        src, generator = self.gencode(output)
 
         # Write to a temporary file so Triton can inspect the source
         with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
@@ -83,7 +86,7 @@ class CUDABackend(Backend):
             # prepare input tensors
             input_tensors = []
             N = 0
-            for arg in codegen.input_args:
+            for arg in generator.input_args:
                 buf = arg.buf
                 arg_type = arg.type
                 metadata = arg.metadata
@@ -103,12 +106,13 @@ class CUDABackend(Backend):
                             input_tensors.extend(buf.view.strides)
 
             output.allocate()
+            assert output.realized is not None  # should be None after allocated
 
             N = math.prod(output.view.shape)  # total size
             BLOCK_SIZE = 1024  # hardcode block size
             grid = (math.ceil(N / BLOCK_SIZE),)
             triton_kernel[grid](
-                *input_tensors, output.realized, N, BLOCK_SIZE=BLOCK_SIZE
+                *input_tensors, output.realized.data, N, BLOCK_SIZE=BLOCK_SIZE
             )
         finally:
             # Clean up the temp file

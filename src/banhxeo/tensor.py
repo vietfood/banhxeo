@@ -19,25 +19,33 @@ class Tensor:
             Union[LazyBuffer, List, Tuple, np.ndarray, torch.Tensor, int, float]
         ] = None,
         device: str = "cpu",
+        shape: Optional[Tuple[int, ...]] = None,
     ):
         self.device = device.upper()
+        self.requires_grad = False
 
-        if isinstance(data, LazyBuffer):
-            self.lazydata = data
-        elif isinstance(data, (int, float)):
+        if data is None:
+            assert shape is not None, "Cannot allocate empty Tensor without shape"
             self.lazydata = LazyBuffer(
-                LoadOp.CONST,
-                view=View.create(shape=(1,)),
-                args=[data],
-                device=self.device,
+                LoadOp.DEFAULT, view=View.create(shape=shape), device=self.device
             )
-        elif isinstance(data, (List, Tuple, np.ndarray)):
-            self.lazydata = LazyBuffer(
-                LoadOp.FROM_CPU,
-                view=View.create(shape=(len(data),)),
-                args=[data],
-                device=self.device,
-            )
+        else:
+            if isinstance(data, LazyBuffer):
+                self.lazydata = data
+            elif isinstance(data, (int, float)):
+                self.lazydata = LazyBuffer(
+                    LoadOp.CONST,
+                    view=View.create(shape=(1,)),
+                    args=[data],
+                    device=self.device,
+                )
+            elif isinstance(data, (List, Tuple, np.ndarray)):
+                self.lazydata = LazyBuffer(
+                    LoadOp.FROM_CPU,
+                    view=View.create(shape=(len(data),)),
+                    args=[data],
+                    device=self.device,
+                )
 
     def _broadcasted(self, other):
         if self.lazydata.view.shape == other.lazydata.view.shape:
