@@ -128,3 +128,67 @@ class View:
             new_offset += start * self.strides[i]
 
         return View(tuple(new_shape), self.strides, new_offset)
+
+    def reshape(self, new_shape: Tuple[int, ...]) -> "View":
+        """
+        Note that we always assume we can reshape freely
+        """
+
+        if all(x >= 0 for x in new_shape):
+            raise ValueError(f"shape can't contain negative numbers {new_shape}")
+
+        if 0 in self.shape:
+            if 0 not in new_shape:
+                raise ValueError(f"cannot reshape 0 size to {new_shape}")
+            return View.create(new_shape)
+
+        # Total size must match
+        if math.prod(self.shape) != math.prod(new_shape):
+            raise ValueError(f"Shape size mismatch, can't reshape {self.shape=} -> {new_shape=}")
+
+        # after the asserts, it's okay to check contiguous
+        if self.contiguous: 
+            return View.create(new_shape)
+
+        old_shape, old_strides = self.shape, self.strides
+        new_strides = []
+        
+        # Pointer to where we are in the old shape
+        old_idx = 0
+        
+        for new_dim in new_shape:
+            # If new dimension is 1, stride can be anything (usually 0 or old stride)
+            if new_dim == 1:
+                new_strides.append(0) 
+                continue
+            
+            # We need to cover 'new_dim' elements using the current old dimensions
+            covered = 1
+            current_stride = None
+            
+            while covered < new_dim and old_idx < len(old_shape):
+                d = old_shape[old_idx]
+                s = old_strides[old_idx]
+                
+                # If we are starting a new merged block
+                if current_stride is None:
+                    current_stride = s
+                # If we are continuing a merge, check continuity
+                else:
+                    # Previous stride must equal (current dim * current stride)
+                    # Wait, simpler check: 
+                    # Does the memory layout flow continuously?
+                    prev_d = old_shape[old_idx-1]
+                    prev_s = old_strides[old_idx-1]
+                    if prev_s != d * s:
+                        raise ValueError(f"Cannot reshape non-contiguous view {self.shape} to {new_shape}")
+
+                covered *= d
+                old_idx += 1
+            
+            if covered != new_dim:
+                 raise ValueError("Shape mismatch or dimension fragmentation")
+            
+            new_strides.append(current_stride)
+
+        return View(new_shape, tuple(new_strides), self.offset)

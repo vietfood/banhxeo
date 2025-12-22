@@ -27,6 +27,7 @@ class LoadOp(Enum):
     VIEW = auto()
     FROM_CPU = auto()
     DEFAULT = auto()
+    CONTIGUOUS = auto()
 
 
 class MovementOp(Enum):
@@ -35,7 +36,6 @@ class MovementOp(Enum):
     EXPAND = auto()
     PAD = auto()
     SLICE = auto()
-    CONTIGUOUS = auto()
 
 
 type Op = Union[LoadOp, UnaryOp, BinaryOp, MovementOp]
@@ -132,6 +132,8 @@ class LazyBuffer:
             new_view = self.view.slice(args[0])
         elif op == MovementOp.EXPAND:
             new_view = self.view.broadcast_to(args[0])
+        elif op == MovementOp.RESHAPE:
+            new_view = self.view.reshape(args[0])
         else:
             # current view
             new_view = self.view

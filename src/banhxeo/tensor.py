@@ -6,6 +6,7 @@ import torch
 from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, UnaryOp
 from banhxeo.device import Device
 from banhxeo.view import View
+from banhxeo.helper import DEBUG
 
 
 class Tensor:
@@ -91,6 +92,30 @@ class Tensor:
 
     def sqrt(self):
         return Tensor(self.lazydata.compute_ops(UnaryOp.SQRT))
+
+    def contiguous(self):
+        # If already contiguous, do nothing
+        if self.lazydata.view.is_contiguous():
+            return self
+        # It's basically load the source using its complex view,
+        # but write it out linearly
+        return Tensor(LazyBuffer(op=LoadOp.CONTIGUOUS, 
+                                 view=View.create(shape=self.lazydata.view.shape),
+                                 src=(self.lazydata,),
+                                 device=self.lazydata.device
+                                ))
+
+    def reshape(sel)f, new_shape: Tuple[int, ...]):
+        if not self.lazydata.view.is_contiguous():
+            if DEBUG >= 1:
+                print("Trigerring contiguous copy!")
+            # this is a naive approach that always forces a copy if
+            # tensor isn't contiguous
+            contiguous_tensor = self.contiguous()
+            return Tensor(contiguous_tensor.lazydata.movement_ops(MovementOp.RESHAPE, new_shape))
+        
+        # reshape freely
+        return Tensor(self.lazydata.movement_ops(MovementOp.RESHAPE, new_shape))
 
     def permute(self, new_axis: Tuple[int, ...]):
         return Tensor(self.lazydata.movement_ops(MovementOp.PERMUTE, new_axis))

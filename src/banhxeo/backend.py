@@ -14,12 +14,18 @@ class Backend:
         topo = []
         visited = set()
 
-        def build_topo(v):
-            if v not in visited:
-                visited.add(v)
-                for child in v.src:
-                    build_topo(child)
-                topo.append(v)
+        def build_topo(v: LazyBuffer):
+            if v in visited:
+                return
+
+            visited.add(v)
+
+            if v.realized is not None: 
+                return # stop when see realized buffer
+
+            for child in v.src:
+                build_topo(child)
+            topo.append(v)
 
         build_topo(buffer)
         return topo
@@ -43,6 +49,13 @@ class CUDABackend(Backend):
     """
     Use TritonCodegen
     """
+    def is_barrier(buf: LazyBuffer):
+        # If the node is barrier, we need to realize it immediately
+        return (
+            isinstance(buf.op, ReduceOp) # Reductions are always barriers
+            or buf.op == BinaryOp.MATMUL # Same as MatMul
+            or buf.op == LoadOp.CONTIGUOUS # Contiguous also forces a realize
+        )
 
     def gencode(self, output: LazyBuffer):
         # First we use toposort to linearize the graph
