@@ -50,11 +50,14 @@ class CUDABackend(Backend):
     Use TritonCodegen
     """
     def is_barrier(buf: LazyBuffer):
-        # If the node is barrier, we need to realize it immediately
+        # realized buffers are always barriers
+        if buf.realized is not None:
+            return True
+
         return (
-            isinstance(buf.op, ReduceOp) # Reductions are always barriers
-            or buf.op == BinaryOp.MATMUL # Same as MatMul
-            or buf.op == LoadOp.CONTIGUOUS # Contiguous also forces a realize
+            isinstance(buf.op, ReduceOp)   # Sum/Max always start a new reduction kernel
+            or buf.op == BinaryOp.MATMUL   # Matmul is a specialized kernel
+            or buf.op == LoadOp.CONTIGUOUS # Contiguous is a memory copy kernel
         )
 
     def gencode(self, output: LazyBuffer):
