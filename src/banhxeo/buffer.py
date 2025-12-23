@@ -20,6 +20,12 @@ class BinaryOp(Enum):
     ADD = auto()
     SUB = auto()
     MUL = auto()
+    MATMUL = auto()
+
+
+class ReduceOp(Enum):
+    SUM = auto()
+    MAX = auto()
 
 
 class LoadOp(Enum):
@@ -63,11 +69,10 @@ class RawBuffer:
             buf_data = torch.empty(shape, dtype=dtype)
         else:
             if isinstance(data, (List, Tuple)):
-                # wrap torch Tensor
                 # we assume 1D Tensor as default
-                buf_data = torch.tensor(data, dtype=dtype)
+                # note that convert to numpy then wrap torch is faster than raw list
+                buf_data = torch.from_numpy(np.array(data)).to(dtype)
             elif isinstance(data, np.ndarray):
-                # better method for numpy array
                 buf_data = torch.from_numpy(data).to(dtype)
             else:
                 # copy a new torch Tensor
@@ -104,12 +109,24 @@ class LazyBuffer:
         self.realized: Optional[RawBuffer] = None
 
     def __repr__(self):
-        return f"<LazyBuffer (op={self.op}, realized={self.realized}, src={self.src}, args={self.args})>"
+        return f"<LazyBuffer (op={self.op}, view={self.view}, realized={self.realized}, args={self.args}, src={[str(s.op) for s in self.src]})>"
+
+    @property
+    def shape(self):
+        return self.view.shape
+
+    @property
+    def strides(self):
+        return self.view.strides
+
+    @property
+    def offset(self):
+        return self.view.offset
 
     def allocate(self):
         self.realized = RawBuffer.create(self.args, self.view.shape, self.device)
 
-    def view_shape(self, shape: Tuple[int, ...]):
+    def view_as(self, shape: Tuple[int, ...]):
         if self.realized is None:
             raise ValueError("Current LazyBuffer isn't realized")
         return self.realized.data.view(shape)

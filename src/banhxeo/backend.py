@@ -4,7 +4,7 @@ import math
 import os
 import tempfile
 
-from banhxeo.buffer import LazyBuffer
+from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, ReduceOp
 from banhxeo.codegen import TorchInterpreter, TritonCodegen
 from banhxeo.helpers import DEBUG
 
@@ -20,8 +20,8 @@ class Backend:
 
             visited.add(v)
 
-            if v.realized is not None: 
-                return # stop when see realized buffer
+            if v.realized is not None:
+                return  # stop when see realized buffer
 
             for child in v.src:
                 build_topo(child)
@@ -49,16 +49,44 @@ class CUDABackend(Backend):
     """
     Use TritonCodegen
     """
-    def is_barrier(buf: LazyBuffer):
+
+    def is_barrier(self, buf: LazyBuffer):
         # realized buffers are always barriers
         if buf.realized is not None:
             return True
 
         return (
-            isinstance(buf.op, ReduceOp)   # Sum/Max always start a new reduction kernel
-            or buf.op == BinaryOp.MATMUL   # Matmul is a specialized kernel
-            or buf.op == LoadOp.CONTIGUOUS # Contiguous is a memory copy kernel
+            isinstance(buf.op, ReduceOp)  # Sum/Max always start a new reduction kernel
+            or buf.op == BinaryOp.MATMUL  # Matmul is a specialized kernel
+            or buf.op == LoadOp.CONTIGUOUS  # Contiguous is a memory copy kernel
         )
+
+    def get_barriers(self, buf: LazyBuffer):
+        """
+        Traverse up from `buf`.
+        If we hit a Barrier, add it to the set and STOP traversing that branch.
+        If we hit a non-Barrier (like ADD), keep traversing its parents.
+        """
+        required = set()
+        visited = set()
+
+        def find(node):
+            if node in visited:
+                return
+            visited.add(node)
+
+            # If the node itself is a barrier (and it's NOT the node we are currently trying to exec),
+            # then this node must be realized before we can continue.
+            if node is not buf and self.is_barrier(node):
+                if node.realized is None:
+                    required.add(node)
+                return  # Stop traversing this branch, we found the cut point.
+
+            for parent in node.src:
+                find(parent)
+
+        find(buf)
+        return required
 
     def gencode(self, output: LazyBuffer):
         # First we use toposort to linearize the graph
@@ -76,6 +104,20 @@ class CUDABackend(Backend):
         return src, generator
 
     def exec(self, output: LazyBuffer):
+        if output.realized is not None:
+            return output
+
+        # Get all dependencies or barriers should be run first
+        barriers = self.get_barriers(output)
+
+        # Then realize all barriers
+        for b in barriers:
+            if DEBUG >= 2:
+                print(f"   [Recurse] Executing dependency {b.op}")
+            self.exec(b)
+
+        # Now that all "hard" dependencies are realized,
+        # we can safely schedule the current kernel.
         src, generator = self.gencode(output)
 
         # Write to a temporary file so Triton can inspect the source

@@ -29,10 +29,12 @@ class TorchInterpreter:
                     assert buf.src[0].realized is not None
                     # we only change shape and stride of current data
                     buf.realized.data = buf.src[0].realized.data.as_strided(
-                        size=buf.view.shape,
-                        stride=buf.view.strides,
-                        storage_offset=buf.view.offset,
+                        size=buf.shape,
+                        stride=buf.strides,
+                        storage_offset=buf.offset,
                     )
+                elif buf.op == LoadOp.CONTIGUOUS:
+                    buf.realized.data = buf.realized.data.contiguous()
             elif isinstance(buf.op, BinaryOp):
                 # as it should be
                 assert buf.src[0].realized is not None
@@ -41,6 +43,7 @@ class TorchInterpreter:
                     BinaryOp.ADD: torch.add,
                     BinaryOp.SUB: torch.sub,
                     BinaryOp.MUL: torch.mul,
+                    BinaryOp.MATMUL: torch.matmul,
                 }
                 buf.realized.data = op_map[buf.op](
                     buf.src[0].realized.data, buf.src[1].realized.data
