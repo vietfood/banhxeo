@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any, List, Optional, Tuple, TypeAlias, Union
 
 import numpy as np
 import torch
@@ -31,7 +31,8 @@ class ReduceOp(Enum):
 class LoadOp(Enum):
     CONST = auto()
     VIEW = auto()
-    FROM_CPU = auto()
+    FROM_CPU = auto()  # list, tuple, any iterable
+    FROM_NUMPY = auto()  # we need to preserve shape and strides
     DEFAULT = auto()
     CONTIGUOUS = auto()
 
@@ -44,7 +45,7 @@ class MovementOp(Enum):
     SLICE = auto()
 
 
-type Op = Union[LoadOp, UnaryOp, BinaryOp, MovementOp]
+Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, MovementOp]
 
 
 @dataclass
@@ -134,10 +135,12 @@ class LazyBuffer:
     def compute_ops(self, op, *others: "LazyBuffer"):
         if isinstance(op, BinaryOp):
             assert len(others) == 1
-            return LazyBuffer(op, src=(self, others[0]), view=self.view)
+            return LazyBuffer(
+                op, src=(self, others[0]), view=self.view, device=self.device
+            )
         elif isinstance(op, UnaryOp):
             assert len(others) == 0
-            return LazyBuffer(op, src=(self,), view=self.view)
+            return LazyBuffer(op, src=(self,), view=self.view, device=self.device)
 
     def movement_ops(self, op, *args):
         if not isinstance(op, MovementOp):
@@ -157,8 +160,10 @@ class LazyBuffer:
 
         # if this is already a VIEW, just update its view and keep the same source
         if self.op == LoadOp.VIEW:
-            return LazyBuffer(LoadOp.VIEW, src=self.src, view=new_view)
+            return LazyBuffer(
+                LoadOp.VIEW, src=self.src, view=new_view, device=self.device
+            )
 
         # we treat the MovementOp as a new LoadOp
         # it loads the same pointer as its parent, but using its own view.
-        return LazyBuffer(LoadOp.VIEW, src=(self,), view=new_view)
+        return LazyBuffer(LoadOp.VIEW, src=(self,), view=new_view, device=self.device)

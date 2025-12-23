@@ -97,27 +97,13 @@ class CUDABackend(Backend):
         src = generator.generate()
 
         if DEBUG >= 1:
-            print("--- GENERATED TRITON KERNEL ---")
+            print("--- [DEBUG] GENERATED TRITON KERNEL ---")
             print(src)
             print("-------------------------------")
 
         return src, generator
 
-    def exec(self, output: LazyBuffer):
-        if output.realized is not None:
-            return output
-
-        # Get all dependencies or barriers should be run first
-        barriers = self.get_barriers(output)
-
-        # Then realize all barriers
-        for b in barriers:
-            if DEBUG >= 2:
-                print(f"   [Recurse] Executing dependency {b.op}")
-            self.exec(b)
-
-        # Now that all "hard" dependencies are realized,
-        # we can safely schedule the current kernel.
+    def exec_elementwise(self, output: LazyBuffer):
         src, generator = self.gencode(output)
 
         # Write to a temporary file so Triton can inspect the source
@@ -175,3 +161,31 @@ class CUDABackend(Backend):
         finally:
             # Clean up the temp file
             os.remove(temp_path)
+
+    def exec_matmul(self, output: LazyBuffer):
+        pass
+
+    def exec_reduce(self, output: LazyBuffer):
+        pass
+
+    def exec(self, output: LazyBuffer):
+        if output.realized is not None:
+            return output
+
+        # Get all dependencies or barriers should be run first
+        barriers = self.get_barriers(output)
+        print(barriers)
+
+        # Then realize all barriers
+        for b in barriers:
+            if DEBUG >= 2:
+                print(f"   [Recurse] Executing dependency {b.op}")
+            self.exec(b)
+
+        # HACK: Right now, MatMul and Reduction has specialized kernel
+        if output.op == BinaryOp.MATMUL:
+            self.exec_matmul(output)
+        elif isinstance(output.op, ReduceOp):
+            self.exec_reduce(output)
+        else:
+            self.exec_elementwise(output)

@@ -34,7 +34,8 @@ class TorchInterpreter:
                         storage_offset=buf.offset,
                     )
                 elif buf.op == LoadOp.CONTIGUOUS:
-                    buf.realized.data = buf.realized.data.contiguous()
+                    assert buf.src[0].realized is not None
+                    buf.realized.data = buf.src[0].realized.data.contiguous()
             elif isinstance(buf.op, BinaryOp):
                 # as it should be
                 assert buf.src[0].realized is not None
@@ -84,6 +85,10 @@ class TritonCodegen:
                 elif buf.op == LoadOp.VIEW:
                     self.input_args.append(
                         InputArgument(buf, None, ["shape", "stride"])
+                    )
+                elif buf.op == LoadOp.FROM_NUMPY:
+                    self.input_args.append(
+                        InputArgument(buf, "ptr", ["shape", "stride"])
                     )
                 self.var_names[buf] = name
             else:

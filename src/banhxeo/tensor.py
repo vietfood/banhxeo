@@ -4,13 +4,13 @@ import numpy as np
 import torch
 
 from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, UnaryOp
-from banhxeo.device import Device
+from banhxeo.device import DEFAULT_DEVICE, Device
 from banhxeo.helpers import DEBUG
 from banhxeo.view import View
 
 
 class Tensor:
-    __slots__ = "lazydata", "requires_grad", "device"
+    __slots__ = "lazydata", "requires_grad"
     __deletable__ = ("_ctx",)
     training: ClassVar[bool] = False
 
@@ -19,16 +19,16 @@ class Tensor:
         data: Optional[
             Union[LazyBuffer, List, Tuple, np.ndarray, torch.Tensor, int, float]
         ] = None,
-        device: str = "cpu",
+        device: str = DEFAULT_DEVICE,
         shape: Optional[Tuple[int, ...]] = None,
     ):
-        self.device = device.upper()
+        device = device.upper()
         self.requires_grad = False
 
         if data is None:
             assert shape is not None, "Cannot allocate empty Tensor without shape"
             self.lazydata = LazyBuffer(
-                LoadOp.DEFAULT, view=View.create(shape=shape), device=self.device
+                LoadOp.DEFAULT, view=View.create(shape=shape), device=device
             )
         else:
             if isinstance(data, LazyBuffer):
@@ -38,24 +38,24 @@ class Tensor:
                     LoadOp.CONST,
                     view=View.create(shape=(1,)),
                     args=[data],
-                    device=self.device,
+                    device=device,
                 )
             elif isinstance(data, (List, Tuple)):
                 self.lazydata = LazyBuffer(
                     LoadOp.FROM_CPU,
                     view=View.create(shape=(len(data),)),
                     args=[data],
-                    device=self.device,
+                    device=device,
                 )
             elif isinstance(data, np.ndarray):
                 self.lazydata = LazyBuffer(
-                    LoadOp.FROM_CPU,
+                    LoadOp.FROM_NUMPY,
                     # for the numpy array it is a little bit problemtic
                     # here we assume the the tensor always continuous
                     # so we flatten numpy array first
                     view=View.create(shape=data.shape),
                     args=[data.flatten()],
-                    device=self.device,
+                    device=device,
                 )
 
     def _broadcasted(self, other):
@@ -76,20 +76,37 @@ class Tensor:
                 f"Cannot broadcast {self.lazydata.view.shape} and {other.lazydata.view.shape}"
             )
 
-    def __add__(self, other):
+    def add(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
         return Tensor(x.lazydata.compute_ops(BinaryOp.ADD, y.lazydata))
 
-    def __mul__(self, other):
+    def __add__(self, other):
+        return self.add(other)
+
+    def mul(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
         return Tensor(x.lazydata.compute_ops(BinaryOp.MUL, y.lazydata))
 
-    def __sub__(self, other):
+    def __mul__(self, other):
+        return self.mul(other)
+
+    def sub(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
         return Tensor(x.lazydata.compute_ops(BinaryOp.SUB, y.lazydata))
+
+    def __sub__(self, other):
+        return self.sub(other)
+
+    def matmul(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOp.MATMUL, y.lazydata))
+
+    def __matmul__(self, other):
+        return self.matmul(other)
 
     def log2(self):
         return Tensor(self.lazydata.compute_ops(UnaryOp.LOG2))
@@ -104,7 +121,6 @@ class Tensor:
         return Tensor(self.lazydata.compute_ops(UnaryOp.SQRT))
 
     def contiguous(self):
-        # If already contiguous, do nothing
         if self.lazydata.view.is_contiguous():
             return self
         # It's basically load the source using its complex view,
@@ -121,7 +137,7 @@ class Tensor:
     def reshape(self, new_shape: Tuple[int, ...]):
         if not self.lazydata.view.is_contiguous():
             if DEBUG >= 1:
-                print("Trigerring contiguous copy!")
+                print("[DEBUG] Trigerring contiguous copy!")
             # this is a naive approach that always forces a copy if
             # tensor isn't contiguous
             contiguous_tensor = self.contiguous()
@@ -142,5 +158,5 @@ class Tensor:
         return Tensor(self.lazydata.movement_ops(MovementOp.EXPAND, shape))
 
     def realize(self):
-        Device.get_backend(self.device)().exec(self.lazydata)
+        Device.get_backend(self.lazydata.device)().exec(self.lazydata)
         return self.lazydata.view_as(self.lazydata.shape)
