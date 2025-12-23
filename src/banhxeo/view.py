@@ -160,11 +160,6 @@ class View:
         old_idx = 0
 
         for new_dim in new_shape:
-            # If new dimension is 1, stride can be anything (usually 0 or old stride)
-            if new_dim == 1:
-                new_strides.append(0)
-                continue
-
             # We need to cover 'new_dim' elements using the current old dimensions
             covered = 1
             current_stride = None
@@ -184,6 +179,7 @@ class View:
                         raise ValueError(
                             f"Cannot reshape non-contiguous view {self.shape} to {new_shape}"
                         )
+                    current_stride = s
 
                 covered *= d
                 old_idx += 1

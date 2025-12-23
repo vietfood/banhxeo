@@ -62,6 +62,10 @@ class Tensor:
         if self.lazydata.view.shape == other.lazydata.view.shape:
             return self, other
 
+        # We don't broadcast on const
+        if other.lazydata.op == LoadOp.CONST:
+            return self, other
+
         try:
             out_shape = tuple(
                 max(s, o)
@@ -102,8 +106,20 @@ class Tensor:
 
     def matmul(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
-        x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.MATMUL, y.lazydata))
+
+        # We need to check dimension and contiguous
+        if self.lazydata.shape[1] != other.lazydata.shape[0]:
+            raise ValueError(
+                f"Incompatible dimensions between {self.lazydata.shape=} and {other.lazydata.shape=}"
+            )
+
+        if not self.lazydata.view.is_contiguous():
+            print(
+                "[WARNING] MatMul should be called with contiguous Tensor => Trigger contiguous copying"
+            )
+            self = self.contiguous()
+
+        return Tensor(self.lazydata.compute_ops(BinaryOp.MATMUL, other.lazydata))
 
     def __matmul__(self, other):
         return self.matmul(other)
@@ -136,8 +152,7 @@ class Tensor:
 
     def reshape(self, new_shape: Tuple[int, ...]):
         if not self.lazydata.view.is_contiguous():
-            if DEBUG >= 1:
-                print("[DEBUG] Trigerring contiguous copy!")
+            print("[WARNING] Trigerring contiguous copy!")
             # this is a naive approach that always forces a copy if
             # tensor isn't contiguous
             contiguous_tensor = self.contiguous()

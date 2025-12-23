@@ -4,7 +4,7 @@ import math
 import os
 import tempfile
 
-from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, ReduceOp
+from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, ReduceOp
 from banhxeo.codegen import TorchInterpreter, TritonCodegen
 from banhxeo.helpers import DEBUG
 
@@ -55,10 +55,14 @@ class CUDABackend(Backend):
         if buf.realized is not None:
             return True
 
+        # If we have a VIEW/CONTIGUOUS op, and its parent is NOT realized (it's a compute op),
+        if isinstance(buf.op, (LoadOp, MovementOp)):
+            if len(buf.src) != 0 and buf.src[0].realized is None:
+                return True
+
         return (
             isinstance(buf.op, ReduceOp)  # Sum/Max always start a new reduction kernel
             or buf.op == BinaryOp.MATMUL  # Matmul is a specialized kernel
-            or buf.op == LoadOp.CONTIGUOUS  # Contiguous is a memory copy kernel
         )
 
     def get_barriers(self, buf: LazyBuffer):
@@ -80,7 +84,7 @@ class CUDABackend(Backend):
             if node is not buf and self.is_barrier(node):
                 if node.realized is None:
                     required.add(node)
-                return  # Stop traversing this branch, we found the cut point.
+                return
 
             for parent in node.src:
                 find(parent)
@@ -130,10 +134,9 @@ class CUDABackend(Backend):
             # prepare input tensors
             input_tensors = []
             N = 0
-            for arg in generator.input_args:
-                buf = arg.buf
-                arg_type = arg.type
-                metadata = arg.metadata
+            for buf, args in generator.input_args.items():
+                arg_type = args.type
+                metadata = args.metadata
 
                 if arg_type == "ptr":
                     buf.allocate()
@@ -163,18 +166,55 @@ class CUDABackend(Backend):
             os.remove(temp_path)
 
     def exec_matmul(self, output: LazyBuffer):
-        pass
+        import triton
+
+        from banhxeo.kernels.matmul import matmul_kernel
+
+        # TODO: Dimension and contiguous check should be in Tensor side instead of Backend side
+        assert all([s.realized is not None for s in output.src]), (
+            "Source must be realized before Matmul"
+        )
+
+        a = output.src[0]
+        b = output.src[1]
+        c = output
+
+        M, K = a.shape
+        K, N = b.shape
+        c.allocate()
+
+        grid = lambda META: (  # noqa: E731
+            triton.cdiv(M, META["BLOCK_SIZE_M"]) * triton.cdiv(N, META["BLOCK_SIZE_N"]),
+        )
+        matmul_kernel[grid](
+            a,
+            b,
+            c,
+            M,
+            N,
+            K,
+            a.strides[0],
+            a.strides[1],
+            b.strides[0],
+            b.strides[1],
+            c.strides[0],
+            c.strides[0],
+        )
 
     def exec_reduce(self, output: LazyBuffer):
+        # TODO:
         pass
 
     def exec(self, output: LazyBuffer):
+        # from banhxeo.viz import visualize_graph
+
+        # visualize_graph(output, "lazybuffer_debug")
+
         if output.realized is not None:
             return output
 
         # Get all dependencies or barriers should be run first
         barriers = self.get_barriers(output)
-        print(barriers)
 
         # Then realize all barriers
         for b in barriers:

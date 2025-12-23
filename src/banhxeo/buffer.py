@@ -65,25 +65,26 @@ class RawBuffer:
         device: Optional[str] = None,
         dtype: torch.dtype = torch.float32,
     ):
+        device_str = device.lower() if device else "cpu"
+
         if data is None:
             assert shape is not None  # This should be handle by Tensor
-            buf_data = torch.empty(shape, dtype=dtype)
+            buf_data = torch.empty(shape, dtype=dtype, device=device_str)
         else:
             if isinstance(data, (List, Tuple)):
                 # we assume 1D Tensor as default
                 # note that convert to numpy then wrap torch is faster than raw list
-                buf_data = torch.from_numpy(np.array(data)).to(dtype)
+                buf_data = torch.from_numpy(np.array(data)).to(
+                    dtype=dtype, device=device_str
+                )
             elif isinstance(data, np.ndarray):
-                buf_data = torch.from_numpy(data).to(dtype)
+                buf_data = torch.from_numpy(data).to(dtype=dtype, device=device_str)
             else:
                 # copy a new torch Tensor
-                buf_data = data.clone().to(dtype)
+                buf_data = data.clone().to(dtype=dtype, device=device_str)
 
             if shape is not None:
                 buf_data = buf_data.view(shape)
-
-            if device is not None and device.lower() != str(buf_data.device):
-                buf_data = buf_data.to(device.lower())
 
         return RawBuffer(
             shape=buf_data.shape,
@@ -110,7 +111,7 @@ class LazyBuffer:
         self.realized: Optional[RawBuffer] = None
 
     def __repr__(self):
-        return f"<LazyBuffer (op={self.op}, view={self.view}, realized={self.realized}, args={self.args}, src={[str(s.op) for s in self.src]})>"
+        return f"<LazyBuffer (op={self.op}, view={self.view}, realized={self.realized}, args={self.args}, src={self.src})>"
 
     @property
     def shape(self):
@@ -135,17 +136,16 @@ class LazyBuffer:
     def compute_ops(self, op, *others: "LazyBuffer"):
         if isinstance(op, BinaryOp):
             assert len(others) == 1
-            return LazyBuffer(
-                op, src=(self, others[0]), view=self.view, device=self.device
-            )
+            if op == BinaryOp.MATMUL:
+                view = View.create(shape=(self.shape[0], others[0].shape[1]))
+            else:
+                view = self.view
+            return LazyBuffer(op, src=(self, others[0]), view=view, device=self.device)
         elif isinstance(op, UnaryOp):
             assert len(others) == 0
             return LazyBuffer(op, src=(self,), view=self.view, device=self.device)
 
     def movement_ops(self, op, *args):
-        if not isinstance(op, MovementOp):
-            raise ValueError("This function accepts MovementOps only")
-
         if op == MovementOp.PERMUTE:
             new_view = self.view.permute(args[0])
         elif op == MovementOp.SLICE:
@@ -163,6 +163,9 @@ class LazyBuffer:
             return LazyBuffer(
                 LoadOp.VIEW, src=self.src, view=new_view, device=self.device
             )
+
+        if self.op == LoadOp.CONST:  # we don't want to "view" const
+            return self
 
         # we treat the MovementOp as a new LoadOp
         # it loads the same pointer as its parent, but using its own view.
