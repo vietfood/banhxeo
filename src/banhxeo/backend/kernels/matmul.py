@@ -89,7 +89,7 @@ def matmul_kernel(
         # Advance the ptrs to the next K block.
         a_ptrs += BLOCK_SIZE_K * stride_ak
         b_ptrs += BLOCK_SIZE_K * stride_bk
-    c = accumulator
+    c = accumulator.to(tl.float32)
 
     # -----------------------------------------------------------
     # Write back the block of the output matrix C with masks.

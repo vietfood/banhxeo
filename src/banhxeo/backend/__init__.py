@@ -53,6 +53,8 @@ class CUDABackend(Backend):
     Use TritonCodegen
     """
 
+    kernel_cache = dict()
+
     def is_barrier(self, buf: LazyBuffer):
         # realized buffers are always barriers
         if buf.realized is not None:
@@ -121,71 +123,75 @@ class CUDABackend(Backend):
     def exec_elementwise(self, output: LazyBuffer):
         src, generator = self.gencode(output)
 
-        # Write to a temporary file so Triton can inspect the source
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
-            f.write("import torch\n")
-            f.write("import triton\n")
-            f.write("import triton.language as tl\n\n")
-            f.write(src)
-            temp_path = f.name
+        if src not in self.kernel_cache.keys():
+            # Write to a temporary file so Triton can inspect the source
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
+                f.write("import torch\n")
+                f.write("import triton\n")
+                f.write("import triton.language as tl\n\n")
+                f.write(src)
+                temp_path = f.name
 
-        try:
-            # Dynamically import the generated module
-            spec = importlib.util.spec_from_file_location("generated_kernel", temp_path)
-            if spec is None:
-                raise ValueError("Generated kernel is None")
+            try:
+                # Dynamically import the generated module
+                spec = importlib.util.spec_from_file_location(
+                    "generated_kernel", temp_path
+                )
+                if spec is None:
+                    raise ValueError("Generated kernel is None")
 
-            mod = importlib.util.module_from_spec(spec)
-            if spec.loader is None:
-                raise ValueError("Loader is None")
+                mod = importlib.util.module_from_spec(spec)
+                if spec.loader is None:
+                    raise ValueError("Loader is None")
 
-            spec.loader.exec_module(mod)
-            triton_kernel = mod.generated_kernel
+                spec.loader.exec_module(mod)
+                triton_kernel = mod.generated_kernel
+                self.kernel_cache[src] = triton_kernel
+            except Exception as e:
+                raise ValueError(f"[ERROR] Kernel compilation failed with error: {e}")
+            finally:
+                os.remove(temp_path)
 
-            # prepare input tensors
-            input_tensors = []
-            N = 0
+        input_tensors = []
+        N = 0
 
-            for buf, args in generator.input_args.items():
-                arg_type = args.type
-                metadata = args.metadata
+        for buf, args in generator.input_args.items():
+            arg_type = args.type
+            metadata = args.metadata
 
-                if arg_type == "ptr":
-                    buf.allocate()
-                    input_tensors.append(buf.realized.data)
-                elif arg_type == "const":
-                    # append const directly
-                    input_tensors.append(buf.args[0])
+            if arg_type == "ptr":
+                buf.allocate()
+                input_tensors.append(buf.realized.data)
+            elif arg_type == "const":
+                # append const directly
+                input_tensors.append(buf.args[0])
 
-                if metadata is not None:
-                    for m in metadata:
-                        if m == "shape":
-                            input_tensors.extend(buf.view.shape)
-                        elif m == "stride":
-                            input_tensors.extend(buf.view.strides)
+            if metadata is not None:
+                for m in metadata:
+                    if m == "shape":
+                        input_tensors.extend(buf.view.shape)
+                    elif m == "stride":
+                        input_tensors.extend(buf.view.strides)
 
-            output.allocate()
-            assert output.realized is not None  # should be None after allocated
+        output.allocate()
+        assert output.realized is not None  # should be None after allocated
 
-            N = math.prod(output.view.shape)  # total size
-            BLOCK_SIZE = 1024  # hardcode block size
-            grid = (math.ceil(N / BLOCK_SIZE),)
-            triton_kernel[grid](
-                *input_tensors, output.realized.data, N, BLOCK_SIZE=BLOCK_SIZE
-            )
-        finally:
-            # Clean up the temp file
-            os.remove(temp_path)
+        N = math.prod(output.view.shape)  # total size
+        BLOCK_SIZE = 1024  # hardcode block size
+        grid = (math.ceil(N / BLOCK_SIZE),)
+        self.kernel_cache[src][grid](
+            *input_tensors, output.realized.data, N, BLOCK_SIZE=BLOCK_SIZE
+        )
 
     def exec_matmul(self, output: LazyBuffer):
         import triton
 
         from banhxeo.backend.kernels.matmul import matmul_kernel
 
-        # TODO: Dimension and contiguous check should be in Tensor side instead of Backend side
-        assert all([s.realized is not None for s in output.src]), (
-            "Source must be realized before Matmul"
-        )
+        for s in output.src:
+            # We need to realize source before matmul kernel
+            # Currently matmul is a different kernel
+            self.exec(s)
 
         a = output.src[0]
         b = output.src[1]
@@ -240,4 +246,4 @@ class CUDABackend(Backend):
             self.exec_elementwise(output)
 
         if DEBUG >= 2:
-            print(output.realized.data)
+            print(output.realized.data)  # type: ignore

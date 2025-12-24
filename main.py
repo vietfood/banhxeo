@@ -1,43 +1,90 @@
+"""
+Thanks Gemini 3.0 Pro
+"""
+
 import numpy as np
+import torch
 
 import banhxeo
 
-
-def test_impossible_reshape(device="cpu"):
-    # 1. Create (4, 4)
-    t = banhxeo.Tensor(np.arange(16).reshape(4, 4), device=device)
-
-    # 2. Transpose -> (4, 4) but with stride (1, 4)
-    t = t.permute((1, 0))
-
-    # 3. Reshape -> (16,)
-    # This should trigger your contiguous barrier logic!
-    flat = t.reshape((16,))
-    flat.realize()
-
-    assert flat.lazydata.realized is not None
-    print(flat.lazydata.realized.data)
-    # Should print: [0, 4, 8, 12, 1, 5, 9, 13, ...] (Column major order)
+# Set seed for reproducibility (so you can debug specific values)
+np.random.seed(1337)
+torch.manual_seed(1337)
 
 
-def test_mixed_execution(device="cpu"):
-    # 1. Elementwise Ops (Should Fuse)
-    a = banhxeo.Tensor([1, 2], device=device)
-    b = banhxeo.Tensor([3, 4], device=device)
-    c = (a + b) * 2  # This should be ONE kernel call
+def test_mlp_forward():
+    print("=== 🧪 Testing MLP Forward Pass (x @ W + b) ===")
 
-    # 2. Reshape (Should trigger Contiguous Barrier)
-    # create non-contiguous view
-    d = c.expand((2, 2)).permute((1, 0))
-    e = d.reshape((4,))  # Barrier 1: Contiguous
+    # 1. Setup Dimensions
+    # Keep them small enough to inspect, but non-square to catch transpose bugs
+    B = 4  # Batch size
+    Din = 8  # Input dim
+    Dout = 16  # Output dim
 
-    # 3. MatMul (Should trigger MatMul Barrier)
-    # (4,1) @ (1,4) -> (4,4)
-    f = e.reshape((4, 1)) @ e.reshape((1, 4))  # Barrier 2: MatMul
+    device = "CUDA"
 
-    # 4. Final Realize
-    print(f.realize())
+    # 2. Prepare Data (Numpy source)
+    # We use float32.
+    raw_x = np.random.randn(B, Din).astype(np.float32)
+    raw_w = np.random.randn(Din, Dout).astype(np.float32)
+    raw_b = np.random.randn(Dout).astype(np.float32)
+
+    # 3. Ground Truth (PyTorch)
+    t_x = torch.tensor(raw_x)
+    t_w = torch.tensor(raw_w)
+    t_b = torch.tensor(raw_b)
+
+    # Run PyTorch execution
+    t_matmul = t_x @ t_w
+    t_out = t_matmul + t_b
+
+    print(f"Shapes: Input{t_x.shape} @ Weights{t_w.shape} + Bias{t_b.shape}")
+    print(f"Expected Output Shape: {t_out.shape}")
+
+    # 4. Banhxeo Execution
+    bx_x = banhxeo.Tensor(raw_x, device=device)
+    bx_w = banhxeo.Tensor(raw_w, device=device)
+    bx_b = banhxeo.Tensor(raw_b, device=device)
+
+    # Step A: Just Matmul
+    print("\n[1/2] Testing Matmul only (x @ W)...")
+    bx_matmul = bx_x @ bx_w
+    bx_matmul.realize()
+
+    # Pull data back (assuming .numpy() or accessing realized buffer directly)
+    # Using internal buffer access to be safe if .numpy() isn't implemented on Tensor yet
+    res_matmul = bx_matmul.lazydata.realized.to_cpu().numpy()  # type: ignore
+
+    if np.allclose(res_matmul, t_matmul.numpy(), atol=1e-3, rtol=1e-3):
+        print("✅ Matmul matched PyTorch!")
+    else:
+        print("❌ Matmul Mismatch!")
+        print("Expected first row:\n", t_matmul.numpy()[0])
+        print("Got first row:\n", res_matmul[0])
+        print("Max diff:", np.abs(res_matmul - t_matmul.numpy()).max())
+        return  # Stop here if matmul is broken
+
+    # Step B: Add Bias (Implicit Broadcasting)
+    # This tests if your View logic handles (B, Dout) + (Dout,) correctly
+    print("\n[2/2] Testing Add Bias (x @ W + b)...")
+
+    # NOTE: If your Tensor.add doesn't auto-reshape, you might fail here.
+    # This is part of the test!
+    bx_out = bx_matmul.add(bx_b)
+    bx_out.realize()
+
+    res_out = bx_out.lazydata.realized.to_cpu().numpy()  # type: ignore
+
+    if np.allclose(res_out, t_out.numpy(), atol=1e-3, rtol=1e-3):
+        print("✅ MLP Forward Pass matched PyTorch!")
+        print("\nSample Output:\n", res_out[0, :5])
+    else:
+        print("❌ Bias Add Mismatch! (Check your broadcasting/view logic)")
+        print(f"Shape of result: {res_out.shape}")
+        print("Expected first row:\n", t_out.numpy()[0])
+        print("Got first row:\n", res_out[0])
+        print("Max diff:", np.abs(res_out - t_out.numpy()).max())
 
 
-# test_impossible_reshape()
-test_mixed_execution("cuda")
+if __name__ == "__main__":
+    test_mlp_forward()

@@ -57,6 +57,77 @@ class Tensor:
                     device=device,
                 )
 
+    # ---------- Binary Ops ----------
+
+    def add(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOp.ADD, y.lazydata))
+
+    def mul(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOp.MUL, y.lazydata))
+
+    def sub(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOp.SUB, y.lazydata))
+
+    def less(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        x, y = self._broadcasted(other)
+        return Tensor(x.lazydata.compute_ops(BinaryOp.CMPLT, y.lazydata))
+
+    def matmul(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+
+        # We need to check dimension and contiguous
+        if self.lazydata.shape[1] != other.lazydata.shape[0]:
+            raise ValueError(
+                f"Incompatible dimensions between {self.lazydata.shape=} and {other.lazydata.shape=}"
+            )
+
+        if not self.lazydata.view.is_contiguous():
+            print(
+                "[WARNING] MatMul should be called with contiguous Tensor => Trigger contiguous copying"
+            )
+            self = self.contiguous()
+
+        return Tensor(self.lazydata.compute_ops(BinaryOp.MATMUL, other.lazydata))
+
+    # ---------- Unary Ops ----------
+
+    def log2(self):
+        return Tensor(self.lazydata.compute_ops(UnaryOp.LOG2))
+
+    def exp2(self):
+        return Tensor(self.lazydata.compute_ops(UnaryOp.EXP2))
+
+    def sin(self):
+        return Tensor(self.lazydata.compute_ops(UnaryOp.SIN))
+
+    def sqrt(self):
+        return Tensor(self.lazydata.compute_ops(UnaryOp.SQRT))
+
+    # ---------- Load Ops ----------
+
+    def contiguous(self):
+        if self.lazydata.view.is_contiguous():
+            return self
+        # It's basically load the source using its complex view,
+        # but write it out linearly
+        return Tensor(
+            LazyBuffer(
+                op=LoadOp.CONTIGUOUS,
+                view=View.create(shape=self.lazydata.view.shape),
+                src=(self.lazydata,),
+                device=self.lazydata.device,
+            )
+        )
+
+    # ---------- Movement Ops ----------
+
     def _broadcasted(self, other):
         if self.lazydata.view.shape == other.lazydata.view.shape:
             return self, other
@@ -79,76 +150,6 @@ class Tensor:
                 f"Cannot broadcast {self.lazydata.view.shape} and {other.lazydata.view.shape}"
             )
 
-    def add(self, other):
-        other = other if isinstance(other, Tensor) else Tensor(other)
-        x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.ADD, y.lazydata))
-
-    def __add__(self, other):
-        return self.add(other)
-
-    def mul(self, other):
-        other = other if isinstance(other, Tensor) else Tensor(other)
-        x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.MUL, y.lazydata))
-
-    def __mul__(self, other):
-        return self.mul(other)
-
-    def sub(self, other):
-        other = other if isinstance(other, Tensor) else Tensor(other)
-        x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.SUB, y.lazydata))
-
-    def __sub__(self, other):
-        return self.sub(other)
-
-    def matmul(self, other):
-        other = other if isinstance(other, Tensor) else Tensor(other)
-
-        # We need to check dimension and contiguous
-        if self.lazydata.shape[1] != other.lazydata.shape[0]:
-            raise ValueError(
-                f"Incompatible dimensions between {self.lazydata.shape=} and {other.lazydata.shape=}"
-            )
-
-        if not self.lazydata.view.is_contiguous():
-            print(
-                "[WARNING] MatMul should be called with contiguous Tensor => Trigger contiguous copying"
-            )
-            self = self.contiguous()
-
-        return Tensor(self.lazydata.compute_ops(BinaryOp.MATMUL, other.lazydata))
-
-    def __matmul__(self, other):
-        return self.matmul(other)
-
-    def log2(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.LOG2))
-
-    def exp2(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.EXP2))
-
-    def sin(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.SIN))
-
-    def sqrt(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.SQRT))
-
-    def contiguous(self):
-        if self.lazydata.view.is_contiguous():
-            return self
-        # It's basically load the source using its complex view,
-        # but write it out linearly
-        return Tensor(
-            LazyBuffer(
-                op=LoadOp.CONTIGUOUS,
-                view=View.create(shape=self.lazydata.view.shape),
-                src=(self.lazydata,),
-                device=self.lazydata.device,
-            )
-        )
-
     def reshape(self, new_shape: Tuple[int, ...]):
         if not self.lazydata.view.is_contiguous():
             print("[WARNING] Trigerring contiguous copy!")
@@ -170,6 +171,25 @@ class Tensor:
 
     def expand(self, shape: Tuple[int, ...]):
         return Tensor(self.lazydata.movement_ops(MovementOp.EXPAND, shape))
+
+    # ---------- Ops Wrapper ----------
+
+    def __add__(self, other):
+        return self.add(other)
+
+    def __mul__(self, other):
+        return self.mul(other)
+
+    def __sub__(self, other):
+        return self.sub(other)
+
+    def __matmul__(self, other):
+        return self.matmul(other)
+
+    def __lt__(self, other):
+        return self.less(other)
+
+    # ---------- Realize Method ----------
 
     def realize(self):
         Device.get_backend(self.lazydata.device)().exec(self.lazydata)

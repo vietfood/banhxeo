@@ -142,6 +142,30 @@ class TritonCodegen:
                 self.code.append(
                     f"    {name} = tl.load({name}{buf_sig} + {self.read_offset}, mask=linear_mask)"
                 )
+            elif buf.op == LoadOp.FROM_NUMPY:
+                code = [
+                    f"    {name}_offset = {buf.view.offset}",
+                    f"    {name}_idx = {self.read_offset}",
+                ]
+                for i in reversed(range(len(buf.view.shape))):
+                    # idx_i = temp_idx % shape_i
+                    # temp_idx = temp_idx // shape_i
+                    # offset += idx_i * stride_i
+                    code.extend(
+                        [
+                            f"    {name}_idx_{i} = {name}_idx % {name}_shape_{i}",
+                            f"    {name}_idx = {name}_idx // {name}_shape_{i}",
+                            f"    {name}_offset += {name}_idx_{i} * {name}_stride_{i}",
+                        ]
+                    )
+                self.code.append(
+                    chr(10).join(
+                        [
+                            *code,
+                            f"    {name} = tl.load({name}{buf_sig} + {name}_offset)",
+                        ]
+                    ),
+                )
             elif buf.op == LoadOp.CONTIGUOUS:
                 if buf.src[0].op == LoadOp.VIEW and buf.src[0].realized is None:
                     handle_op_view(buf.src[0], contiguous=True)

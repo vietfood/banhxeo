@@ -2,7 +2,7 @@ from typing import List
 
 import torch
 
-from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, UnaryOp
+from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, UnaryOp, TernaryOp
 from banhxeo.utils.helpers import DEBUG
 
 
@@ -37,6 +37,7 @@ class TorchInterpreter:
                     BinaryOp.SUB: torch.sub,
                     BinaryOp.MUL: torch.mul,
                     BinaryOp.MATMUL: torch.matmul,
+                    BinaryOp.CMPLT: lambda x, y: (x < y).float(),
                 }
                 buf.realized.data = op_map[buf.op](
                     buf.src[0].realized.data, buf.src[1].realized.data
@@ -50,6 +51,21 @@ class TorchInterpreter:
                     UnaryOp.SQRT: torch.sqrt,
                 }
                 buf.realized.data = op_map[buf.op](buf.src[0].realized.data)
+            elif isinstance(buf.op, TernaryOp):
+                assert buf.src[0].realized is not None
+                assert buf.src[1].realized is not None
+                assert buf.src[2].realized is not None
+
+                op_map = {
+                    TernaryOp.WHERE: torch.where,
+                }
+
+                # torch.where expects bool for condition, ensuring we cast if needed
+                condition = buf.src[0].realized.data.bool()
+                x = buf.src[1].realized.data
+                y = buf.src[2].realized.data
+
+                buf.realized.data = op_map[buf.op](condition, x, y)
 
             if DEBUG >= 2:
                 print(buf.realized.data)

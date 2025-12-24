@@ -22,6 +22,7 @@ class BinaryOp(Enum):
     SUB = auto()
     MUL = auto()
     MATMUL = auto()
+    CMPLT = auto()  # compare less than
 
 
 class ReduceOp(Enum):
@@ -44,6 +45,10 @@ class MovementOp(Enum):
     EXPAND = auto()
     PAD = auto()
     SLICE = auto()
+
+
+class TernaryOp(Enum):
+    WHERE = auto()
 
 
 Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, MovementOp]
@@ -138,7 +143,7 @@ class LazyBuffer:
 
     def compute_ops(self, op: Op, *others: "LazyBuffer"):
         if isinstance(op, BinaryOp):
-            assert len(others) == 1
+            assert len(others) == 1, "BinaryOp requires 1 other buffers"
             if op == BinaryOp.MATMUL:
                 view = View.create(shape=(self.shape[0], others[0].shape[1]))
             else:
@@ -147,6 +152,11 @@ class LazyBuffer:
         elif isinstance(op, UnaryOp):
             assert len(others) == 0
             return LazyBuffer(op, src=(self,), view=self.view, device=self.device)
+        elif isinstance(op, TernaryOp):
+            assert len(others) == 2, "TernaryOp requires 2 other buffers"
+            return LazyBuffer(
+                op, src=(self, others[0], others[1]), view=self.view, device=self.device
+            )
 
     def movement_ops(self, op: Op, *args):
         if op == MovementOp.PERMUTE:
