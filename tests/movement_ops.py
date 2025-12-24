@@ -7,8 +7,8 @@ import pytest
 import torch
 
 from banhxeo import Tensor
-from banhxeo.buffer import MovementOp
-from banhxeo.view import View
+from banhxeo.core.buffer import MovementOp
+from banhxeo.core.view import View
 
 
 @pytest.fixture

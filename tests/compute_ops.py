@@ -121,6 +121,7 @@ class TestBroadcasting:
         out = t1 + t2
 
         pt1 = torch.tensor(data1)
+        pt1 = torch.tensor(data1)
         pt2 = torch.tensor(data2)
         assert_tensors_close(out, pt1 + pt2)
 
