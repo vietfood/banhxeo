@@ -210,7 +210,7 @@ class CUDABackend(Backend):
             b.strides[0],
             b.strides[1],
             c.strides[0],
-            c.strides[0],
+            c.strides[1],
         )
 
     def exec_reduce(self, output: LazyBuffer):
@@ -228,6 +228,7 @@ class CUDABackend(Backend):
         for b in barriers:
             if DEBUG >= 2:
                 print(f"   [DEBUG] Recursion: Executing dependency {b.op}")
+
             self.exec(b)
 
         # HACK: Right now, MatMul and Reduction has specialized kernel
@@ -237,3 +238,6 @@ class CUDABackend(Backend):
             self.exec_reduce(output)
         else:
             self.exec_elementwise(output)
+
+        if DEBUG >= 2:
+            print(output.realized.data)

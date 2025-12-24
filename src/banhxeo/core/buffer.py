@@ -7,6 +7,7 @@ import torch
 
 from banhxeo.core.device import DEFAULT_DEVICE
 from banhxeo.core.view import View
+from banhxeo.utils.helpers import DEBUG
 
 
 class UnaryOp(Enum):
@@ -159,6 +160,11 @@ class LazyBuffer:
         else:
             # current view
             new_view = self.view
+
+        if DEBUG >= 2:
+            print(
+                f"Current view {self.view} => MovementOp={str(op)} with new view {new_view}"
+            )
 
         # if this is already a VIEW, just update its view and keep the same source
         if self.op == LoadOp.VIEW:

@@ -3,6 +3,7 @@ from typing import List
 import torch
 
 from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, UnaryOp
+from banhxeo.utils.helpers import DEBUG
 
 
 class TorchInterpreter:
@@ -49,3 +50,6 @@ class TorchInterpreter:
                     UnaryOp.SQRT: torch.sqrt,
                 }
                 buf.realized.data = op_map[buf.op](buf.src[0].realized.data)
+
+            if DEBUG >= 2:
+                print(buf.realized.data)

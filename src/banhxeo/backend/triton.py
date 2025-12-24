@@ -24,6 +24,7 @@ class TritonCodegen:
         self.realized_names = dict()
 
         self.output_offset = "linear_offsets"
+        self.read_offset = "linear_offsets"
         self.output_name = ""
 
         # the gen code
@@ -77,7 +78,7 @@ class TritonCodegen:
         src_name = self.get_var_name(src)
         code = [
             f"    {name}_offset = {buf.view.offset}",
-            f"    {name}_idx = temp_idx",
+            f"    {name}_idx = {self.read_offset}",
         ]
         for i in reversed(range(len(buf.view.shape))):
             # idx_i = temp_idx % shape_i
@@ -107,6 +108,13 @@ class TritonCodegen:
         if DEBUG >= 2:
             print(f"Visit LoadOp {str(buf.op)=} with name {name}")
 
+        # If this VIEW is the output, we force linear storage.
+        # The indexing math is handled in generate() to map inputs.
+        if buf == self.schedule[-1] and buf.op == LoadOp.VIEW:
+            self.output_offset = "linear_offsets"
+            self.output_name = self.get_var_name(buf.src[0])
+            return
+
         def handle_op_view(b, contiguous=False):
             view_src = b.src[0]
             view_src_name = self.get_var_name(view_src)
@@ -132,7 +140,7 @@ class TritonCodegen:
                 self.code.append(f"    {name} = {name}{buf_sig}")
             elif buf.op == LoadOp.FROM_CPU:
                 self.code.append(
-                    f"    {name} = tl.load({name}{buf_sig} + linear_offsets, mask=linear_mask)"
+                    f"    {name} = tl.load({name}{buf_sig} + {self.read_offset}, mask=linear_mask)"
                 )
             elif buf.op == LoadOp.CONTIGUOUS:
                 if buf.src[0].op == LoadOp.VIEW and buf.src[0].realized is None:
@@ -175,7 +183,7 @@ class TritonCodegen:
         buf_arg = self.input_args.get(buf)
         sig = "" if buf_arg is None else f"_{buf_arg.type}"
         self.code.append(
-            f"    {name} = tl.load({name}{sig} + linear_offsets, mask=linear_mask)"
+            f"    {name} = tl.load({name}{sig} + {self.read_offset}, mask=linear_mask)"
         )
 
     def visit(self, buf: LazyBuffer, name: str):
@@ -190,6 +198,15 @@ class TritonCodegen:
                 self.visit_UnaryOp(buf, name)
 
     def generate(self):
+        last_buf = self.schedule[-1]
+        if last_buf.op == LoadOp.VIEW:
+            # Generate the indexing code based on the Output View's strides
+            # This calculates the offset into the Source data.
+            code, name = self.render_indexing(last_buf, only_compute_offset=True)
+            self.code.append(code)
+            # All inputs should be read using this calculated offset
+            self.read_offset = name
+
         for buf in self.schedule:
             self.visit(buf, self.get_var_name(buf))
 
