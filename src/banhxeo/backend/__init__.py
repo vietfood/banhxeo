@@ -6,7 +6,7 @@ import tempfile
 
 from banhxeo.backend.torch import TorchInterpreter
 from banhxeo.backend.triton import TritonCodegen
-from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, ReduceOp
+from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, ReduceOp
 from banhxeo.utils.helpers import DEBUG
 
 
@@ -22,7 +22,9 @@ class Backend:
             visited.add(v)
 
             if v.realized is not None:
-                return  # stop when see realized buffer
+                # If a node is realized, it must be part of the topo list so the codegen knows to generate a LoadOp (pointer load) for it.
+                topo.append(v)
+                return
 
             for child in v.src:
                 build_topo(child)
@@ -56,14 +58,17 @@ class CUDABackend(Backend):
         if buf.realized is not None:
             return True
 
-        # If we have a VIEW/CONTIGUOUS op, and its parent is NOT realized (it's a compute op),
-        if isinstance(buf.op, (LoadOp, MovementOp)):
-            if len(buf.src) != 0 and buf.src[0].realized is None:
+        # if we have a VIEW/CONTIGUOUS op, and its parents is NOT realized (it's a compute op), we realized it
+        if isinstance(buf.op, LoadOp):
+            if (
+                len(buf.src) != 0  # has parents
+                and buf.src[0].realized is None
+            ):
                 return True
 
         return (
-            isinstance(buf.op, ReduceOp)  # Sum/Max always start a new reduction kernel
-            or buf.op == BinaryOp.MATMUL  # Matmul is a specialized kernel
+            isinstance(buf.op, ReduceOp)  # specialized kernel
+            or buf.op == BinaryOp.MATMUL
         )
 
     def get_barriers(self, buf: LazyBuffer):
@@ -97,12 +102,17 @@ class CUDABackend(Backend):
         # First we use toposort to linearize the graph
         linear_graph = self.schedule(output)
 
+        if DEBUG >= 2:
+            from banhxeo.utils.viz import visualize_schedule_cli
+
+            visualize_schedule_cli(linear_graph)
+
         # we then generate Triton code
         generator = TritonCodegen(linear_graph)
         src = generator.generate()
 
         if DEBUG >= 1:
-            print("--- [DEBUG] GENERATED TRITON KERNEL ---")
+            print(f"--- [DEBUG] GENERATED TRITON KERNEL ({str(output.op).upper()}) ---")
             print(src)
             print("-------------------------------")
 
@@ -207,10 +217,6 @@ class CUDABackend(Backend):
         pass
 
     def exec(self, output: LazyBuffer):
-        # from banhxeo.viz import visualize_graph
-
-        # visualize_graph(output, "lazybuffer_debug")
-
         if output.realized is not None:
             return output
 
@@ -220,7 +226,7 @@ class CUDABackend(Backend):
         # Then realize all barriers
         for b in barriers:
             if DEBUG >= 2:
-                print(f"   [Recurse] Executing dependency {b.op}")
+                print(f"   [DEBUG] Recursion: Executing dependency {b.op}")
             self.exec(b)
 
         # HACK: Right now, MatMul and Reduction has specialized kernel
