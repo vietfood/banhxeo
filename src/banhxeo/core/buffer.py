@@ -126,6 +126,8 @@ class LazyBuffer:
         return self.view.offset
 
     def allocate(self):
+        if self.realized is not None:
+            return
         self.realized = RawBuffer.create(self.args, self.view.shape, self.device)
 
     def view_as(self, shape: Tuple[int, ...]):

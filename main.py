@@ -40,4 +40,4 @@ def test_mixed_execution(device="cpu"):
 
 
 # test_impossible_reshape()
-test_mixed_execution()
+test_mixed_execution("cuda")

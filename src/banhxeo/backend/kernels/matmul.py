@@ -5,7 +5,7 @@ Taken from: https://triton-lang.org/main/getting-started/tutorials/03-matrix-mul
 import triton
 import triton.language as tl
 
-from banhxeo.kernels.utils import get_cuda_autotune_config
+from banhxeo.backend.kernels.utils import get_cuda_autotune_config
 
 
 @triton.autotune(
@@ -89,6 +89,7 @@ def matmul_kernel(
         # Advance the ptrs to the next K block.
         a_ptrs += BLOCK_SIZE_K * stride_ak
         b_ptrs += BLOCK_SIZE_K * stride_bk
+    c = accumulator
 
     # -----------------------------------------------------------
     # Write back the block of the output matrix C with masks.

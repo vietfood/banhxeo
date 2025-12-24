@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Literal, Optional
 
 from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, UnaryOp
+from banhxeo.utils.helpers import DEBUG
 
 
 @dataclass
@@ -17,9 +18,10 @@ class TritonCodegen:
 
         # Map LazyBuffer to Variable name
         self.var_names = dict()
-
         # Keep track of which input pointers we need
         self.input_args = dict()
+        # Keep track of realized input
+        self.realized_names = dict()
 
         self.output_offset = "linear_offsets"
         self.output_name = ""
@@ -46,10 +48,12 @@ class TritonCodegen:
                     self.var_names[buf] = name
                 else:
                     self.var_names[buf] = f"temp_{len(self.var_names)}"
+            return self.var_names[buf]
         else:  # for realized buffer, we treat it as an input
-            self.input_args[buf] = InputArgument("ptr")
-            self.var_names[buf] = f"in_{len(self.input_args)}"
-        return self.var_names[buf]
+            if buf not in self.realized_names:
+                self.realized_names[buf] = f"in_{len(self.input_args)}"
+                self.input_args[buf] = InputArgument("ptr")
+            return self.realized_names[buf]
 
     def should_materialize(self, buf):
         # Count children (buffers that use this as src)
@@ -100,6 +104,9 @@ class TritonCodegen:
             ), name
 
     def visit_LoadOp(self, buf: LazyBuffer, name: str):
+        if DEBUG >= 2:
+            print(f"Visit LoadOp {str(buf.op)=} with name {name}")
+
         def handle_op_view(b, contiguous=False):
             view_src = b.src[0]
             view_src_name = self.get_var_name(view_src)
@@ -128,7 +135,7 @@ class TritonCodegen:
                     f"    {name} = tl.load({name}{buf_sig} + linear_offsets, mask=linear_mask)"
                 )
             elif buf.op == LoadOp.CONTIGUOUS:
-                if buf.src[0].op == LoadOp.VIEW:
+                if buf.src[0].op == LoadOp.VIEW and buf.src[0].realized is None:
                     handle_op_view(buf.src[0], contiguous=True)
                 else:
                     handle_op_view(buf, contiguous=True)
@@ -136,6 +143,9 @@ class TritonCodegen:
                 handle_op_view(buf, contiguous=False)
 
     def visit_BinaryOp(self, buf: LazyBuffer, name: str):
+        if DEBUG >= 2:
+            print(f"Visit Binary {str(buf.op)=} with name {name}")
+
         src0 = self.get_var_name(buf.src[0])
         src1 = self.get_var_name(buf.src[1])
         op_map = {
@@ -146,6 +156,9 @@ class TritonCodegen:
         self.code.append(f"    {name} = {src0} {op_map[buf.op]} {src1}")  # pyright: ignore[reportArgumentType]
 
     def visit_UnaryOp(self, buf: LazyBuffer, name: str):
+        if DEBUG >= 2:
+            print(f"Visit Unary {str(buf.op)=} with name {name}")
+
         src0 = self.get_var_name(buf.src[0])
         op_map = {
             UnaryOp.LOG2: "tl.log2",
@@ -156,25 +169,32 @@ class TritonCodegen:
         self.code.append(f"    {name} = {op_map[buf.op]}({src0})")  # pyright: ignore[reportArgumentType]
 
     def visit_Input(self, buf: LazyBuffer, name: str):
+        if DEBUG >= 2:
+            print(f"Visit Input {str(buf.op)=} with name {name}")
+
+        buf_arg = self.input_args.get(buf)
+        sig = "" if buf_arg is None else f"_{buf_arg.type}"
         self.code.append(
-            f"    {name} = tl.load({name}_ptr + linear_offsets, mask=linear_mask)"
+            f"    {name} = tl.load({name}{sig} + linear_offsets, mask=linear_mask)"
         )
 
     def visit(self, buf: LazyBuffer, name: str):
         if buf.realized is not None:
             self.visit_Input(buf, name)
-        elif isinstance(buf.op, LoadOp):
-            self.visit_LoadOp(buf, name)
-        elif isinstance(buf.op, BinaryOp):
-            self.visit_BinaryOp(buf, name)
-        elif isinstance(buf.op, UnaryOp):
-            self.visit_UnaryOp(buf, name)
+        else:
+            if isinstance(buf.op, LoadOp):
+                self.visit_LoadOp(buf, name)
+            elif isinstance(buf.op, BinaryOp):
+                self.visit_BinaryOp(buf, name)
+            elif isinstance(buf.op, UnaryOp):
+                self.visit_UnaryOp(buf, name)
 
     def generate(self):
         for buf in self.schedule:
             self.visit(buf, self.get_var_name(buf))
 
         args_sig = []
+
         for buf, args in self.input_args.items():
             sig = args.type
             metadata = args.metadata
@@ -199,6 +219,9 @@ class TritonCodegen:
             "    linear_offsets = temp_idx",
             "    linear_mask = linear_offsets < N",
         ]
+
+        if self.output_name == "":
+            self.output_name = self.get_var_name(self.schedule[-1])
 
         return "\n".join(
             kernel_def

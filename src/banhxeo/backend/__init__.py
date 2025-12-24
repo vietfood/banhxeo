@@ -145,6 +145,7 @@ class CUDABackend(Backend):
             # prepare input tensors
             input_tensors = []
             N = 0
+
             for buf, args in generator.input_args.items():
                 arg_type = args.type
                 metadata = args.metadata
@@ -198,9 +199,9 @@ class CUDABackend(Backend):
             triton.cdiv(M, META["BLOCK_SIZE_M"]) * triton.cdiv(N, META["BLOCK_SIZE_N"]),
         )
         matmul_kernel[grid](
-            a,
-            b,
-            c,
+            a.realized.data,  # type: ignore
+            b.realized.data,  # type: ignore
+            c.realized.data,  # type: ignore
             M,
             N,
             K,
