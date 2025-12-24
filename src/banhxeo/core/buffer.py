@@ -5,8 +5,8 @@ from typing import Any, List, Optional, Tuple, TypeAlias, Union
 import numpy as np
 import torch
 
-from banhxeo.device import DEFAULT_DEVICE
-from banhxeo.view import View
+from banhxeo.core.device import DEFAULT_DEVICE
+from banhxeo.core.view import View
 
 
 class UnaryOp(Enum):
@@ -133,7 +133,7 @@ class LazyBuffer:
             raise ValueError("Current LazyBuffer isn't realized")
         return self.realized.data.view(shape)
 
-    def compute_ops(self, op, *others: "LazyBuffer"):
+    def compute_ops(self, op: Op, *others: "LazyBuffer"):
         if isinstance(op, BinaryOp):
             assert len(others) == 1
             if op == BinaryOp.MATMUL:
@@ -145,7 +145,7 @@ class LazyBuffer:
             assert len(others) == 0
             return LazyBuffer(op, src=(self,), view=self.view, device=self.device)
 
-    def movement_ops(self, op, *args):
+    def movement_ops(self, op: Op, *args):
         if op == MovementOp.PERMUTE:
             new_view = self.view.permute(args[0])
         elif op == MovementOp.SLICE:

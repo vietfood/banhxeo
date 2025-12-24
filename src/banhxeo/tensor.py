@@ -3,10 +3,9 @@ from typing import ClassVar, List, Optional, Tuple, Union
 import numpy as np
 import torch
 
-from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, UnaryOp
-from banhxeo.device import DEFAULT_DEVICE, Device
-from banhxeo.helpers import DEBUG
-from banhxeo.view import View
+from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, UnaryOp
+from banhxeo.core.device import DEFAULT_DEVICE, Device
+from banhxeo.core.view import View
 
 
 class Tensor:

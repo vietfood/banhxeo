@@ -6,10 +6,17 @@ from typing import Set
 
 import graphviz
 
-from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, ReduceOp, UnaryOp
+from banhxeo.core.buffer import (
+    BinaryOp,
+    LazyBuffer,
+    LoadOp,
+    MovementOp,
+    ReduceOp,
+    UnaryOp,
+)
 
 
-def _format_op_label(lb: "LazyBuffer") -> str:
+def _format_op_label(lb: LazyBuffer) -> str:
     """
     Creates an HTML-like label for Graphviz.
     Highlights Shape/Strides because that's what debugging memory layout requires.
@@ -38,7 +45,7 @@ def _format_op_label(lb: "LazyBuffer") -> str:
     )
 
 
-def _get_node_style(lb: "LazyBuffer") -> dict:
+def _get_node_style(lb: LazyBuffer) -> dict:
     """
     Color-coding based on operation type to separate Memory IO, Compute, and Metadata.
     """
@@ -69,9 +76,7 @@ def _get_node_style(lb: "LazyBuffer") -> dict:
     return style
 
 
-def visualize_graph(
-    root: "LazyBuffer", filename: str = "lazy_graph", view: bool = True
-):
+def visualize_graph(root: LazyBuffer, filename: str = "lazy_graph", view: bool = True):
     """
     Walks the LazyBuffer graph from the root up to the sources (parents)
     and renders it using Graphviz.

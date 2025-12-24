@@ -1,12 +1,11 @@
 import numpy as np
-import torch
 
-from banhxeo import Tensor
+import banhxeo
 
 
-def test_impossible_reshape():
+def test_impossible_reshape(device="cpu"):
     # 1. Create (4, 4)
-    t = Tensor(np.arange(16).reshape(4, 4))
+    t = banhxeo.Tensor(np.arange(16).reshape(4, 4), device=device)
 
     # 2. Transpose -> (4, 4) but with stride (1, 4)
     t = t.permute((1, 0))
@@ -21,10 +20,10 @@ def test_impossible_reshape():
     # Should print: [0, 4, 8, 12, 1, 5, 9, 13, ...] (Column major order)
 
 
-def test_mixed_execution():
+def test_mixed_execution(device="cpu"):
     # 1. Elementwise Ops (Should Fuse)
-    a = Tensor([1, 2], device="cuda")
-    b = Tensor([3, 4], device="cuda")
+    a = banhxeo.Tensor([1, 2], device=device)
+    b = banhxeo.Tensor([3, 4], device=device)
     c = (a + b) * 2  # This should be ONE kernel call
 
     # 2. Reshape (Should trigger Contiguous Barrier)

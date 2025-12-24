@@ -4,9 +4,10 @@ import math
 import os
 import tempfile
 
-from banhxeo.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, ReduceOp
-from banhxeo.codegen import TorchInterpreter, TritonCodegen
-from banhxeo.helpers import DEBUG
+from banhxeo.backend.torch import TorchInterpreter
+from banhxeo.backend.triton import TritonCodegen
+from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, ReduceOp
+from banhxeo.utils.helpers import DEBUG
 
 
 class Backend:
@@ -168,7 +169,7 @@ class CUDABackend(Backend):
     def exec_matmul(self, output: LazyBuffer):
         import triton
 
-        from banhxeo.kernels.matmul import matmul_kernel
+        from banhxeo.backend.kernels.matmul import matmul_kernel
 
         # TODO: Dimension and contiguous check should be in Tensor side instead of Backend side
         assert all([s.realized is not None for s in output.src]), (

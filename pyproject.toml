@@ -20,6 +20,7 @@ dependencies = [
     "torch",
     "triton; sys_platform=='linux'",
     "pytest>=8.3.5",
+    "graphviz>=0.21",
 ]
 
 [project.optional-dependencies]
