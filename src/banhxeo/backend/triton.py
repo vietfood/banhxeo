@@ -36,11 +36,11 @@ class TritonCodegen:
                 # If it's a LoadOp, it needs a variable name that corresponds to a kernel argument
                 if isinstance(buf.op, LoadOp):
                     name = f"in_{len(self.input_args)}"
-                    if buf.op == LoadOp.FROM_CPU or buf.op == LoadOp.DEFAULT:
+                    if buf.op == LoadOp.FROM_CPU or buf.op == LoadOp.FROM_NONE:
                         # assume LoadOp.FROM_CPU is linearly
                         # note that DEFAULT create an empty Tensor so we assume it is a pointer too
                         self.input_args[buf] = InputArgument("ptr")
-                    elif buf.op == LoadOp.CONST:
+                    elif buf.op == LoadOp.FROM_CONST:
                         self.input_args[buf] = InputArgument("const")
                     elif buf.op == LoadOp.VIEW or buf.op == LoadOp.CONTIGUOUS:
                         self.input_args[buf] = InputArgument(None, ["shape", "stride"])
@@ -61,7 +61,7 @@ class TritonCodegen:
 
         # If the source is a CONST, we don't care about strides/offsets.
         # Just skip it
-        if src == LoadOp.CONST:
+        if src == LoadOp.FROM_CONST:
             return ""
 
         name = self.get_var_name(buf)
@@ -136,7 +136,7 @@ class TritonCodegen:
         if should_materialize():
             buf_arg = self.input_args.get(buf)
             buf_sig = "" if buf_arg is None else f"_{buf_arg.type}"
-            if buf.op == LoadOp.CONST:
+            if buf.op == LoadOp.FROM_CONST:
                 self.code.append(f"    {name} = {name}{buf_sig}")
             elif buf.op == LoadOp.FROM_CPU:
                 self.code.append(
@@ -180,13 +180,19 @@ class TritonCodegen:
 
         src0 = self.get_var_name(buf.src[0])
         src1 = self.get_var_name(buf.src[1])
-        op_map = {
-            BinaryOp.ADD: "+",
-            BinaryOp.SUB: "-",
-            BinaryOp.MUL: "*",
-            BinaryOp.CMPLT: "<",
-        }
-        self.code.append(f"    {name} = {src0} {op_map[buf.op]} {src1}")  # pyright: ignore[reportArgumentType]
+
+        if buf.op == BinaryOp.MAX:
+            self.code.append(f"    {name} = tl.maximum({src0}, {src1})")
+        else:
+            op_map = {
+                BinaryOp.ADD: "+",
+                BinaryOp.SUB: "-",
+                BinaryOp.MUL: "*",
+                BinaryOp.CMPLT: "<",
+                BinaryOp.DIV: "/",
+                BinaryOp.MOD: "%",
+            }
+            self.code.append(f"    {name} = {src0} {op_map[buf.op]} {src1}")  # pyright: ignore[reportArgumentType]
 
     def visit_UnaryOp(self, buf: LazyBuffer, name: str):
         if DEBUG >= 2:
@@ -194,12 +200,13 @@ class TritonCodegen:
 
         src0 = self.get_var_name(buf.src[0])
         op_map = {
-            UnaryOp.LOG2: "tl.log2",
-            UnaryOp.EXP2: "tl.exp2",
-            UnaryOp.SIN: "tl.sin",
-            UnaryOp.SQRT: "tl.sqrt",
+            UnaryOp.LOG: "tl.log({src})",
+            UnaryOp.EXP: "tl.exp({src})",
+            UnaryOp.SIN: "tl.sin({src})",
+            UnaryOp.SQRT: "tl.sqrt({src})",
+            UnaryOp.NEG: "-{src}",
         }
-        self.code.append(f"    {name} = {op_map[buf.op]}({src0})")  # pyright: ignore[reportArgumentType]
+        self.code.append(f"    {name} = {op_map[op].format(src=src0)}")  # pyright: ignore[reportUndefinedVariable, reportArgumentType]
 
     def visit_Input(self, buf: LazyBuffer, name: str):
         if DEBUG >= 2:
