@@ -1,3 +1,4 @@
+import time
 from typing import ClassVar, List, Optional, Tuple, Union
 
 import numpy as np
@@ -16,6 +17,7 @@ class Tensor:
     __deletable__ = ("_ctx",)
     training: ClassVar[bool] = False
     no_grad: ClassVar[bool] = False
+    _seed: int = int(time.time())
 
     def __init__(
         self,
@@ -274,12 +276,72 @@ class Tensor:
         condition = condition if isinstance(condition, Tensor) else Tensor(condition)
         return condition._where(input, other)
 
+    # ---------- Creation Methods ----------
+
+    @staticmethod
+    def _loadop(
+        op,
+        size,
+        device: Optional[str] = None,
+        arg=None,
+        **kwargs,
+    ):
+        # TODO
+        ...
+
+    @staticmethod
+    def empty(*shape, **kwargs):
+        pass
+
+    @staticmethod
+    def manual_seed(seed=0):
+        Tensor._seed = seed
+
+    @staticmethod
+    def rand(*shape, **kwargs):
+        # TODO
+        ...
+
+    @staticmethod
+    def full(shape: Tuple[int, ...], fill_value, **kwargs):
+        # TODO
+        ...
+
+    @staticmethod
+    def zeros(*shape, **kwargs):
+        # TODO
+        ...
+
+    @staticmethod
+    def ones(*shape, **kwargs):
+        # TODO
+        ...
+
+    @staticmethod
+    def arange(start, stop=None, step=1, **kwargs):
+        # TODO
+        ...
+
+    @staticmethod
+    def eye(dim: int, **kwargs):
+        # TODO
+        ...
+
+    def full_like(self, fill_value, **kwargs):
+        # TODO
+        ...
+
+    def ones_like(self, **kwargs):
+        # TODO
+        ...
+
+    # ---------- Random Methods ----------
+
     # ---------- Other Methods ----------
-    def backward(self):
+    def backward(self, retain_graph: bool = False):
         if self._ctx is None:
             return
 
-        # initialize gradient at the root (1.0)
         if self.grad is None:
             self.grad = Tensor(1.0, device=self.device).expand(self.shape)
 
@@ -297,13 +359,12 @@ class Tensor:
 
         build_topo(self)
 
-        # Then traverse the linear graph in reverse order
+        # Backward pass
         for t in reversed(topo):
             if t.grad is None or t._ctx is None:
                 continue
 
             grads = t._ctx.backward(t.grad.lazydata)
-
             if not isinstance(grads, tuple):
                 grads = (grads,)
 
@@ -316,12 +377,35 @@ class Tensor:
                     else:
                         parent.grad = parent.grad + g_tensor
 
+        # Clean up the computation graph
+        if not retain_graph:
+            for t in topo:
+                if hasattr(t, "_ctx"):
+                    delattr(t, "_ctx")
+
     def realize(self) -> "Tensor":
         Device.get_backend(self.lazydata.device)().exec(self.lazydata)
         return self
 
-    def numpy(self):
-        if self.lazydata.realized is None:
-            self.realize()
-        else:
-            return self.lazydata.realized.to_cpu().numpy()
+    def to(self, device: str):
+        device = device.upper()
+        if device == self.device:
+            return self
+
+        # Force realization. You can't move what doesn't exist yet.
+        self.realize()
+
+        assert self.lazydata.realized is not None
+        ret = Tensor(
+            self.lazydata.realized.to(device),
+            device=device,
+            requires_grad=self.requires_grad,
+        )
+
+        if self.grad:
+            ret.grad = self.grad.to(device)
+
+        return ret
+
+    def detach(self):
+        return Tensor(self.lazydata, device=self.device, requires_grad=False)

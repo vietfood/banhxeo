@@ -66,8 +66,11 @@ class RawBuffer:
     device: str = DEFAULT_DEVICE
     dtype: torch.dtype = torch.float32
 
-    def to_cpu(self):
-        return self.data.cpu()
+    def to(self, device: str):
+        return self.data.to(device.lower())
+
+    def numpy(self):
+        return self.data.detach().to("cpu").numpy()
 
     @staticmethod
     def create(
@@ -246,13 +249,15 @@ class LazyBuffer:
         return self.movement_ops(MovementOp.SLICE, args)
 
     def reshape(self, new_shape: Tuple[int, ...]):
-        if not self.view.is_contiguous():
-            print("[WARNING] Trigerring contiguous copy!")
-            # this is a naive approach that always forces a copy if
-            # tensor isn't contiguous
-            return self.contiguous()
-        # reshape freely
-        return self.movement_ops(MovementOp.RESHAPE, new_shape)
+        try:
+            return self.movement_ops(MovementOp.RESHAPE, new_shape)
+        except ValueError:
+            # we force a physical copy (contiguous) and try again.
+            if DEBUG >= 1:
+                print(
+                    f"[INFO] Reshape failed for {self.shape}->{new_shape}, triggering contiguous."
+                )
+            return self.contiguous().movement_ops(MovementOp.RESHAPE, new_shape)
 
     def matmul(self, other: "LazyBuffer"):
         if self.shape[1] != other.shape[0]:
