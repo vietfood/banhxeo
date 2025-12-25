@@ -256,7 +256,47 @@ class Tensor:
         condition = condition if isinstance(condition, Tensor) else Tensor(condition)
         return condition._where(input, other)
 
-    # ---------- Realize Method ----------
+    # ---------- Other Methods ----------
+    def backward(self):
+        if self._ctx is None:
+            return
+
+        # initialize gradient at the root (1.0)
+        if self.grad is None:
+            self.grad = Tensor(1.0, device=self.device).expand(self.shape)
+
+        # Topological Sort
+        topo = []
+        visited = set()
+
+        def build_topo(t):
+            if t not in visited:
+                visited.add(t)
+                if t._ctx:
+                    for parent in t._ctx.parents:
+                        build_topo(parent)
+                topo.append(t)
+
+        build_topo(self)
+
+        # Then traverse the linear graph in reverse order
+        for t in reversed(topo):
+            if t.grad is None or t._ctx is None:
+                continue
+
+            grads = t._ctx.backward(t.grad.lazydata)
+
+            if not isinstance(grads, tuple):
+                grads = (grads,)
+
+            # Accumulate gradients
+            for parent, g in zip(t._ctx.parents, grads):
+                if g is not None and parent.requires_grad:
+                    g_tensor = Tensor(g, device=self.device)
+                    if parent.grad is None:
+                        parent.grad = g_tensor
+                    else:
+                        parent.grad = parent.grad + g_tensor
 
     def realize(self) -> "Tensor":
         Device.get_backend(self.lazydata.device)().exec(self.lazydata)
