@@ -275,6 +275,7 @@ class TritonCodegen:
                     )  # note that we assume shape len always equals to strides len
 
         kernel_def = [
+            "@triton.heuristics(values={'BLOCK_SIZE': lambda args: triton.next_power_of_2(args['N'])})",  # use Triton heuristics for better performance
             "@triton.jit",
             f"def generated_kernel({', '.join(args_sig)}, out_ptr, N, BLOCK_SIZE: tl.constexpr):",
             "    pid = tl.program_id(0)",
