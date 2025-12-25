@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Literal, Optional
 
-from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, UnaryOp
+from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, TernaryOp, UnaryOp
 from banhxeo.utils.helpers import DEBUG
 
 
@@ -55,16 +55,6 @@ class TritonCodegen:
                 self.realized_names[buf] = f"in_{len(self.input_args)}"
                 self.input_args[buf] = InputArgument("ptr")
             return self.realized_names[buf]
-
-    def should_materialize(self, buf):
-        # Count children (buffers that use this as src)
-        children = [b for b in self.schedule if buf in b.src]
-
-        # Only materialize if it has multiple children or non-VIEW children
-        if len(children) == 1 and children[0].op == LoadOp.VIEW:
-            return False
-
-        return True
 
     def render_indexing(self, buf, only_compute_offset=False):
         src = buf.src[0]
@@ -133,7 +123,17 @@ class TritonCodegen:
                     self.code.append(f"    {name} = {self.get_var_name(b)}")
                 self.output_offset = "linear_offsets"
 
-        if self.should_materialize(buf):
+        def should_materialize():
+            # Count children (buffers that use this as src)
+            children = [b for b in self.schedule if buf in b.src]
+
+            # Only materialize if LoadOp has multiple children or has non-VIEW children
+            if len(children) == 1 and children[0].op == LoadOp.VIEW:
+                return False
+
+            return True
+
+        if should_materialize():
             buf_arg = self.input_args.get(buf)
             buf_sig = "" if buf_arg is None else f"_{buf_arg.type}"
             if buf.op == LoadOp.CONST:
@@ -184,6 +184,7 @@ class TritonCodegen:
             BinaryOp.ADD: "+",
             BinaryOp.SUB: "-",
             BinaryOp.MUL: "*",
+            BinaryOp.CMPLT: "<",
         }
         self.code.append(f"    {name} = {src0} {op_map[buf.op]} {src1}")  # pyright: ignore[reportArgumentType]
 
@@ -210,6 +211,18 @@ class TritonCodegen:
             f"    {name} = tl.load({name}{sig} + {self.read_offset}, mask=linear_mask)"
         )
 
+    def visit_TernaryOp(self, buf: LazyBuffer, name: str):
+        if DEBUG >= 2:
+            print(f"Visit Ternary {str(buf.op)=} with name {name}")
+
+        src0 = self.get_var_name(buf.src[0])  # Condition
+        src1 = self.get_var_name(buf.src[1])  # True path
+        src2 = self.get_var_name(buf.src[2])  # False path
+
+        if buf.op == TernaryOp.WHERE:
+            # tl.where(condition, true_val, false_val)
+            self.code.append(f"    {name} = tl.where({src0}, {src1}, {src2})")
+
     def visit(self, buf: LazyBuffer, name: str):
         if buf.realized is not None:
             self.visit_Input(buf, name)
@@ -220,6 +233,8 @@ class TritonCodegen:
                 self.visit_BinaryOp(buf, name)
             elif isinstance(buf.op, UnaryOp):
                 self.visit_UnaryOp(buf, name)
+            elif isinstance(buf.op, TernaryOp):
+                self.visit_TernaryOp(buf, name)
 
     def generate(self):
         last_buf = self.schedule[-1]

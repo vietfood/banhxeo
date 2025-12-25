@@ -2,7 +2,7 @@ from typing import List
 
 import torch
 
-from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, UnaryOp, TernaryOp
+from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, TernaryOp, UnaryOp
 from banhxeo.utils.helpers import DEBUG
 
 

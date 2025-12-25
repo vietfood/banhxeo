@@ -3,7 +3,14 @@ from typing import ClassVar, List, Optional, Tuple, Union
 import numpy as np
 import torch
 
-from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, MovementOp, UnaryOp
+from banhxeo.core.buffer import (
+    BinaryOp,
+    LazyBuffer,
+    LoadOp,
+    MovementOp,
+    TernaryOp,
+    UnaryOp,
+)
 from banhxeo.core.device import DEFAULT_DEVICE, Device
 from banhxeo.core.view import View
 
@@ -56,6 +63,16 @@ class Tensor:
                     args=[data.flatten()],
                     device=device,
                 )
+
+    # ---------- Property ----------
+
+    @property
+    def device(self):
+        return self.lazydata.device
+
+    @property
+    def shape(self):
+        return self.lazydata.view.shape
 
     # ---------- Binary Ops ----------
 
@@ -110,6 +127,20 @@ class Tensor:
     def sqrt(self):
         return Tensor(self.lazydata.compute_ops(UnaryOp.SQRT))
 
+    # ---------- Ternary Ops ----------
+
+    def _where(self, input, other):
+        # https://github.com/tinygrad/teenygrad/blob/main/teenygrad/tensor.py#L719
+
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        input = input if isinstance(input, Tensor) else Tensor(input)
+
+        x_, y_ = self._broadcasted(input)
+        x, z_ = x_._broadcasted(other)
+        y, z = y_._broadcasted(z_)
+
+        return Tensor(x.lazydata.compute_ops(TernaryOp.WHERE, y.lazydata, z.lazydata))
+
     # ---------- Load Ops ----------
 
     def contiguous(self):
@@ -128,7 +159,7 @@ class Tensor:
 
     # ---------- Movement Ops ----------
 
-    def _broadcasted(self, other):
+    def _broadcasted(self, other: "Tensor") -> Tuple["Tensor", "Tensor"]:
         if self.lazydata.view.shape == other.lazydata.view.shape:
             return self, other
 
@@ -189,8 +220,30 @@ class Tensor:
     def __lt__(self, other):
         return self.less(other)
 
+    # ---------- Neural Network Method ----------
+
+    def relu(self):
+        # relu(x) = where(x < 0, 0, x)
+        return Tensor.where(self < 0, 0, self)
+
+    def leaky_relu(self, alpha):
+        return Tensor.where(self < 0, alpha * self, self)
+
+    # ---------- Static Method ----------
+
+    @staticmethod
+    def where(condition, input, other):
+        condition = condition if isinstance(condition, Tensor) else Tensor(condition)
+        return condition._where(input, other)
+
     # ---------- Realize Method ----------
 
     def realize(self):
         Device.get_backend(self.lazydata.device)().exec(self.lazydata)
         return self.lazydata.view_as(self.lazydata.shape)
+
+    def numpy(self):
+        if self.lazydata.realized is None:
+            self.realize()
+        else:
+            return self.lazydata.realized.to_cpu().numpy()

@@ -53,14 +53,14 @@ def test_mlp_forward():
 
     # Pull data back (assuming .numpy() or accessing realized buffer directly)
     # Using internal buffer access to be safe if .numpy() isn't implemented on Tensor yet
-    res_matmul = bx_matmul.lazydata.realized.to_cpu().numpy()  # type: ignore
+    res_matmul = bx_matmul.numpy()
 
-    if np.allclose(res_matmul, t_matmul.numpy(), atol=1e-3, rtol=1e-3):
+    if np.allclose(res_matmul, t_matmul.numpy(), atol=1e-3, rtol=1e-3):  # type: ignore
         print("✅ Matmul matched PyTorch!")
     else:
         print("❌ Matmul Mismatch!")
         print("Expected first row:\n", t_matmul.numpy()[0])
-        print("Got first row:\n", res_matmul[0])
+        print("Got first row:\n", res_matmul[0])  # type: ignore
         print("Max diff:", np.abs(res_matmul - t_matmul.numpy()).max())
         return  # Stop here if matmul is broken
 
@@ -73,16 +73,16 @@ def test_mlp_forward():
     bx_out = bx_matmul.add(bx_b)
     bx_out.realize()
 
-    res_out = bx_out.lazydata.realized.to_cpu().numpy()  # type: ignore
+    res_out = bx_out.numpy()  # type: ignore
 
-    if np.allclose(res_out, t_out.numpy(), atol=1e-3, rtol=1e-3):
+    if np.allclose(res_out, t_out.numpy(), atol=1e-3, rtol=1e-3):  # type: ignore
         print("✅ MLP Forward Pass matched PyTorch!")
-        print("\nSample Output:\n", res_out[0, :5])
+        print("\nSample Output:\n", res_out[0, :5])  # type: ignore
     else:
         print("❌ Bias Add Mismatch! (Check your broadcasting/view logic)")
-        print(f"Shape of result: {res_out.shape}")
+        print(f"Shape of result: {res_out.shape}")  # type: ignore
         print("Expected first row:\n", t_out.numpy()[0])
-        print("Got first row:\n", res_out[0])
+        print("Got first row:\n", res_out[0])  # type: ignore
         print("Max diff:", np.abs(res_out - t_out.numpy()).max())
 
 
