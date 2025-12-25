@@ -180,12 +180,22 @@ class Tensor:
     def _where(self, input, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         input = input if isinstance(input, Tensor) else Tensor(input)
-        return Tensor(self.lazydata.where(input.lazydata, other.lazydata))
+
+        from banhxeo.core.function import Where
+
+        return Where.apply(self, input, other)
 
     # ---------- Load Ops ----------
 
     def contiguous(self):
-        return Tensor(self.lazydata.contiguous())
+        from banhxeo.core.function import Contiguous
+
+        return Contiguous.apply(self)
+
+    def contiguous_backward(self):
+        from banhxeo.core.function import ContiguousBackward
+
+        return ContiguousBackward.apply(self)
 
     # ---------- Movement Ops ----------
 
@@ -194,22 +204,33 @@ class Tensor:
         return Tensor(x), Tensor(y)
 
     def reshape(self, new_shape: Tuple[int, ...]):
-        return Tensor(self.lazydata.reshape(new_shape))
+        from banhxeo.core.function import Reshape
+
+        return Reshape.apply(self, shape=new_shape)
 
     def permute(self, new_axis: Tuple[int, ...]):
-        return Tensor(self.lazydata.permute(new_axis))
+        from banhxeo.core.function import Permute
+
+        return Permute.apply(self, order=new_axis)
 
     def slice(self, args: Tuple[Tuple[int, ...], ...]):
-        return Tensor(self.lazydata.slice(args))
+        """
+        TODO
+        """
 
     def expand(self, shape: Tuple[int, ...]):
-        return Tensor(self.lazydata.expand(shape))
+        """
+        TODO
+        """
 
-    def _transpose(self):
+    def transpose(self):
+        """
+        Work with 2D Tensor only
+        """
         assert self.shape == 2, (
             "Transpose only works with 2 dimension, please use Permute for more than 2 dimensions"
         )
-        return self.permute((1, 0))
+        return Tensor(self.lazydata.t())
 
     # ---------- Ops Wrapper ----------
 
@@ -235,10 +256,7 @@ class Tensor:
         return self.div(other)
 
     def t(self):
-        """
-        Transpose 2D Tensor
-        """
-        return self._transpose()
+        return self.transpose()
 
     # ---------- Neural Network Method ----------
 
