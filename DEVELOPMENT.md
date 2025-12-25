@@ -17,11 +17,12 @@
 
 - Backward Ops
     - [x] Unary Op
-    - [ ] Binary Op
-    - [ ] Movement Op
+    - [ ] Binary Op (partial)
+    - [ ] Movement Op (partial)
     - [x] Ternary Op
 - [ ] Reduce Ops: sum and max.
-- [ ] Broadcasting: need this for bias addition.
+- [ ] Properly Broadcasting: need this for bias addition.
+- [ ] Creation method (LoadOp.RAND)
 
 ### v0.4 - More Ops
 - [ ] nn.Linear: Wrap Matmul + Add in a class.

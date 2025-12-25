@@ -169,11 +169,12 @@ class CUDABackend(Backend):
 
     def exec_elementwise(self, output: LazyBuffer):
         src, generator = self.gencode(output)
+        src_hash = hashlib.sha1(src.encode("utf-8")).hexdigest()
 
         if src not in self.kernel_cache.keys():
             try:
                 kernel, kernel_name = self.compile_triton_src(src)
-                self.kernel_cache[id(src)] = kernel
+                self.kernel_cache[src_hash] = kernel
                 self.kernel_file_name[id(kernel)] = kernel_name
             except Exception as e:
                 print(f"FAILED SOURCE:\n{src}")
@@ -213,7 +214,7 @@ class CUDABackend(Backend):
             torch.cuda.synchronize()
             st = time.perf_counter()
 
-        self.kernel_cache[id(src)][grid](*input_tensors, output.realized.data, N)
+        self.kernel_cache[src_hash][grid](*input_tensors, output.realized.data, N)
 
         if DEBUG >= 3:
             import torch
