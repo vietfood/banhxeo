@@ -57,30 +57,58 @@ class TritonCodegen:
             return self.realized_names[buf]
 
     def render_indexing(self, buf, only_compute_offset=False):
-        src = buf.src[0]
+        def simplify_axes(shape, strides):
+            if not shape:
+                return (1,), (0,)  # Scalar
 
-        # If the source is a CONST, we don't care about strides/offsets.
-        # Just skip it
-        if src == LoadOp.FROM_CONST:
+            # Start with the innermost dimension
+            new_shape = [shape[-1]]
+            new_strides = [strides[-1]]
+
+            # Iterate backwards from the second-to-last dimension
+            for i in reversed(range(len(shape) - 1)):
+                # Check contiguous condition
+                if strides[i] == (shape[i + 1] * strides[i + 1]):
+                    # Merge: Multiply shape, keep the inner stride
+                    new_shape[0] = new_shape[0] * shape[i]
+                    # new_strides[0] remains the same
+                else:
+                    # Cannot merge, push a new dimension
+                    new_shape.insert(0, shape[i])
+                    new_strides.insert(0, strides[i])
+
+            return tuple(new_shape), tuple(new_strides)
+
+        src = buf.src[0]
+        if src.op == LoadOp.FROM_CONST:
             return ""
 
         name = self.get_var_name(buf)
         src_name = self.get_var_name(src)
+
+        shape, strides = buf.view.shape, buf.view.strides
+        # This reduces (64, 128, 128) -> (1048576,) if contiguous
+        s_shape, s_strides = simplify_axes(shape, strides)
+
         code = [
             f"    {name}_offset = {buf.view.offset}",
-            f"    {name}_idx = {self.read_offset}",
+            f"    {name}_idx = {self.read_offset}",  # This is usually the linear_id
         ]
-        for i in reversed(range(len(buf.view.shape))):
-            # idx_i = temp_idx % shape_i
-            # temp_idx = temp_idx // shape_i
-            # offset += idx_i * stride_i
-            code.extend(
-                [
-                    f"    {name}_idx_{i} = {name}_idx % {name}_shape_{i}",
-                    f"    {name}_idx = {name}_idx // {name}_shape_{i}",
-                    f"    {name}_offset += {name}_idx_{i} * {name}_stride_{i}",
-                ]
-            )
+
+        for i in reversed(range(len(s_shape))):
+            dim_sz = s_shape[i]
+            dim_st = s_strides[i]
+
+            if i == 0:
+                code.append(f"    {name}_offset += {name}_idx * {dim_st}")
+            else:
+                code.extend(
+                    [
+                        f"    {name}_idx_{i} = {name}_idx % {dim_sz}",
+                        f"    {name}_idx = {name}_idx // {dim_sz}",
+                        f"    {name}_offset += {name}_idx_{i} * {dim_st}",
+                    ]
+                )
 
         if only_compute_offset:
             return chr(10).join(code), f"{name}_offset"

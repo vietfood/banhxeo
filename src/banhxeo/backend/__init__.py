@@ -1,10 +1,7 @@
 import hashlib
-import importlib
-import importlib.util
 import linecache
 import math
-import os
-import tempfile
+import time
 
 from banhxeo.backend.torch import TorchInterpreter
 from banhxeo.backend.triton import TritonCodegen
@@ -56,6 +53,7 @@ class CUDABackend(Backend):
     """
 
     kernel_cache = dict()
+    kernel_file_name = dict()
 
     def compile_triton_src(self, src_code: str):
         """
@@ -63,8 +61,14 @@ class CUDABackend(Backend):
         How we do this (Thanks Gemini for the solution):
         * Create a virtual file (but inject directly in to linecache) so we can trick Python to think we have "this file"
         * Then we can use the same method exec (faster than writing to disk)
-        * We need this because we can exec JIT compiled Triton kernel
+        * We need this because we can't run JIT compiled Triton kernel directly with exec (because @triton.jit() use inspect.getsource() first)
         """
+
+        # clear cache
+        if len(linecache.cache) > 10000:
+            for name in self.kernel_file_name.values():
+                linecache.checkcache(name)
+
         import triton
 
         # This acts as the cache key and the virtual filename
@@ -96,37 +100,7 @@ class CUDABackend(Backend):
         # Retrieve the JIT-ed function
         kernel = context["generated_kernel"]
 
-        return kernel
-
-    def writing_triton_src(self, src_code: str):
-        """
-        Really slow method. I put it here just for correctness validation
-        """
-        # Write to a temporary file so Triton can inspect the source
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
-            f.write("import torch\n")
-            f.write("import triton\n")
-            f.write("import triton.language as tl\n\n")
-            f.write(src_code)
-            temp_path = f.name
-
-        try:
-            # Dynamically import the generated module
-            spec = importlib.util.spec_from_file_location("generated_kernel", temp_path)
-            if spec is None:
-                raise ValueError("Generated kernel is None")
-
-            mod = importlib.util.module_from_spec(spec)
-            if spec.loader is None:
-                raise ValueError("Loader is None")
-
-            spec.loader.exec_module(mod)
-            triton_kernel = mod.generated_kernel
-            return triton_kernel
-        except Exception as e:
-            raise ValueError(f"[ERROR] Kernel compilation failed with error: {e}")
-        finally:
-            os.remove(temp_path)
+        return kernel, virtual_filename
 
     def is_barrier(self, buf: LazyBuffer):
         # realized buffers are always barriers
@@ -198,7 +172,9 @@ class CUDABackend(Backend):
 
         if src not in self.kernel_cache.keys():
             try:
-                self.kernel_cache[src] = self.compile_triton_src(src)
+                kernel, kernel_name = self.compile_triton_src(src)
+                self.kernel_cache[id(src)] = kernel
+                self.kernel_file_name[id(kernel)] = kernel_name
             except Exception as e:
                 print(f"FAILED SOURCE:\n{src}")
                 raise e
@@ -229,7 +205,22 @@ class CUDABackend(Backend):
 
         N = math.prod(output.view.shape)  # total size
         grid = lambda META: (math.ceil(N / META["BLOCK_SIZE"]),)  # noqa: E731
-        self.kernel_cache[src][grid](*input_tensors, output.realized.data, N)
+
+        st = 0
+        if DEBUG >= 3:
+            import torch
+
+            torch.cuda.synchronize()
+            st = time.perf_counter()
+
+        self.kernel_cache[id(src)][grid](*input_tensors, output.realized.data, N)
+
+        if DEBUG >= 3:
+            import torch
+
+            torch.cuda.synchronize()
+            et = time.perf_counter()
+            print(f"[DEBUG] KERNEL {output.op} took {(et - st) * 1000:.2f} ms")
 
     def exec_matmul(self, output: LazyBuffer):
         import triton

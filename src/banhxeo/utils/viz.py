@@ -2,7 +2,7 @@
 Thanks Gemini 3.0 Pro and Claude Sonnet 4.5
 """
 
-from typing import List, Set, Tuple
+from typing import List, Set
 
 import graphviz
 
@@ -12,6 +12,7 @@ from banhxeo.core.buffer import (
     LoadOp,
     MovementOp,
     ReduceOp,
+    TernaryOp,
     UnaryOp,
 )
 
@@ -64,7 +65,7 @@ def _get_node_style(lb: LazyBuffer) -> dict:
         style["fillcolor"] = "#e0f7fa"  # Cyan tint
         style["color"] = "#006064"
         style["style"] = "filled,rounded"  # Round corners for metadata ops
-    elif isinstance(lb.op, (BinaryOp, UnaryOp, ReduceOp)):
+    elif isinstance(lb.op, (BinaryOp, UnaryOp, ReduceOp, TernaryOp)):
         # Compute (The heavy lifting)
         style["fillcolor"] = "#eeeeee"
         style["color"] = "black"
@@ -120,7 +121,7 @@ def _get_op_symbol(lb: LazyBuffer) -> str:
         return "📥"
     elif isinstance(lb.op, MovementOp):
         return "↔️"
-    elif isinstance(lb.op, BinaryOp):
+    elif isinstance(lb.op, (BinaryOp, TernaryOp)):
         return "⊕"
     elif isinstance(lb.op, UnaryOp):
         return "◯"
@@ -135,7 +136,7 @@ def _get_color_code(lb: LazyBuffer) -> str:
         return "\033[93m"  # Yellow
     elif isinstance(lb.op, MovementOp):
         return "\033[96m"  # Cyan
-    elif isinstance(lb.op, (BinaryOp, UnaryOp, ReduceOp)):
+    elif isinstance(lb.op, (BinaryOp, UnaryOp, ReduceOp, TernaryOp)):
         return "\033[92m"  # Green
     return "\033[0m"  # Reset
 

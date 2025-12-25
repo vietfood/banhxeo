@@ -1,12 +1,9 @@
 import math
-from typing import Type
+from typing import Tuple, Type
 
 from banhxeo.core.buffer import (
     BinaryOp,
     LazyBuffer,
-    LoadOp,
-    ReduceOp,
-    TernaryOp,
     UnaryOp,
 )
 from banhxeo.tensor import Tensor
@@ -250,7 +247,26 @@ class Sigmoid(Function):
 
 # ------------ Movement Op ------------
 
-# TODO
+
+class Reshape(Function):
+    def forward(self, x: LazyBuffer, shape: Tuple[int, ...]):
+        self.input_shape = x.shape
+        return x.reshape(shape)
+
+    def backward(self, grad_output: LazyBuffer):
+        return grad_output.reshape(self.input_shape)
+
+
+class Permute(Function):
+    def forward(self, x: LazyBuffer, order: Tuple[int, ...]):
+        self.input_order = order
+        return x.permute(order)
+
+    def backward(self, grad_output: LazyBuffer):
+        from banhxeo.utils.helpers import argsort
+
+        return grad_output.permute(argsort(self.input_order))
+
 
 # ------------ Reduce Op ------------
 
