@@ -51,7 +51,7 @@ class TernaryOp(Enum):
     WHERE = auto()
 
 
-Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, MovementOp]
+Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, MovementOp, TernaryOp]
 
 
 @dataclass
