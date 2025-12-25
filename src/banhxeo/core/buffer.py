@@ -11,10 +11,11 @@ from banhxeo.utils.helpers import DEBUG
 
 
 class UnaryOp(Enum):
-    EXP2 = auto()
-    LOG2 = auto()
+    EXP = auto()
+    LOG = auto()
     SIN = auto()
     SQRT = auto()
+    NEG = auto()
 
 
 class BinaryOp(Enum):
@@ -23,6 +24,9 @@ class BinaryOp(Enum):
     MUL = auto()
     MATMUL = auto()
     CMPLT = auto()  # compare less than
+    DIV = auto()
+    MOD = auto()
+    MAX = auto()
 
 
 class ReduceOp(Enum):
@@ -31,19 +35,20 @@ class ReduceOp(Enum):
 
 
 class LoadOp(Enum):
-    CONST = auto()
-    VIEW = auto()
+    FROM_CONST = auto()
     FROM_CPU = auto()  # list, tuple, any iterable
     FROM_NUMPY = auto()  # we need to preserve shape and strides
-    DEFAULT = auto()
+    FROM_NONE = auto()
+    VIEW = auto()
     CONTIGUOUS = auto()
+    RAND = auto()  # TODO
 
 
 class MovementOp(Enum):
     RESHAPE = auto()
     PERMUTE = auto()
     EXPAND = auto()
-    PAD = auto()
+    PAD = auto()  # TODO
     SLICE = auto()
 
 
@@ -136,11 +141,6 @@ class LazyBuffer:
             return
         self.realized = RawBuffer.create(self.args, self.view.shape, self.device)
 
-    def view_as(self, shape: Tuple[int, ...]):
-        if self.realized is None:
-            raise ValueError("Current LazyBuffer isn't realized")
-        return self.realized.data.view(shape)
-
     def compute_ops(self, op: Op, *others: "LazyBuffer"):
         if isinstance(op, BinaryOp):
             assert len(others) == 1, "BinaryOp requires 1 other buffers"
@@ -157,6 +157,8 @@ class LazyBuffer:
             return LazyBuffer(
                 op, src=(self, others[0], others[1]), view=self.view, device=self.device
             )
+        else:
+            raise ValueError(f"This {op} isn't supported yet")
 
     def movement_ops(self, op: Op, *args):
         if op == MovementOp.PERMUTE:
@@ -182,9 +184,103 @@ class LazyBuffer:
                 LoadOp.VIEW, src=self.src, view=new_view, device=self.device
             )
 
-        if self.op == LoadOp.CONST:  # we don't want to "view" const
+        if self.op == LoadOp.FROM_CONST:  # we don't want to "view" const
             return self
 
         # we treat the MovementOp as a new LoadOp
         # it loads the same pointer as its parent, but using its own view.
         return LazyBuffer(LoadOp.VIEW, src=(self,), view=new_view, device=self.device)
+
+    def contiguous(self):
+        if self.view.is_contiguous():
+            return self
+        # It's basically load the source using its complex view,
+        # but write it out linearly
+        return LazyBuffer(
+            op=LoadOp.CONTIGUOUS,
+            view=View.create(shape=self.view.shape),
+            src=(self,),
+            device=self.device,
+        )
+
+    def const(self, val: float):
+        """
+        We copy 'self.view' so this constant acts like a tensor of full shape (fill), allowing elementwise ops (like SUB) to infer the correct output shape.
+        """
+        return LazyBuffer(
+            LoadOp.FROM_CONST,
+            src=(),
+            view=self.view,
+            args=[val],
+            device=self.device,
+        )
+
+    def broadcasted(self, other: "LazyBuffer"):
+        if self.view.shape == other.view.shape:
+            return self, other
+
+        # We don't broadcast on const
+        if other.op == LoadOp.FROM_CONST:
+            return self, other
+
+        try:
+            out_shape = tuple(
+                max(s, o) for s, o in zip(self.view.shape, other.view.shape)
+            )
+            return self.expand(out_shape), other.expand(out_shape)
+        except Exception:
+            # This is naive. A real implementation handles (3, 1) + (3,) -> (3, 3)
+            # For now, assume users are explicit or shapes match well enough
+            # For example, (3, 1) and (1, 3)
+            raise ValueError(
+                f"Cannot broadcast {self.view.shape} and {other.view.shape}"
+            )
+
+    def expand(self, new_shape: Tuple[int, ...]):
+        return self.movement_ops(MovementOp.EXPAND, new_shape)
+
+    def permute(self, new_axis: Tuple[int, ...]):
+        return self.movement_ops(MovementOp.PERMUTE, new_axis)
+
+    def slice(self, args: Tuple[Tuple[int, ...], ...]):
+        return self.movement_ops(MovementOp.SLICE, args)
+
+    def reshape(self, new_shape: Tuple[int, ...]):
+        if not self.view.is_contiguous():
+            print("[WARNING] Trigerring contiguous copy!")
+            # this is a naive approach that always forces a copy if
+            # tensor isn't contiguous
+            return self.contiguous()
+        # reshape freely
+        return self.movement_ops(MovementOp.RESHAPE, new_shape)
+
+    def matmul(self, other: "LazyBuffer"):
+        if self.shape[1] != other.shape[0]:
+            raise ValueError(
+                f"Incompatible dimensions between {self.shape=} and {other.shape=}"
+            )
+
+        if not self.view.is_contiguous():
+            print(
+                "[WARNING] MatMul should be called with contiguous Tensor => Trigger contiguous copying"
+            )
+            new_buf = self.contiguous()
+        else:
+            new_buf = self
+
+        return new_buf.compute_ops(BinaryOp.MATMUL, other)
+
+    def t(self):
+        return self.permute((1, 0))
+
+    def where(self, input: "LazyBuffer", other: "LazyBuffer"):
+        # https://github.com/tinygrad/teenygrad/blob/main/teenygrad/tensor.py#L719
+        x_, y_ = self.broadcasted(input)
+        x, z_ = x_.broadcasted(other)
+        y, z = y_.broadcasted(z_)
+        return x.compute_ops(TernaryOp.WHERE, y, z)
+
+    def view_as(self, shape: Tuple[int, ...]):
+        if self.realized is None:
+            raise ValueError("Current LazyBuffer isn't realized")
+        return self.realized.data.view(shape)

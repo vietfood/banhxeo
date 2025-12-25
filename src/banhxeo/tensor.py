@@ -4,44 +4,44 @@ import numpy as np
 import torch
 
 from banhxeo.core.buffer import (
-    BinaryOp,
     LazyBuffer,
     LoadOp,
-    MovementOp,
-    TernaryOp,
-    UnaryOp,
 )
 from banhxeo.core.device import DEFAULT_DEVICE, Device
 from banhxeo.core.view import View
 
 
 class Tensor:
-    __slots__ = "lazydata", "requires_grad"
+    __slots__ = "lazydata", "requires_grad", "grad", "_ctx"
     __deletable__ = ("_ctx",)
     training: ClassVar[bool] = False
+    no_grad: ClassVar[bool] = False
 
     def __init__(
         self,
         data: Optional[
             Union[LazyBuffer, List, Tuple, np.ndarray, torch.Tensor, int, float]
         ] = None,
-        device: str = DEFAULT_DEVICE,
+        device: Optional[str] = None,
         shape: Optional[Tuple[int, ...]] = None,
+        requires_grad: Optional[bool] = None,
     ):
+        if device is None:
+            device = DEFAULT_DEVICE
         device = device.upper()
         self.requires_grad = False
 
         if data is None:
             assert shape is not None, "Cannot allocate empty Tensor without shape"
             self.lazydata = LazyBuffer(
-                LoadOp.DEFAULT, view=View.create(shape=shape), device=device
+                LoadOp.FROM_NONE, view=View.create(shape=shape), device=device
             )
         else:
             if isinstance(data, LazyBuffer):
                 self.lazydata = data
             elif isinstance(data, (int, float)):
                 self.lazydata = LazyBuffer(
-                    LoadOp.CONST,
+                    LoadOp.FROM_CONST,
                     view=View.create(shape=(1,)),
                     args=[data],
                     device=device,
@@ -64,6 +64,31 @@ class Tensor:
                     device=device,
                 )
 
+            # gradient of this Tensor
+            # or basically a reference to another Tensor in graph
+            self.grad: Optional[Tensor] = None
+
+            # NOTE: this can be in three states. False and None: no gradient, True: gradient
+            # None (the default) will be updated to True if it's put in an optimizer
+            self.requires_grad = requires_grad
+
+            # internal variables used for autograd graph construction
+            from banhxeo.core.function import Function
+
+            self._ctx: Optional[Function] = None
+
+    def __repr__(self):
+        return f"<Tensor {self.lazydata!r} on {self.device} with grad {(self.grad.lazydata if self.grad else None)!r}>"
+
+    def __str__(self):
+        if self.lazydata.realized is None:
+            print("[WARNING] Tensor isn't realized yet!")
+            return self.__repr__()
+        return str(self.lazydata.realized.data)
+
+    def __hash__(self):
+        return id(self)
+
     # ---------- Property ----------
 
     @property
@@ -72,136 +97,119 @@ class Tensor:
 
     @property
     def shape(self):
-        return self.lazydata.view.shape
+        return self.lazydata.shape
 
     # ---------- Binary Ops ----------
 
     def add(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.ADD, y.lazydata))
+
+        from banhxeo.core.function import Add
+
+        return Add.apply(x, y)
 
     def mul(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.MUL, y.lazydata))
+
+        from banhxeo.core.function import Mul
+
+        return Mul.apply(x, y)
 
     def sub(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.SUB, y.lazydata))
+
+        from banhxeo.core.function import Sub
+
+        return Sub.apply(x, y)
 
     def less(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
-        return Tensor(x.lazydata.compute_ops(BinaryOp.CMPLT, y.lazydata))
+
+        from banhxeo.core.function import Less
+
+        return Less.apply(x, y)
 
     def matmul(self, other):
         other = other if isinstance(other, Tensor) else Tensor(other)
 
-        # We need to check dimension and contiguous
-        if self.lazydata.shape[1] != other.lazydata.shape[0]:
-            raise ValueError(
-                f"Incompatible dimensions between {self.lazydata.shape=} and {other.lazydata.shape=}"
-            )
+        from banhxeo.core.function import Matmul
 
-        if not self.lazydata.view.is_contiguous():
-            print(
-                "[WARNING] MatMul should be called with contiguous Tensor => Trigger contiguous copying"
-            )
-            self = self.contiguous()
+        return Matmul.apply(self, other)
 
-        return Tensor(self.lazydata.compute_ops(BinaryOp.MATMUL, other.lazydata))
+    def div(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        x, y = self._broadcasted(other)
+
+        from banhxeo.core.function import Div
+
+        return Div.apply(x, y)
 
     # ---------- Unary Ops ----------
 
-    def log2(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.LOG2))
+    def log(self):
+        from banhxeo.core.function import Log
 
-    def exp2(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.EXP2))
+        return Log.apply(self)
+
+    def exp(self):
+        from banhxeo.core.function import Exp
+
+        return Exp.apply(self)
 
     def sin(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.SIN))
+        from banhxeo.core.function import Sin
+
+        return Sin.apply(self)
 
     def sqrt(self):
-        return Tensor(self.lazydata.compute_ops(UnaryOp.SQRT))
+        from banhxeo.core.function import Sqrt
+
+        return Sqrt.apply(self)
+
+    def neg(self):
+        from banhxeo.core.function import Neg
+
+        return Neg.apply(self)
 
     # ---------- Ternary Ops ----------
 
     def _where(self, input, other):
-        # https://github.com/tinygrad/teenygrad/blob/main/teenygrad/tensor.py#L719
-
         other = other if isinstance(other, Tensor) else Tensor(other)
         input = input if isinstance(input, Tensor) else Tensor(input)
-
-        x_, y_ = self._broadcasted(input)
-        x, z_ = x_._broadcasted(other)
-        y, z = y_._broadcasted(z_)
-
-        return Tensor(x.lazydata.compute_ops(TernaryOp.WHERE, y.lazydata, z.lazydata))
+        return Tensor(self.lazydata.where(input.lazydata, other.lazydata))
 
     # ---------- Load Ops ----------
 
     def contiguous(self):
-        if self.lazydata.view.is_contiguous():
-            return self
-        # It's basically load the source using its complex view,
-        # but write it out linearly
-        return Tensor(
-            LazyBuffer(
-                op=LoadOp.CONTIGUOUS,
-                view=View.create(shape=self.lazydata.view.shape),
-                src=(self.lazydata,),
-                device=self.lazydata.device,
-            )
-        )
+        return Tensor(self.lazydata.contiguous())
 
     # ---------- Movement Ops ----------
 
     def _broadcasted(self, other: "Tensor") -> Tuple["Tensor", "Tensor"]:
-        if self.lazydata.view.shape == other.lazydata.view.shape:
-            return self, other
-
-        # We don't broadcast on const
-        if other.lazydata.op == LoadOp.CONST:
-            return self, other
-
-        try:
-            out_shape = tuple(
-                max(s, o)
-                for s, o in zip(self.lazydata.view.shape, other.lazydata.view.shape)
-            )
-            return self.expand(out_shape), other.expand(out_shape)
-        except Exception:
-            # This is naive. A real implementation handles (3, 1) + (3,) -> (3, 3)
-            # For now, assume users are explicit or shapes match well enough
-            # For example, (3, 1) and (1, 3)
-            raise ValueError(
-                f"Cannot broadcast {self.lazydata.view.shape} and {other.lazydata.view.shape}"
-            )
+        x, y = self.lazydata.broadcasted(other.lazydata)
+        return Tensor(x), Tensor(y)
 
     def reshape(self, new_shape: Tuple[int, ...]):
-        if not self.lazydata.view.is_contiguous():
-            print("[WARNING] Trigerring contiguous copy!")
-            # this is a naive approach that always forces a copy if
-            # tensor isn't contiguous
-            contiguous_tensor = self.contiguous()
-            return Tensor(
-                contiguous_tensor.lazydata.movement_ops(MovementOp.RESHAPE, new_shape)
-            )
-
-        # reshape freely
-        return Tensor(self.lazydata.movement_ops(MovementOp.RESHAPE, new_shape))
+        return Tensor(self.lazydata.reshape(new_shape))
 
     def permute(self, new_axis: Tuple[int, ...]):
-        return Tensor(self.lazydata.movement_ops(MovementOp.PERMUTE, new_axis))
+        return Tensor(self.lazydata.permute(new_axis))
 
     def slice(self, args: Tuple[Tuple[int, ...], ...]):
-        return Tensor(self.lazydata.movement_ops(MovementOp.SLICE, args))
+        return Tensor(self.lazydata.slice(args))
 
     def expand(self, shape: Tuple[int, ...]):
-        return Tensor(self.lazydata.movement_ops(MovementOp.EXPAND, shape))
+        return Tensor(self.lazydata.expand(shape))
+
+    def _transpose(self):
+        assert self.shape == 2, (
+            "Transpose only works with 2 dimension, please use Permute for more than 2 dimensions"
+        )
+        return self.permute((1, 0))
 
     # ---------- Ops Wrapper ----------
 
@@ -219,6 +227,18 @@ class Tensor:
 
     def __lt__(self, other):
         return self.less(other)
+
+    def __neg__(self):
+        return self.neg()
+
+    def __div__(self, other):
+        return self.div(other)
+
+    def t(self):
+        """
+        Transpose 2D Tensor
+        """
+        return self._transpose()
 
     # ---------- Neural Network Method ----------
 
@@ -238,9 +258,9 @@ class Tensor:
 
     # ---------- Realize Method ----------
 
-    def realize(self):
+    def realize(self) -> "Tensor":
         Device.get_backend(self.lazydata.device)().exec(self.lazydata)
-        return self.lazydata.view_as(self.lazydata.shape)
+        return self
 
     def numpy(self):
         if self.lazydata.realized is None:

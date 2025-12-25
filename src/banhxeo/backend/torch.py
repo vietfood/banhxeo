@@ -38,6 +38,9 @@ class TorchInterpreter:
                     BinaryOp.MUL: torch.mul,
                     BinaryOp.MATMUL: torch.matmul,
                     BinaryOp.CMPLT: lambda x, y: (x < y).float(),
+                    BinaryOp.DIV: torch.div,
+                    BinaryOp.MOD: torch.remainder,
+                    BinaryOp.MAX: torch.max,
                 }
                 buf.realized.data = op_map[buf.op](
                     buf.src[0].realized.data, buf.src[1].realized.data
@@ -45,10 +48,11 @@ class TorchInterpreter:
             elif isinstance(buf.op, UnaryOp):
                 assert buf.src[0].realized is not None
                 op_map = {
-                    UnaryOp.LOG2: torch.log2,
-                    UnaryOp.EXP2: torch.exp2,
+                    UnaryOp.LOG: torch.log,
+                    UnaryOp.EXP: torch.exp,
                     UnaryOp.SIN: torch.sin,
                     UnaryOp.SQRT: torch.sqrt,
+                    UnaryOp.NEG: torch.neg,
                 }
                 buf.realized.data = op_map[buf.op](buf.src[0].realized.data)
             elif isinstance(buf.op, TernaryOp):

@@ -11,13 +11,17 @@
 ### v0.2: First Matmul
 - [x] Solve the Reshape Boss: Implement the contiguous() check and the reshape logic.
 - [x] Naive Matmul: Don't try to build a cuBLAS competitor. Write a simple Triton kernel that just works. (Block size 32, no fancy pipe-lining).
-- [ ] The MLP Forward Pass: Manually construct the weights for a small linear layer and run x @ W + b. Verify the numbers against PyTorch.
+- [x] The MLP Forward Pass: Manually construct the weights for a small linear layer and run x @ W + b. Verify the numbers against PyTorch.
 
 ### v0.3: Autograd Engine
 
+- Backward Ops
+    - [x] Unary Op
+    - [ ] Binary Op
+    - [ ] Movement Op
+    - [x] Ternary Op
 - [ ] Reduce Ops: sum and max.
 - [ ] Broadcasting: need this for bias addition.
-- [ ] Backward Ops: Implement mul_backward, add_backward, matmul_backward.
 
 ### v0.4 - More Ops
 - [ ] nn.Linear: Wrap Matmul + Add in a class.
