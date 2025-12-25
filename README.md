@@ -8,7 +8,7 @@
 
 Banhxeo is a minimalist deep learning framework built from scratch to understand how modern ML frameworks actually work. Inspired by [Tinygrad](https://github.com/tinygrad/tinygrad) and the philosophy that **the best way to learn is to build**, this project strips away all the magic and shows you the raw mechanics of lazy evaluation, automatic differentiation, and GPU kernel generation.
 
-**Current Status:** A week of commited - Basic tensor operations working with Triton codegen 🚀
+**Current Status:** Two weeks in hell - Basic tensor operations working with Triton codegen and simple autograd engine.
 
 ## Why Banhxeo?
 
