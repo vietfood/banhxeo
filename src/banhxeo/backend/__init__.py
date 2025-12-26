@@ -260,8 +260,41 @@ class CUDABackend(Backend):
         )
 
     def exec_reduce(self, output: LazyBuffer):
-        # TODO:
-        pass
+        from banhxeo.backend.kernels.reduce import reduce_max_kernel, reduce_sum_kernel
+        from banhxeo.core.buffer import ReduceOp
+
+        kernel_map = {ReduceOp.SUM: reduce_sum_kernel, ReduceOp.MAX: reduce_max_kernel}
+
+        src = output.src[0]
+
+        # If we permuted dimensions to get here, the strides are messy.
+        # Making it contiguous ensures stride_row = N and stride_col = 1
+        if not src.view.is_contiguous():
+            src = src.contiguous()
+            self.exec(src)
+        else:
+            self.exec(src)
+
+        # Input is logically (Batch..., N) -> (M, N)
+        *batch_dims, N = src.shape
+        M = math.prod(batch_dims)
+
+        output.allocate()
+
+        grid = (M,)
+
+        # Strides: Since we forced contiguous, we know the layout
+        # (M, N) contiguous layout:
+        # stride_row = N (jump N elements to get to next row)
+        # stride_col = 1 (elements in row are sequential)
+        kernel_map[output.op][grid](  # type: ignore
+            src.realized.data,  # type: ignore
+            output.realized.data,  # type: ignore
+            stride_x_row=N,
+            stride_x_col=1,
+            N=N,
+            BLOCK_SIZE=1024,
+        )
 
     def exec(self, output: LazyBuffer):
         if output.realized is not None:

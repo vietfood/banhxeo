@@ -6,6 +6,7 @@ import numpy as np
 import torch
 
 from banhxeo.core.device import DEFAULT_DEVICE
+from banhxeo.core.dtype import DType, dtypes
 from banhxeo.core.view import View
 from banhxeo.utils.helpers import DEBUG
 
@@ -16,6 +17,7 @@ class UnaryOp(Enum):
     SIN = auto()
     SQRT = auto()
     NEG = auto()
+    CAST = auto()
 
 
 class BinaryOp(Enum):
@@ -36,8 +38,9 @@ class ReduceOp(Enum):
 
 class LoadOp(Enum):
     FROM_CONST = auto()
-    FROM_CPU = auto()  # list, tuple, any iterable
+    FROM_PYTHON = auto()  # list, tuple, any iterable
     FROM_NUMPY = auto()  # we need to preserve shape and strides
+    FROM_TORCH = auto()  # same as numpy but we need to take account of device
     FROM_NONE = auto()
     VIEW = auto()
     CONTIGUOUS = auto()
@@ -49,6 +52,7 @@ class MovementOp(Enum):
     PERMUTE = auto()
     EXPAND = auto()
     PAD = auto()  # TODO
+    SHRINK = auto()  # TODO
     SLICE = auto()
 
 
@@ -56,7 +60,7 @@ class TernaryOp(Enum):
     WHERE = auto()
 
 
-Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, MovementOp, TernaryOp]
+Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, MovementOp, TernaryOp, ReduceOp]
 
 
 @dataclass
@@ -74,37 +78,55 @@ class RawBuffer:
 
     @staticmethod
     def create(
-        data: Optional[Union[List, Tuple, np.ndarray, torch.Tensor]],
+        op: Op,
+        args: Any,
         shape: Optional[Tuple[int, ...]] = None,
         device: Optional[str] = None,
         dtype: torch.dtype = torch.float32,
     ):
         device_str = device.lower() if device else "cpu"
+        if op == LoadOp.RAND:
+            seed = args[0]
+            if shape is None:
+                raise ValueError("Shape cannot be None for random Buffer creation")
 
-        if data is None:
-            assert shape is not None  # This should be handle by Tensor
-            buf_data = torch.empty(shape, dtype=dtype, device=device_str)
+            if seed is not None:
+                torch.manual_seed(seed)
+
+            return RawBuffer(
+                shape=shape, data=torch.rand(shape, dtype=dtype, device=device_str)
+            )
         else:
-            if isinstance(data, (List, Tuple)):
-                # we assume 1D Tensor as default
-                # note that convert to numpy then wrap torch is faster than raw list
-                buf_data = torch.from_numpy(np.array(data)).to(
-                    dtype=dtype, device=device_str
-                )
-            elif isinstance(data, np.ndarray):
-                buf_data = torch.from_numpy(data).to(dtype=dtype, device=device_str)
+            if args is None:
+                if shape is None:
+                    raise ValueError("Shape cannot be None for empty Buffer creation")
+                buf_data = torch.empty(shape, dtype=dtype, device=device_str)
             else:
-                # copy a new torch Tensor
-                buf_data = data.clone().to(dtype=dtype, device=device_str)
+                data = args[0]
+                if isinstance(data, (int, float)):
+                    if shape is None:
+                        raise ValueError("Scalar creation requires shape")
+                    buf_data = torch.full(shape, data, dtype=dtype, device=device_str)
+                elif isinstance(data, (List, Tuple)):
+                    # we assume 1D Tensor as default
+                    # note that convert to numpy then wrap torch is faster than raw list
+                    buf_data = torch.from_numpy(np.array(data)).to(
+                        dtype=dtype, device=device_str
+                    )
+                elif isinstance(data, np.ndarray):
+                    buf_data = torch.from_numpy(data).to(dtype=dtype, device=device_str)
+                else:
+                    # copy a new torch Tensor
+                    buf_data = data.clone().to(dtype=dtype, device=device_str)
 
-            if shape is not None:
-                buf_data = buf_data.view(shape)
+                if shape is not None:
+                    buf_data = buf_data.view(shape)
 
-        return RawBuffer(
-            shape=buf_data.shape,
-            data=buf_data,
-            device=buf_data.device.type,
-        )
+            return RawBuffer(
+                shape=buf_data.shape,
+                data=buf_data,
+                device=buf_data.device.type,
+            )
 
 
 class LazyBuffer:
@@ -114,6 +136,7 @@ class LazyBuffer:
         view: View,
         src: Tuple["LazyBuffer", ...] = (),
         args: Any = None,
+        dtype: DType = dtypes.float32,
         device: str = DEFAULT_DEVICE,
     ):
         self.op = op
@@ -121,6 +144,8 @@ class LazyBuffer:
         self.args = args
         self.view = view
         self.device = device
+        self.dtype = dtype
+
         # If we computed this already, store the data here
         self.realized: Optional[RawBuffer] = None
 
@@ -142,23 +167,35 @@ class LazyBuffer:
     def allocate(self):
         if self.realized is not None:
             return
-        self.realized = RawBuffer.create(self.args, self.view.shape, self.device)
+        self.realized = RawBuffer.create(
+            self.op, self.args, self.view.shape, self.device
+        )
 
-    def compute_ops(self, op: Op, *others: "LazyBuffer"):
+    # ---------- Ops Methods ----------
+
+    def compute_ops(self, op: Op, *others: "LazyBuffer", args=None):
         if isinstance(op, BinaryOp):
             assert len(others) == 1, "BinaryOp requires 1 other buffers"
             if op == BinaryOp.MATMUL:
                 view = View.create(shape=(self.shape[0], others[0].shape[1]))
             else:
                 view = self.view
-            return LazyBuffer(op, src=(self, others[0]), view=view, device=self.device)
+            return LazyBuffer(
+                op, src=(self, others[0]), view=view, device=self.device, args=args
+            )
         elif isinstance(op, UnaryOp):
             assert len(others) == 0
-            return LazyBuffer(op, src=(self,), view=self.view, device=self.device)
+            return LazyBuffer(
+                op, src=(self,), view=self.view, device=self.device, args=args
+            )
         elif isinstance(op, TernaryOp):
             assert len(others) == 2, "TernaryOp requires 2 other buffers"
             return LazyBuffer(
-                op, src=(self, others[0], others[1]), view=self.view, device=self.device
+                op,
+                src=(self, others[0], others[1]),
+                view=self.view,
+                device=self.device,
+                args=args,
             )
         else:
             raise ValueError(f"This {op} isn't supported yet")
@@ -193,6 +230,19 @@ class LazyBuffer:
         # we treat the MovementOp as a new LoadOp
         # it loads the same pointer as its parent, but using its own view.
         return LazyBuffer(LoadOp.VIEW, src=(self,), view=new_view, device=self.device)
+
+    def reduce_ops(self, op: Op, new_shape: Tuple[int, ...]):
+        assert len(self.shape) == len(new_shape), (
+            "[ERROR] Reduce shapes must have same dimensions"
+        )
+        return LazyBuffer(
+            op,
+            src=(self,),
+            view=View.create(new_shape),
+            device=self.device,
+        )
+
+    # ---------- Other Methods ----------
 
     def contiguous(self):
         if self.view.is_contiguous():

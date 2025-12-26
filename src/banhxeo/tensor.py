@@ -1,23 +1,24 @@
+import math
 import time
 from typing import ClassVar, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
 
-from banhxeo.core.buffer import (
-    LazyBuffer,
-    LoadOp,
-)
+from banhxeo.core.buffer import LazyBuffer, LoadOp, ReduceOp
 from banhxeo.core.device import DEFAULT_DEVICE, Device
+from banhxeo.core.dtype import DType, dtypes
 from banhxeo.core.view import View
 
 
 class Tensor:
     __slots__ = "lazydata", "requires_grad", "grad", "_ctx"
     __deletable__ = ("_ctx",)
+
     training: ClassVar[bool] = False
     no_grad: ClassVar[bool] = False
-    _seed: int = int(time.time())
+    default_type: ClassVar[DType] = dtypes.float32
+    _seed: ClassVar[int] = int(time.time())
 
     def __init__(
         self,
@@ -26,17 +27,23 @@ class Tensor:
         ] = None,
         device: Optional[str] = None,
         shape: Optional[Tuple[int, ...]] = None,
+        dtype: Optional[DType] = None,
         requires_grad: Optional[bool] = None,
     ):
         if device is None:
             device = DEFAULT_DEVICE
         device = device.upper()
-        self.requires_grad = False
+
+        if dtype is None:
+            dtype = Tensor.default_type
 
         if data is None:
             assert shape is not None, "Cannot allocate empty Tensor without shape"
             self.lazydata = LazyBuffer(
-                LoadOp.FROM_NONE, view=View.create(shape=shape), device=device
+                LoadOp.FROM_NONE,
+                view=View.create(shape=shape),
+                device=device,
+                dtype=dtype,
             )
         else:
             if isinstance(data, LazyBuffer):
@@ -44,16 +51,18 @@ class Tensor:
             elif isinstance(data, (int, float)):
                 self.lazydata = LazyBuffer(
                     LoadOp.FROM_CONST,
-                    view=View.create(shape=(1,)),
+                    view=View.create(shape=(1,) if shape is None else shape),
                     args=[data],
                     device=device,
+                    dtype=dtype,
                 )
             elif isinstance(data, (List, Tuple)):
                 self.lazydata = LazyBuffer(
-                    LoadOp.FROM_CPU,
+                    LoadOp.FROM_PYTHON,
                     view=View.create(shape=(len(data),)),
                     args=[data],
                     device=device,
+                    dtype=dtype,
                 )
             elif isinstance(data, np.ndarray):
                 self.lazydata = LazyBuffer(
@@ -64,20 +73,31 @@ class Tensor:
                     view=View.create(shape=data.shape),
                     args=[data.flatten()],
                     device=device,
+                    dtype=dtype,
+                )
+            elif isinstance(data, torch.Tensor):
+                self.lazydata = LazyBuffer(
+                    LoadOp.FROM_TORCH,
+                    view=View.create(shape=data.shape),
+                    args=[
+                        data.detach().flatten()
+                    ],  # remove the autograd graph from current Tensor and flatten it
+                    device=device,
+                    dtype=dtype,
                 )
 
-            # gradient of this Tensor
-            # or basically a reference to another Tensor in graph
-            self.grad: Optional[Tensor] = None
+        # gradient of this Tensor
+        # or basically a reference to another Tensor in graph
+        self.grad: Optional[Tensor] = None
 
-            # NOTE: this can be in three states. False and None: no gradient, True: gradient
-            # None (the default) will be updated to True if it's put in an optimizer
-            self.requires_grad = requires_grad
+        # NOTE: this can be in three states. False and None: no gradient, True: gradient
+        # None (the default) will be updated to True if it's put in an optimizer
+        self.requires_grad = requires_grad
 
-            # internal variables used for autograd graph construction
-            from banhxeo.core.function import Function
+        # internal variables used for autograd graph construction
+        from banhxeo.core.function import Function
 
-            self._ctx: Optional[Function] = None
+        self._ctx: Optional[Function] = None
 
     def __repr__(self):
         return f"<Tensor {self.lazydata!r} on {self.device} with grad {(self.grad.lazydata if self.grad else None)!r}>"
@@ -177,6 +197,14 @@ class Tensor:
 
         return Neg.apply(self)
 
+    def cos(self):
+        return ((math.pi / 2) - self).sin()
+
+    def cast(self, dtype=None):
+        from banhxeo.core.function import Cast
+
+        return Cast.apply(self, dtype=dtype)
+
     # ---------- Ternary Ops ----------
 
     def _where(self, input, other):
@@ -186,6 +214,70 @@ class Tensor:
         from banhxeo.core.function import Where
 
         return Where.apply(self, input, other)
+
+    # ---------- Reduce Ops ----------
+
+    def _reduce(self, op: ReduceOp, axis=None, keepdim=False):
+        # 1. handle "Sum All": Flatten then sum
+        if axis is None:
+            # reshape(-1) flattens to 1D, then we sum that single dimension
+            return self.reshape((-1,))._reduce(op, axis=0, keepdim=False)
+
+        # 2. handle Negative Axis
+        if axis < 0:
+            axis += len(self.shape)
+
+        # 3. Handle Permutation (Move reduction axis to end)
+        if axis != len(self.shape) - 1:
+            permute_order = [i for i in range(len(self.shape)) if i != axis] + [axis]
+            ret = self.permute(tuple(permute_order))._reduce(op, axis=-1, keepdim=False)
+
+            # If keepdim, we need to reshape it back to have a '1' in the original axis
+            if keepdim:
+                # e.g., (2, 3) sum(0) -> (3,) -> reshape(1, 3)
+                shape = list(self.shape)
+                shape[axis] = 1
+                return ret.reshape(tuple(shape))
+            return ret
+
+        # 4. The Actual Reduction (Axis is now -1)
+        # Calculate new shape: (10, 20, 30) -> (10, 20)
+        new_shape = self.shape[:-1]
+
+        ret = Tensor(self.lazydata.reduce_ops(op, new_shape))
+
+        # Handle keepdim for the simple case
+        if keepdim:
+            shape = list(self.shape)
+            shape[axis] = 1
+            return ret.reshape(tuple(shape))
+
+        return ret
+
+    def sum(self, axis=None, keepdim=False):
+        return self._reduce(ReduceOp.SUM, axis, keepdim)
+
+    def max(self, axis=None, keepdim=False):
+        return self._reduce(ReduceOp.MAX, axis, keepdim)
+
+    def min(self, axis=None, keepdim=False):
+        # min(x) = -max(-x)
+        return -((-self).max(axis=axis, keepdim=keepdim))
+
+    def mean(self, axis=None, keepdim=False):
+        # mean(x) = sum(x) / count
+        out = self.sum(axis=axis, keepdim=keepdim)
+
+        # Calculate divisor size
+        if axis is None:
+            div = math.prod(self.shape)
+        elif isinstance(axis, int):
+            div = self.shape[axis]
+        else:
+            # Handle tuple axis if you support it later
+            div = math.prod(self.shape[i] for i in axis)
+
+        return out.div(div)
 
     # ---------- Load Ops ----------
 
@@ -234,28 +326,112 @@ class Tensor:
         )
         return Tensor(self.lazydata.t())
 
+    def __getitem__(self, val):
+        from banhxeo.utils.helpers import normalize_slice
+
+        if not isinstance(val, tuple):
+            val = (val,)
+
+        # TODO: Handle ellipsis (...)
+
+        new_shape = []
+        new_strides = []
+        new_offset = self.lazydata.view.offset
+
+        current_dim = 0
+        for v in val:
+            dim_size = self.shape[current_dim]
+            dim_stride = self.lazydata.view.strides[current_dim]
+
+            if isinstance(v, int):
+                # Integer Indexing: x[2]
+                # 1. Normalize negative index
+                if v < 0:
+                    v += dim_size
+                if not (0 <= v < dim_size):
+                    raise IndexError(
+                        f"Index {v} out of bounds for dim {current_dim} size {dim_size}"
+                    )
+
+                # 2. Update Offset: Move pointer forward
+                new_offset += v * dim_stride
+
+                # 3. Drop Dimension: We do NOT append to new_shape/new_strides
+
+            elif isinstance(v, slice):
+                # Slicing: x[1:5:2]
+                start, stop, step = normalize_slice(v, dim_size)
+
+                # 1. Update Offset: Move to start
+                new_offset += start * dim_stride
+
+                # 2. Update Shape: How many elements?
+                # Formula: ceil((stop - start) / step)
+                new_dim_size = math.ceil((stop - start) / step)
+                new_shape.append(max(0, new_dim_size))
+
+                # 3. Update Stride: Stride multiplies
+                new_strides.append(dim_stride * step)
+
+            else:
+                raise NotImplementedError(f"Indexing with {type(v)} not supported")
+
+            current_dim += 1
+
+        # append remaining dimensions untouched
+        while current_dim < len(self.shape):
+            new_shape.append(self.shape[current_dim])
+            new_strides.append(self.lazydata.view.strides[current_dim])
+            current_dim += 1
+
+        new_view = View(tuple(new_shape), tuple(new_strides), new_offset)
+
+        return Tensor(
+            LazyBuffer(
+                LoadOp.VIEW,
+                src=self.lazydata.src,
+                view=new_view,
+                device=self.device,
+            )
+        )
+
     # ---------- Ops Wrapper ----------
 
     def __add__(self, other):
         return self.add(other)
 
+    def __radd__(self, other):
+        return other.add(self)
+
     def __mul__(self, other):
         return self.mul(other)
+
+    def __rmul__(self, other):
+        return other.mul(self)
 
     def __sub__(self, other):
         return self.sub(other)
 
+    def __rsub__(self, other):
+        return other.sub(self)
+
     def __matmul__(self, other):
         return self.matmul(other)
+
+    def __rmatmul__(self, other):
+        return other.matmul(self)
+
+    def __div__(self, other):
+        return self.div(other)
+
+    def __rdiv__(self, other):
+        return other.div(self)
 
     def __lt__(self, other):
         return self.less(other)
 
     def __neg__(self):
         return self.neg()
-
-    def __div__(self, other):
-        return self.div(other)
 
     def t(self):
         return self.transpose()
@@ -279,63 +455,82 @@ class Tensor:
     # ---------- Creation Methods ----------
 
     @staticmethod
-    def _loadop(
-        op,
-        size,
-        device: Optional[str] = None,
-        arg=None,
-        **kwargs,
-    ):
-        # TODO
-        ...
-
-    @staticmethod
-    def empty(*shape, **kwargs):
-        pass
-
-    @staticmethod
     def manual_seed(seed=0):
         Tensor._seed = seed
 
     @staticmethod
-    def rand(*shape, **kwargs):
-        # TODO
-        ...
+    def rand(shape: Tuple[int, ...], **kwargs):
+        Tensor._seed += 1
+
+        return Tensor(
+            LazyBuffer(
+                op=LoadOp.RAND,
+                view=View.create(shape=shape),
+                args=[Tensor._seed],
+                device=kwargs.pop("device", DEFAULT_DEVICE),
+            )
+        )
 
     @staticmethod
-    def full(shape: Tuple[int, ...], fill_value, **kwargs):
-        # TODO
-        ...
+    def full(shape: Tuple[int, ...], fill_value: Union[float, int], **kwargs):
+        return Tensor(
+            LazyBuffer(
+                LoadOp.FROM_CONST,
+                view=View.create(shape),
+                args=[fill_value],
+                device=kwargs.pop("device", DEFAULT_DEVICE),
+            )
+        )
 
     @staticmethod
-    def zeros(*shape, **kwargs):
-        # TODO
-        ...
+    def zeros(shape: Tuple[int, ...], **kwargs):
+        return Tensor.full(shape, 0.0, **kwargs)
 
     @staticmethod
-    def ones(*shape, **kwargs):
-        # TODO
-        ...
-
-    @staticmethod
-    def arange(start, stop=None, step=1, **kwargs):
-        # TODO
-        ...
-
-    @staticmethod
-    def eye(dim: int, **kwargs):
-        # TODO
-        ...
+    def ones(shape: Tuple[int, ...], **kwargs):
+        return Tensor.full(shape, 1.0, **kwargs)
 
     def full_like(self, fill_value, **kwargs):
-        # TODO
-        ...
+        return Tensor.full(
+            self.shape,
+            fill_value=fill_value,
+            device=kwargs.pop("device", self.device),
+            **kwargs,
+        )
+
+    def zeros_like(self, **kwargs):
+        return self.full_like(0, **kwargs)
 
     def ones_like(self, **kwargs):
-        # TODO
-        ...
+        return self.full_like(1, **kwargs)
 
     # ---------- Random Methods ----------
+
+    @staticmethod
+    def randn(shape: Tuple[int, ...], dtype: Optional[DType] = None, **kwargs):
+        # create two uniform distribution
+        src = Tensor.rand(shape=tuple([2] + list(shape)), **kwargs)
+        # Then apply Muller transform trick (https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform)
+        # taken from: https://github.com/tinygrad/teenygrad/blob/main/teenygrad/tensor.py#L693
+        lhs = (src[0] * (2 * math.pi)).cos()
+        rhs = ((1 - src[1]).log() * (-2)).sqrt()
+        return (lhs * rhs).cast(Tensor.default_type if dtype is None else dtype)
+
+    @staticmethod
+    def randint(low, high, shape: Tuple[int, ...], **kwargs):
+        t = Tensor.rand(shape, **kwargs)
+        t = t * (high - low)
+        t = t + low
+        return t.cast(dtypes.int32)
+
+    @staticmethod
+    def normal(shape: Tuple[int, ...], mean=0.0, std=1.0, **kwargs):
+        return (std * Tensor.randn(shape, **kwargs)) + mean
+
+    @staticmethod
+    def uniform(*shape, low=0.0, high=1.0, **kwargs):
+        dtype = kwargs.pop("dtype", Tensor.default_type)
+        return ((high - low) * Tensor.rand(*shape, **kwargs)).cast(dtype) + low
 
     # ---------- Other Methods ----------
     def backward(self, retain_graph: bool = False):
@@ -409,3 +604,20 @@ class Tensor:
 
     def detach(self):
         return Tensor(self.lazydata, device=self.device, requires_grad=False)
+
+    def numpy(self):
+        return (
+            self.detach()
+            .contiguous()
+            .to("cpu")
+            .realize()
+            .lazydata.realized.numpy()  # type: ignore
+            .reshape(self.shape)
+        )
+
+    def item(self) -> Union[float, int]:
+        if len(self.shape) == 1 and self.shape[0] == 1:
+            return self.numpy().item()
+        raise ValueError(
+            "item() method can be used only for Scalar Tensor (with shape=(1))"
+        )

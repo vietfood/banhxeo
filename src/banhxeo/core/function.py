@@ -121,6 +121,15 @@ class Sqrt(Function):
         )
 
 
+class Cast(Function):
+    def forward(self, x: LazyBuffer, dtype):
+        self.input_dtype = x.dtype
+        return x.compute_ops(UnaryOp.CAST, args=[dtype])
+
+    def backward(self, grad_output: LazyBuffer):
+        return grad_output.compute_ops(UnaryOp.CAST, args=[self.input_dtype])
+
+
 # ------------ Binary Op ------------
 
 

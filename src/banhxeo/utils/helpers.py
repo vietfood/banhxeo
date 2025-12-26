@@ -23,4 +23,12 @@ def argsort(x):
     return type(x)(sorted(range(len(x)), key=x.__getitem__))
 
 
+def normalize_slice(s, dim_size):
+    start, stop, step = s.indices(dim_size)
+    # TODO: Handle negative strides (flip) later
+    if step < 0:
+        raise NotImplementedError("Negative strides not supported yet")
+    return start, stop, step
+
+
 DEBUG, WINO, IMAGE = getenv("DEBUG"), getenv("WINO"), 0

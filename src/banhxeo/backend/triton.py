@@ -36,7 +36,7 @@ class TritonCodegen:
                 # If it's a LoadOp, it needs a variable name that corresponds to a kernel argument
                 if isinstance(buf.op, LoadOp):
                     name = f"in_{len(self.input_args)}"
-                    if buf.op == LoadOp.FROM_CPU or buf.op == LoadOp.FROM_NONE:
+                    if buf.op == LoadOp.FROM_PYTHON or buf.op == LoadOp.FROM_NONE:
                         # assume LoadOp.FROM_CPU is linearly
                         # note that DEFAULT create an empty Tensor so we assume it is a pointer too
                         self.input_args[buf] = InputArgument("ptr")
@@ -44,7 +44,7 @@ class TritonCodegen:
                         self.input_args[buf] = InputArgument("const")
                     elif buf.op == LoadOp.VIEW or buf.op == LoadOp.CONTIGUOUS:
                         self.input_args[buf] = InputArgument(None, ["shape", "stride"])
-                    elif buf.op == LoadOp.FROM_NUMPY:
+                    elif buf.op in (LoadOp.FROM_NUMPY, LoadOp.FROM_TORCH):
                         self.input_args[buf] = InputArgument("ptr", ["shape", "stride"])
                     self.var_names[buf] = name
                 else:
@@ -138,11 +138,11 @@ class TritonCodegen:
             buf_sig = "" if buf_arg is None else f"_{buf_arg.type}"
             if buf.op == LoadOp.FROM_CONST:
                 self.code.append(f"    {name} = {name}{buf_sig}")
-            elif buf.op == LoadOp.FROM_CPU:
+            elif buf.op == LoadOp.FROM_PYTHON:
                 self.code.append(
                     f"    {name} = tl.load({name}{buf_sig} + {self.read_offset}, mask=linear_mask)"
                 )
-            elif buf.op == LoadOp.FROM_NUMPY:
+            elif buf.op in (LoadOp.FROM_NUMPY, LoadOp.FROM_TORCH):
                 code = [
                     f"    {name}_offset = {buf.view.offset}",
                     f"    {name}_idx = {self.read_offset}",
@@ -199,6 +199,11 @@ class TritonCodegen:
             print(f"Visit Unary {str(buf.op)=} with name {name}")
 
         src0 = self.get_var_name(buf.src[0])
+
+        if buf.op == UnaryOp.CAST:
+            self.code.append(f"    {name} = {src0}.to(tl.{buf.args[0].name})")
+            return
+
         op_map = {
             UnaryOp.LOG: "tl.log({src})",
             UnaryOp.EXP: "tl.exp({src})",
@@ -275,7 +280,7 @@ class TritonCodegen:
                     )  # note that we assume shape len always equals to strides len
 
         kernel_def = [
-            "@triton.heuristics(values={'BLOCK_SIZE': lambda args: triton.next_power_of_2(args['N'])})",  # use Triton heuristics for better performance
+            "@triton.heuristics(values={'BLOCK_SIZE': lambda args: min(triton.next_power_of_2(args['N']), 1024))",  # use Triton heuristics for better performance
             "@triton.jit",
             f"def generated_kernel({', '.join(args_sig)}, out_ptr, N, BLOCK_SIZE: tl.constexpr):",
             "    pid = tl.program_id(0)",

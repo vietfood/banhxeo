@@ -3,6 +3,7 @@ from typing import List
 import torch
 
 from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, TernaryOp, UnaryOp
+from banhxeo.core.dtype import dtypes
 from banhxeo.utils.helpers import DEBUG
 
 
@@ -47,14 +48,22 @@ class TorchInterpreter:
                 )
             elif isinstance(buf.op, UnaryOp):
                 assert buf.src[0].realized is not None
-                op_map = {
-                    UnaryOp.LOG: torch.log,
-                    UnaryOp.EXP: torch.exp,
-                    UnaryOp.SIN: torch.sin,
-                    UnaryOp.SQRT: torch.sqrt,
-                    UnaryOp.NEG: torch.neg,
-                }
-                buf.realized.data = op_map[buf.op](buf.src[0].realized.data)
+                if buf.op == UnaryOp.CAST:
+                    type_map = {
+                        dtypes.float32: torch.float32,
+                        dtypes.int32: torch.int32,
+                        dtypes.bool: torch.bool,
+                    }
+                    buf.realized.data = buf.realized.data.to(type_map[buf.args[0]])
+                else:
+                    op_map = {
+                        UnaryOp.LOG: torch.log,
+                        UnaryOp.EXP: torch.exp,
+                        UnaryOp.SIN: torch.sin,
+                        UnaryOp.SQRT: torch.sqrt,
+                        UnaryOp.NEG: torch.neg,
+                    }
+                    buf.realized.data = op_map[buf.op](buf.src[0].realized.data)
             elif isinstance(buf.op, TernaryOp):
                 assert buf.src[0].realized is not None
                 assert buf.src[1].realized is not None
