@@ -1,11 +1,7 @@
 import math
 from typing import Tuple, Type
 
-from banhxeo.core.buffer import (
-    BinaryOp,
-    LazyBuffer,
-    UnaryOp,
-)
+from banhxeo.core.buffer import BinaryOp, LazyBuffer, ReduceOp, UnaryOp
 from banhxeo.tensor import Tensor
 
 
@@ -201,6 +197,33 @@ class Matmul(Function):
         ] else None
 
 
+class Maximum(Function):
+    def forward(self, x, y):
+        self.x, self.y = x, y
+        return x.compute_ops(BinaryOp.MAX, y)
+
+    def backward(self, grad_output):
+        # Gradient flows to x where x > y
+        # Gradient flows to y where y > x
+        # At x == y, pick one or split.
+
+        # dL/dx = grad * (x >= y)
+        grad_x = (
+            grad_output.where(self.x >= self.y, 0.0)
+            if self.needs_input_grad[0]
+            else None
+        )
+
+        # dL/dy = grad * (y > x)
+        grad_y = (
+            grad_output.where(self.y > self.x, 0.0)
+            if self.needs_input_grad[1]
+            else None
+        )
+
+        return grad_x, grad_y
+
+
 # ------------ Ternary Op ------------
 
 
@@ -219,39 +242,6 @@ class Where(Function):
             if self.needs_input_grad[2]
             else None,
         )
-
-
-# ------------ Neural Network Op ------------
-
-
-class Relu(Function):
-    def forward(self, x: LazyBuffer) -> LazyBuffer:
-        self.ret = x.compute_ops(BinaryOp.MAX, x.const(0))
-        return self.ret
-
-    def backward(self, grad_output: LazyBuffer) -> LazyBuffer:
-        return (
-            self.ret.const(0)
-            .compute_ops(BinaryOp.CMPLT, self.ret)
-            .compute_ops(BinaryOp.MUL, grad_output)
-        )
-
-
-class Sigmoid(Function):
-    def forward(self, x: LazyBuffer) -> LazyBuffer:
-        self.ret = x.const(1).compute_ops(
-            BinaryOp.DIV,
-            x.const(1).compute_ops(
-                BinaryOp.ADD,
-                x.compute_ops(UnaryOp.EXP),
-            ),
-        )
-        return self.ret
-
-    def backward(self, grad_output: LazyBuffer) -> LazyBuffer:
-        return self.ret.compute_ops(
-            BinaryOp.MUL, self.ret.const(1).compute_ops(BinaryOp.SUB, self.ret)
-        ).compute_ops(BinaryOp.MUL, grad_output)
 
 
 # ------------ Movement Op ------------
@@ -277,6 +267,39 @@ class Permute(Function):
         return grad_output.permute(argsort(self.input_order))
 
 
+class Expand(Function):
+    def forward(self, x: LazyBuffer, shape: Tuple[int, ...]) -> LazyBuffer:
+        self.input_shape = x.shape
+        return x.expand(shape)
+
+    def backward(self, grad_output: LazyBuffer) -> LazyBuffer:
+        return grad_output.reduce_ops(ReduceOp.SUM, self.input_shape)
+
+
 # ------------ Reduce Op ------------
 
-# TODO
+
+class Sum(Function):
+    def forward(self, x: LazyBuffer, new_shape: Tuple[int, ...]) -> LazyBuffer:
+        self.input_shape = x.shape
+        return x.reduce_ops(ReduceOp.SUM, new_shape)
+
+    def backward(self, grad_output: LazyBuffer) -> LazyBuffer:
+        return grad_output.expand(self.input_shape)
+
+
+class Max(Function):
+    def forward(self, x: LazyBuffer, new_shape: Tuple[int, ...]) -> LazyBuffer:
+        self.x, self.ret = x, x.reduce_ops(ReduceOp.MAX, new_shape)
+        return self.ret
+
+    def backward(self, grad_output: LazyBuffer) -> LazyBuffer:
+        # 1s in locations where the max was chosen (can be two locations)
+        max_is_1s = self.x.const(1.0).compute_ops(
+            BinaryOp.SUB,
+            self.x.compute_ops(BinaryOp.CMPLT, self.ret.expand(self.x.shape)),
+        )
+        div = max_is_1s.reduce_ops(ReduceOp.SUM, grad_output.shape).expand(self.x.shape)
+        return max_is_1s.compute_ops(BinaryOp.DIV, div).compute_ops(
+            BinaryOp.MUL, grad_output.expand(self.x.shape)
+        )

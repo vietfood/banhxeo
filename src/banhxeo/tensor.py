@@ -5,7 +5,7 @@ from typing import ClassVar, List, Optional, Tuple, Union
 import numpy as np
 import torch
 
-from banhxeo.core.buffer import LazyBuffer, LoadOp, ReduceOp
+from banhxeo.core.buffer import LazyBuffer, LoadOp
 from banhxeo.core.device import DEFAULT_DEVICE, Device
 from banhxeo.core.dtype import DType, dtypes
 from banhxeo.core.view import View
@@ -121,6 +121,10 @@ class Tensor:
     def shape(self):
         return self.lazydata.shape
 
+    @property
+    def dtype(self):
+        return self.lazydata.dtype
+
     # ---------- Binary Ops ----------
 
     def add(self, other):
@@ -170,6 +174,14 @@ class Tensor:
 
         return Div.apply(x, y)
 
+    def maximum(self, x) -> "Tensor":
+        from banhxeo.core.function import Maximum
+
+        return Maximum.apply(x)
+
+    def minimum(self, x) -> "Tensor":
+        return -((-self).maximum(-x))
+
     # ---------- Unary Ops ----------
 
     def log(self):
@@ -217,11 +229,11 @@ class Tensor:
 
     # ---------- Reduce Ops ----------
 
-    def _reduce(self, op: ReduceOp, axis=None, keepdim=False):
+    def _reduce(self, reduce_fn, axis=None, keepdim=False):
         # 1. handle "Sum All": Flatten then sum
         if axis is None:
             # reshape(-1) flattens to 1D, then we sum that single dimension
-            return self.reshape((-1,))._reduce(op, axis=0, keepdim=False)
+            return self.reshape((-1,))._reduce(reduce_fn, axis=0, keepdim=False)
 
         # 2. handle Negative Axis
         if axis < 0:
@@ -230,7 +242,9 @@ class Tensor:
         # 3. Handle Permutation (Move reduction axis to end)
         if axis != len(self.shape) - 1:
             permute_order = [i for i in range(len(self.shape)) if i != axis] + [axis]
-            ret = self.permute(tuple(permute_order))._reduce(op, axis=-1, keepdim=False)
+            ret = self.permute(tuple(permute_order))._reduce(
+                reduce_fn, axis=-1, keepdim=False
+            )
 
             # If keepdim, we need to reshape it back to have a '1' in the original axis
             if keepdim:
@@ -244,7 +258,7 @@ class Tensor:
         # Calculate new shape: (10, 20, 30) -> (10, 20)
         new_shape = self.shape[:-1]
 
-        ret = Tensor(self.lazydata.reduce_ops(op, new_shape))
+        ret = reduce_fn.apply(self, new_shape)
 
         # Handle keepdim for the simple case
         if keepdim:
@@ -255,10 +269,14 @@ class Tensor:
         return ret
 
     def sum(self, axis=None, keepdim=False):
-        return self._reduce(ReduceOp.SUM, axis, keepdim)
+        from banhxeo.core.function import Sum
+
+        return self._reduce(Sum, axis, keepdim)
 
     def max(self, axis=None, keepdim=False):
-        return self._reduce(ReduceOp.MAX, axis, keepdim)
+        from banhxeo.core.function import Max
+
+        return self._reduce(Max, axis, keepdim)
 
     def min(self, axis=None, keepdim=False):
         # min(x) = -max(-x)
@@ -313,9 +331,9 @@ class Tensor:
         """
 
     def expand(self, shape: Tuple[int, ...]):
-        """
-        TODO
-        """
+        from banhxeo.core.function import Expand
+
+        return Expand.apply(self, shape=shape)
 
     def transpose(self):
         """
@@ -397,53 +415,38 @@ class Tensor:
 
     # ---------- Ops Wrapper ----------
 
-    def __add__(self, other):
-        return self.add(other)
+    # fmt: off
+    def __add__(self, other): return self.add(other)
+    def __radd__(self, other): return other.add(self)
+    def __iadd__(self, other): return self.assign(self.add(other))
 
-    def __radd__(self, other):
-        return other.add(self)
+    def __mul__(self, other): return self.mul(other)
+    def __rmul__(self, other): return other.mul(self)
+    def __imul__(self, other): return self.assign(self.mul(other))
 
-    def __mul__(self, other):
-        return self.mul(other)
+    def __sub__(self, other): return self.sub(other)
+    def __isub__(self, other): return self.assign(self.add(other))
+    def __rsub__(self, other): return other.sub(self)
 
-    def __rmul__(self, other):
-        return other.mul(self)
+    def __matmul__(self, other): return self.matmul(other)
+    def __rmatmul__(self, other): return other.matmul(self)
+    def __imatmul__(self, other): return self.assign(self.matmul(other))
 
-    def __sub__(self, other):
-        return self.sub(other)
+    def __truediv__(self, other): return self.div(other)
+    def __rtruediv__(self, other): return other.div(self)
+    def __itruediv__(self, other): return self.assign(self.div(other))
 
-    def __rsub__(self, other):
-        return other.sub(self)
+    def __lt__(self, other): return self.less(other)
+    def __gt__(self, other): return other.less(self)
+    def __ge__(self, other): return 1.0 - (self < other)
+    def __le__(self, other): return 1.0 - (self > other)
+    def __eq__(self, other): return (self >= other) and (self <= other)
+    def __ne__(self, other): return 1.0 - (self == other)
 
-    def __matmul__(self, other):
-        return self.matmul(other)
+    def __neg__(self): return self.neg()
 
-    def __rmatmul__(self, other):
-        return other.matmul(self)
-
-    def __div__(self, other):
-        return self.div(other)
-
-    def __rdiv__(self, other):
-        return other.div(self)
-
-    def __lt__(self, other):
-        return self.less(other)
-
-    def __neg__(self):
-        return self.neg()
-
-    def t(self):
-        return self.transpose()
-
-    # ---------- Neural Network Method ----------
-
-    def relu(self):
-        # relu(x) = where(x < 0, 0, x)
-        return Tensor.where(self < 0, 0, self)
-
-    def leaky_relu(self, alpha):
-        return Tensor.where(self < 0, alpha * self, self)
+    def t(self): return self.transpose()
+    # fmt: on
 
     # ---------- Static Method ----------
 
@@ -468,7 +471,9 @@ class Tensor:
                 view=View.create(shape=shape),
                 args=[Tensor._seed],
                 device=kwargs.pop("device", DEFAULT_DEVICE),
-            )
+            ),
+            requires_grad=kwargs.pop("requires_grad", False),
+            dtype=kwargs.pop("dtype", Tensor.default_type),
         )
 
     @staticmethod
@@ -479,7 +484,9 @@ class Tensor:
                 view=View.create(shape),
                 args=[fill_value],
                 device=kwargs.pop("device", DEFAULT_DEVICE),
-            )
+            ),
+            requires_grad=kwargs.pop("requires_grad", False),
+            dtype=kwargs.pop("dtype", Tensor.default_type),
         )
 
     @staticmethod
@@ -533,6 +540,7 @@ class Tensor:
         return ((high - low) * Tensor.rand(*shape, **kwargs)).cast(dtype) + low
 
     # ---------- Other Methods ----------
+
     def backward(self, retain_graph: bool = False):
         if self._ctx is None:
             return
@@ -621,3 +629,26 @@ class Tensor:
         raise ValueError(
             "item() method can be used only for Scalar Tensor (with shape=(1))"
         )
+
+    def assign(self, x: Union["Tensor", float]) -> "Tensor":
+        if not isinstance(x, Tensor):
+            x = Tensor(x, device=self.device, dtype=self.dtype)
+
+        # Force Realization to break graph dependecy
+        x.realize()
+
+        # We take the raw realized buffer from 'x' and wrap it in a new
+        # clean LazyBuffer with no parents (src=()).
+        # This effectively "forgets" how x was calculated.
+        if self.shape != x.shape:
+            x = x.reshape(self.shape)
+
+        self.lazydata = LazyBuffer(
+            LoadOp.FROM_TORCH,  # note that Pytorch can implicitly handle both CPU and GPU devices mismatch
+            src=(),
+            view=x.lazydata.view,
+            device=self.device,
+        )
+        self.lazydata.realized = x.lazydata.realized
+
+        return self

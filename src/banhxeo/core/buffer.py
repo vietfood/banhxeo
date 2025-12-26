@@ -44,7 +44,7 @@ class LoadOp(Enum):
     FROM_NONE = auto()
     VIEW = auto()
     CONTIGUOUS = auto()
-    RAND = auto()  # TODO
+    RAND = auto()
 
 
 class MovementOp(Enum):

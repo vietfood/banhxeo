@@ -20,9 +20,9 @@
     - [ ] Binary Op (partial)
     - [ ] Movement Op (partial)
     - [x] Ternary Op
-- [ ] Reduce Ops: sum and max.
+- [x] Reduce Ops: sum and max.
 - [ ] Properly Broadcasting: need this for bias addition.
-- [ ] Creation method (LoadOp.RAND)
+- [x] Creation method (LoadOp.RAND)
 
 ### v0.4 - More Ops
 - [ ] nn.Linear: Wrap Matmul + Add in a class.
@@ -34,3 +34,8 @@
 - [ ] Data Loading: Just load the numpy arrays for MNIST (Maybe use Pytorch DataLoader).
 - [ ] The CNN: Implement Conv2d. *Note*: Use im2col (unfold) to turn convolution into a MatMul. It's slower than custom Conv2D (or WinoGrad algorithm) but reuses Matmul kernel.
 - [ ] Training: Run the loop.
+
+## Note
+
+- If you need to *update weights*, update the whole tensor via `assign`. If you need to *manipulate specific values*, use masks: `x = x * mask + val * (1 - mask)`.
+- Slice assignment e.g. `x[1:3] = y` isn't implemented right now (it's hard to do).
