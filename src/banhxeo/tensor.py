@@ -114,20 +114,20 @@ class Tensor:
     # ---------- Property ----------
 
     @property
-    def device(self):
+    def device(self) -> str:
         return self.lazydata.device
 
     @property
-    def shape(self):
+    def shape(self) -> Tuple[int, ...]:
         return self.lazydata.shape
 
     @property
-    def dtype(self):
+    def dtype(self) -> DType:
         return self.lazydata.dtype
 
     # ---------- Binary Ops ----------
 
-    def add(self, other):
+    def add(self, other) -> "Tensor":
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
 
@@ -135,7 +135,7 @@ class Tensor:
 
         return Add.apply(x, y)
 
-    def mul(self, other):
+    def mul(self, other) -> "Tensor":
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
 
@@ -143,7 +143,7 @@ class Tensor:
 
         return Mul.apply(x, y)
 
-    def sub(self, other):
+    def sub(self, other) -> "Tensor":
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
 
@@ -151,7 +151,7 @@ class Tensor:
 
         return Sub.apply(x, y)
 
-    def less(self, other):
+    def less(self, other) -> "Tensor":
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
 
@@ -159,14 +159,14 @@ class Tensor:
 
         return Less.apply(x, y)
 
-    def matmul(self, other):
+    def matmul(self, other) -> "Tensor":
         other = other if isinstance(other, Tensor) else Tensor(other)
 
         from banhxeo.core.function import Matmul
 
         return Matmul.apply(self, other)
 
-    def div(self, other):
+    def div(self, other) -> "Tensor":
         other = other if isinstance(other, Tensor) else Tensor(other)
         x, y = self._broadcasted(other)
 
@@ -184,42 +184,42 @@ class Tensor:
 
     # ---------- Unary Ops ----------
 
-    def log(self):
+    def log(self) -> "Tensor":
         from banhxeo.core.function import Log
 
         return Log.apply(self)
 
-    def exp(self):
+    def exp(self) -> "Tensor":
         from banhxeo.core.function import Exp
 
         return Exp.apply(self)
 
-    def sin(self):
+    def sin(self) -> "Tensor":
         from banhxeo.core.function import Sin
 
         return Sin.apply(self)
 
-    def sqrt(self):
+    def sqrt(self) -> "Tensor":
         from banhxeo.core.function import Sqrt
 
         return Sqrt.apply(self)
 
-    def neg(self):
+    def neg(self) -> "Tensor":
         from banhxeo.core.function import Neg
 
         return Neg.apply(self)
 
-    def cos(self):
+    def cos(self) -> "Tensor":
         return ((math.pi / 2) - self).sin()
 
-    def cast(self, dtype=None):
+    def cast(self, dtype=None) -> "Tensor":
         from banhxeo.core.function import Cast
 
         return Cast.apply(self, dtype=dtype)
 
     # ---------- Ternary Ops ----------
 
-    def _where(self, input, other):
+    def _where(self, input, other) -> "Tensor":
         other = other if isinstance(other, Tensor) else Tensor(other)
         input = input if isinstance(input, Tensor) else Tensor(input)
 
@@ -229,7 +229,7 @@ class Tensor:
 
     # ---------- Reduce Ops ----------
 
-    def _reduce(self, reduce_fn, axis=None, keepdim=False):
+    def _reduce(self, reduce_fn, axis=None, keepdim=False) -> "Tensor":
         # 1. handle "Sum All": Flatten then sum
         if axis is None:
             # reshape(-1) flattens to 1D, then we sum that single dimension
@@ -335,14 +335,11 @@ class Tensor:
 
         return Expand.apply(self, shape=shape)
 
-    def transpose(self):
-        """
-        Work with 2D Tensor only
-        """
+    def _transpose(self):
         assert self.shape == 2, (
             "Transpose only works with 2 dimension, please use Permute for more than 2 dimensions"
         )
-        return Tensor(self.lazydata.t())
+        return self.permute((1, 0))
 
     def __getitem__(self, val):
         from banhxeo.utils.helpers import normalize_slice
@@ -445,7 +442,7 @@ class Tensor:
 
     def __neg__(self): return self.neg()
 
-    def t(self): return self.transpose()
+    def t(self): return self._transpose()
     # fmt: on
 
     # ---------- Static Method ----------
