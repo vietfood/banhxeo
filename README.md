@@ -1,144 +1,109 @@
-# 🥞 banhxeo: A Simple, Efficient (Enough), and Educational Tensor Framework
+# 🥞 banhxeo
 
-> [!WARNING] 
-> Banhxeo cannot be used (and will never be used) for production.
+> "Like a perfect Vietnamese crepe - crispy on the outside, efficient on the inside."
 
-> [!NOTE]
-> "Like a perfect Vietnamese crepe - crispy on the outside, efficient on the inside"
+**banhxeo** is a tiny, lazy, autograd engine and tensor compiler. It implements backpropagation and Triton kernel generation from scratch. 
 
-Banhxeo is a minimalist deep learning framework built from scratch to understand how modern ML frameworks actually work. Inspired by [Tinygrad](https://github.com/tinygrad/tinygrad) and the philosophy that **the best way to learn is to build**, this project strips away all the magic and shows you the raw mechanics of lazy evaluation, automatic differentiation, and GPU kernel generation.
+**It is ~2000 lines of code (with formatting).**
 
-**Current Status:** Two weeks in hell - Basic tensor operations working with Triton codegen and simple autograd engine.
+> [!WARNING]
+> **DO NOT USE THIS FOR PRODUCTION.** 
+> This is an educational framework designed to demystify deep learning. It is fragile, aggressively minimalist, and lacks 99% of the safety checks found in PyTorch. If you use this in production, you are on your own.
 
-## Why Banhxeo?
+## The Philosophy
 
-Because reading PyTorch source code is like trying to understand a compiler by staring at assembly. Banhxeo is:
+Modern deep learning frameworks are bloated. Reading PyTorch source code is like trying to understand a compiler by staring at assembly. **banhxeo** strips away the magic:
 
-- **Tiny** (~1000 LOC): Small enough to understand in an afternoon
-- **Educational**: Every line exists to teach, not to handle edge cases from 2015
-- **Lazy**: Builds a computation graph, compiles to Triton kernels on-the-fly
-- **Transparent**: No hidden optimizations, no magic, just pure computation
+1.  **Lazy Evaluation**: `x + y` doesn't compute anything. It builds a graph.
+2.  **Triton Codegen**: The graph is compiled into a single custom GPU kernel.
+3.  **Zero Fluff**: No legacy support, no CPU optimizations (CPU is just a slow interpreter for debugging), no bloat.
 
-## Quick Example
+## Quick Start
+
+We use `uv` for dependency management. It's fast and better that `pip`.
+
+```bash
+# Clone
+git clone https://github.com/lenguyen1807/banhxeo
+cd banhxeo
+
+# Install & Sync
+uv sync
+source .venv/bin/activate
+```
+
+### The "Hello World"
 
 ```python
 from banhxeo import Tensor
 
-# Create tensors (lazy - nothing computed yet)
-x = Tensor([1.0, 2.0, 3.0, 4.0])
-y = Tensor([2.0, 3.0, 4.0, 5.0])
+# 1. Define tensors (Lazy - no memory allocated for data)
+x = Tensor.eye(3, requires_grad=True)
+y = Tensor([[2.0, 0, -2.0]], requires_grad=True)
 
-# Build computation graph
-z = (x + y) * x.sin()  # Still lazy!
+# 2. Build graph
+z = y.matmul(x).sum()
 
-# Execute: generates Triton kernel and runs on GPU
-result = z.realize()
-print(result)  # tensor([...])
+# 3. Backprop (Implicitly realizes the forward pass first)
+z.backward()
+
+# 4. Check gradients
+print(x.grad.numpy())
+print(y.grad.numpy())
 ```
 
-Set `DEBUG=1` to see the generated Triton kernel:
-```bash
-DEBUG=1 python your_script.py
-```
+### See The Matrix
 
-## Architecture in 60 Seconds
-
-```
-Tensor → LazyBuffer → Computation Graph → Triton Codegen → GPU Kernel
-```
-
-1. **Tensor**: User-facing API, operator overloading
-2. **LazyBuffer**: Lazy computation graph node (op, src, view)
-3. **View**: Stride-based memory layout (enables zero-copy reshape/slice)
-4. **Codegen**: Walks the graph, emits Triton code
-5. **realize()**: Compiles kernel, allocates output, executes
-
-### The Core Trick: Lazy Evaluation
-
-Instead of computing immediately:
-```python
-x + y  # PyTorch: allocates memory, runs kernel
-```
-
-Banhxeo builds a graph:
-```python
-LazyBuffer(op=ADD, src=[LazyBuffer(...), LazyBuffer(...)])
-```
-
-Only when you call `.realize()` does it:
-- Topologically sort the graph
-- Generate a Triton kernel
-- Execute on GPU
-
-**Why?** Kernel fusion. `(x + y) * z` becomes ONE kernel, not three.
-
-## Installation
-
-From source:
+Want to see the Triton kernel we just generated? Set `DEBUG=1` (or larger).
 
 ```bash
-# Clone the repo
-git clone https://github.com/lenguyen1807/banhxeo
-cd banhxeo
-
-# Install dependencies
-uv sync && source .venv/bin/activate
-
-# Run tests (when they exist)
-python -m pytest tests/
+DEBUG=1 python examples/mnist_mlp.py
 ```
 
-From Pip:
+Output:
+```python
+@triton.jit
+def kernel(ptr0, ptr1, ptr2, ...):
+    # Generated Triton Kernel ...
+```
+
+## How It Actually Works
+
+The entire core logic fits in your head:
+
+1.  **`Tensor`**: The frontend. Handles operator overloading and autograd state.
+2.  **`LazyBuffer`**: The node in the computation graph. Tracks the operation (`ADD`, `MUL`) and its parents.
+3.  **`View`**: Handles shapes and strides. **banhxeo** supports zero-copy reshapes, permutes, and slices.
+4.  **`TritonCodegen`**: Walks the `LazyBuffer` graph, fuses compatible operations, and emits a Triton kernel string.
+5.  **`Backend`**: Compiles the kernel and executes it on the GPU.
+
+## Development
+
+We are currently in the **v0.3 (Autograd)** phase.
+
+- **[Roadmap & Status](docs/DEVELOPMENT.md)**: See what's working and what's broken.
+- **[Stabilization Checklist](docs/CHECKLIST.md)**: The immediate plan to fix the "fragile" parts.
+
+## Running Tests
+
+If you break it, you fix it.
 
 ```bash
-pip install banhxeo
+# Run all tests
+uv run pytest tests
+
+# Run specific test
+uv run pytest tests/small_tests/mlp_forward.py
 ```
 
-**Requirements:**
-- Python 3.10+
-- CUDA-capable GPU (for Triton)
-- PyTorch (just for tensors/CUDA, not autograd)
-- Triton
+## Inspiration
 
-## Learn By Doing
-
-Want to understand something? Break it:
-
-```python
-# What happens if you slice incorrectly?
-x = Tensor([1, 2, 3])
-x.slice(((0, 10),))  # IndexError - read the traceback
-
-# How does broadcasting work?
-x = Tensor([[1, 2, 3]])  # shape (1, 3)
-y = Tensor([[1], [2]])   # shape (2, 1)
-z = x + y                # shape (2, 3) - how?
-```
-
-Set `DEBUG=1` and watch the generated kernels. Modify `codegen.py` and see what breaks.
-
-## Why "Banhxeo"?
-
-It's a Vietnamese crispy pancake. Like this framework:
-- Thin and crispy (minimal LOC)
-- Made fresh to order (compilation)
-- Surprisingly satisfying (when it works)
-
-Plus, every ML framework needs a food name. It's the law.
-
-## Resources to Pair With This Code
-
-- [Tinygrad](https://github.com/tinygrad/tinygrad) - The OG minimalist Tensor framework
-- [Micrograd](https://github.com/karpathy/micrograd) - Karpathy's autograd in 100 lines
-- [Triton Tutorials](https://triton-lang.org/main/getting-started/tutorials/) - GPU kernel language
-- A good AI partner (Opus 4.5 or Gemini 3.0 Pro maybe)
+- [tinygrad](https://github.com/tinygrad/tinygrad): The spiritual ancestor.
+- [micrograd](https://github.com/karpathy/micrograd): For the autograd basics.
+- [Triton](https://openai.com/research/triton): For making CUDA usable by mortals.
 
 ## License
 
-MIT - Do whatever you want. If you learn something, that's payment enough.
+MIT. 
 
----
-
-*Built with curiosity and coffee in Hanoi* ☕
-
-**Remember:** The goal isn't to build production software. It's to understand the magic. Read every line. Break things. Fix them. That's how you learn.
+*Built with curiosity and coffee in Hanoi.* ☕
