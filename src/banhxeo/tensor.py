@@ -32,7 +32,7 @@ class Tensor:
     ):
         if device is None:
             device = DEFAULT_DEVICE
-        device = device.upper()
+        device = device.lower()
 
         if dtype is None:
             dtype = Tensor.default_type
@@ -177,7 +177,7 @@ class Tensor:
     def maximum(self, x) -> "Tensor":
         from banhxeo.core.function import Maximum
 
-        return Maximum.apply(x)
+        return Maximum.apply(self, x)
 
     def minimum(self, x) -> "Tensor":
         return -((-self).maximum(-x))
@@ -211,6 +211,10 @@ class Tensor:
 
     def cos(self) -> "Tensor":
         return ((math.pi / 2) - self).sin()
+
+    def reciprocal(self) -> "Tensor":
+        """Returns 1/x element-wise."""
+        return Tensor(1.0).div(self)
 
     def cast(self, dtype=None) -> "Tensor":
         from banhxeo.core.function import Cast
@@ -336,7 +340,7 @@ class Tensor:
         return Expand.apply(self, shape=shape)
 
     def _transpose(self):
-        assert self.shape == 2, (
+        assert len(self.shape) == 2, (
             "Transpose only works with 2 dimension, please use Permute for more than 2 dimensions"
         )
         return self.permute((1, 0))
@@ -414,23 +418,28 @@ class Tensor:
 
     # fmt: off
     def __add__(self, other): return self.add(other)
-    def __radd__(self, other): return other.add(self)
+    # we cannot simply use other.add(self)
+    # because other can be scalar or non-tensor type
+    # a + b = b + a
+    def __radd__(self, other): return self.add(other)
     def __iadd__(self, other): return self.assign(self.add(other))
 
     def __mul__(self, other): return self.mul(other)
-    def __rmul__(self, other): return other.mul(self)
+    def __rmul__(self, other): return self.mul(other)  # a * b = b * a
     def __imul__(self, other): return self.assign(self.mul(other))
 
     def __sub__(self, other): return self.sub(other)
-    def __isub__(self, other): return self.assign(self.add(other))
-    def __rsub__(self, other): return other.sub(self)
+    def __isub__(self, other): return self.assign(self.sub(other))
+    def __rsub__(self, other): return (-self).add(other)  # other - self = -self + other
 
     def __matmul__(self, other): return self.matmul(other)
-    def __rmatmul__(self, other): return other.matmul(self)
+    def __rmatmul__(self, other): 
+        assert isinstance(other, Tensor)
+        return other.matmul(self)  # matmul is not commutative, other must be Tensor
     def __imatmul__(self, other): return self.assign(self.matmul(other))
 
     def __truediv__(self, other): return self.div(other)
-    def __rtruediv__(self, other): return other.div(self)
+    def __rtruediv__(self, other): return self.reciprocal().mul(other)  # other / self = other * (1/self)
     def __itruediv__(self, other): return self.assign(self.div(other))
 
     def __lt__(self, other): return self.less(other)
@@ -588,7 +597,7 @@ class Tensor:
         return self
 
     def to(self, device: str):
-        device = device.upper()
+        device = device.lower()
         if device == self.device:
             return self
 

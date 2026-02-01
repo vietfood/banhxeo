@@ -2,6 +2,7 @@ import triton
 import triton.language as tl
 
 
+@triton.jit
 def reduce_sum_kernel(
     X,
     Y,
@@ -36,6 +37,7 @@ def reduce_sum_kernel(
     tl.store(Y + row_idx, result)
 
 
+@triton.jit
 def reduce_max_kernel(
     X,  # pointer to input data
     Y,  # pointer to output data

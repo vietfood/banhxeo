@@ -1,7 +1,7 @@
 # We see Device as a singleton class
 class Device:
-    CPU = "CPU"
-    CUDA = "CUDA"
+    CPU = "cpu"
+    CUDA = "cuda"
 
     _backends = {}
 

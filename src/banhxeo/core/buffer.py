@@ -48,6 +48,12 @@ class LoadOp(Enum):
 
 
 class MovementOp(Enum):
+    """Internal enum for View manipulations.
+
+    Note: MovementOps are converted to LoadOp.VIEW before backend processing.
+    Backends never see MovementOp directly - they only handle LoadOp.VIEW.
+    """
+
     RESHAPE = auto()
     PERMUTE = auto()
     EXPAND = auto()
@@ -60,7 +66,9 @@ class TernaryOp(Enum):
     WHERE = auto()
 
 
-Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, MovementOp, TernaryOp, ReduceOp]
+# Note: MovementOp is intentionally excluded - it's internal only.
+# Movements become LoadOp.VIEW before reaching backends.
+Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, TernaryOp, ReduceOp]
 
 
 @dataclass

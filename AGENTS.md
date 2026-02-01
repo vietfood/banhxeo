@@ -2,62 +2,38 @@
 
 This repository contains **banhxeo**, a minimalist educational deep learning framework. It implements lazy evaluation and Triton kernel generation from scratch.
 
-## 🛠️ Build & Environment
-
 This project uses `uv` for dependency management.
-
-- **Install/Sync dependencies:**
-  ```bash
-  uv sync
-  source .venv/bin/activate
-  ```
-- **Build package:**
-  ```bash
-  uv build
-  ```
-- **Run Docs:**
-  ```bash
-  make docs
-  ```
-
-## 🧪 Testing & Linting
-
-Tests are located in `tests/`. `pytest` is the test runner.
-
-- **Run all tests:**
-  ```bash
-  uv run pytest tests
-  # OR via make
-  make test
-  ```
-- **Run a single test file:**
-  ```bash
-  uv run pytest tests/small_tests/relu.py
-  ```
-- **Run a specific test function:**
-  ```bash
-  uv run pytest tests/small_tests/relu.py::test_activations
-  ```
-- **Linting & Formatting:**
-  Uses `ruff` for both linting and formatting.
-  ```bash
-  uv run ruff check .
-  uv run ruff format .
-  ```
-- **Type Checking:**
-  Uses `pyright`.
-  ```bash
-  uv run pyright .
-  ```
 
 ## 🎨 Code Style & Conventions
 
 Adhere strictly to the following conventions to maintain the "minimalist and educational" philosophy.
 
 ### 1. General Philosophy
-- **Tiny & Readable:** Keep code concise. Prefer simple implementations over complex optimizations unless necessary for the educational goal.
-- **Lazy Evaluation:** Operations should generally be lazy, building a computation graph (`LazyBuffer`) rather than executing immediately.
-- **Triton Codegen:** The backend targets Triton kernels.
+- **Tiny & Readable:** 
+  - Keep code concise. Prefer simple implementations over complex optimizations unless necessary for the educational goal.
+  - Every line must earn its keep. Prefer readability over cleverness. We believe that if carefully designed, 10 lines can have the impact of 1000. Never mix functionality changes with whitespace changes. All functionality changes must be tested.
+- **Minimum code that solves the problem. Nothing speculative.**
+  - No features beyond what was asked.
+  - No abstractions for single-use code.
+  - No "flexibility" or "configurability" that wasn't requested.
+  - No error handling for impossible scenarios.
+  - If you write 200 lines and it could be 50, rewrite it.
+  Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+- **Don't assume. Don't hide confusion. Surface tradeoffs.** Before implementing:
+  - State your assumptions explicitly. If uncertain, ask.
+  - If multiple interpretations exist, present them - don't pick silently.
+  - If a simpler approach exists, say so. Push back when warranted.
+  - If something is unclear, stop. Name what's confusing. Ask.
+- **Touch only what you must. Clean up only your own mess.** When editing existing code:
+  - Don't "improve" adjacent code, comments, or formatting.
+  - Don't refactor things that aren't broken.
+  - Match existing style, even if you'd do it differently.
+  - If you notice unrelated dead code, mention it - don't delete it.
+  - When your changes create orphans:
+    - Remove imports/variables/functions that YOUR changes made unused.
+    - Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
 
 ### 2. Formatting & Imports
 - **Formatter:** Code must be formatted with `ruff` (Black-compatible).
@@ -98,10 +74,3 @@ Adhere strictly to the following conventions to maintain the "minimalist and edu
 - `src/banhxeo/nn/`: Neural network layers and optimizers.
 - `src/banhxeo/tensor.py`: Main user-facing `Tensor` class.
 - `tests/`: Test suite.
-
-## 🐛 Debugging
-
-- **Environment Variable:** Set `DEBUG=1` (or higher) to see generated kernels and execution details.
-  ```bash
-  DEBUG=1 uv run python main.py
-  ```

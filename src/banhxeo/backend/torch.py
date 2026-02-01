@@ -1,8 +1,16 @@
+import math
 from typing import List
 
 import torch
 
-from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, TernaryOp, UnaryOp
+from banhxeo.core.buffer import (
+    BinaryOp,
+    LazyBuffer,
+    LoadOp,
+    ReduceOp,
+    TernaryOp,
+    UnaryOp,
+)
 from banhxeo.core.dtype import dtypes
 from banhxeo.utils.helpers import DEBUG
 
@@ -79,6 +87,35 @@ class TorchInterpreter:
                 y = buf.src[2].realized.data
 
                 buf.realized.data = op_map[buf.op](condition, x, y)
+            elif isinstance(buf.op, ReduceOp):
+                assert buf.src[0].realized is not None
+                src_data = buf.src[0].realized.data
+
+                # Find the axis that changed size (reduction axis)
+                # Compare source shape to output shape
+                src_shape = buf.src[0].shape
+                out_shape = buf.shape
+
+                # Find axes where shape changed from N to 1
+                reduce_axes = []
+                for i, (s, o) in enumerate(zip(src_shape, out_shape)):
+                    if s != o:
+                        assert o == 1, f"Reduce output dim must be 1, got {o}"
+                        reduce_axes.append(i)
+
+                if not reduce_axes:
+                    # No reduction needed, just copy
+                    buf.realized.data = src_data.clone()
+                elif buf.op == ReduceOp.SUM:
+                    result = src_data
+                    for axis in sorted(reduce_axes, reverse=True):
+                        result = torch.sum(result, dim=axis, keepdim=True)
+                    buf.realized.data = result
+                elif buf.op == ReduceOp.MAX:
+                    result = src_data
+                    for axis in sorted(reduce_axes, reverse=True):
+                        result, _ = torch.max(result, dim=axis, keepdim=True)
+                    buf.realized.data = result
 
             if DEBUG >= 2:
                 print(buf.realized.data)
