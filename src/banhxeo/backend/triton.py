@@ -71,6 +71,7 @@ class TritonCodegen:
             f"    {name}_idx = {self.read_offset}",
         ]
         for i in reversed(range(len(buf.view.shape))):
+            # HACK: This is a way to handle indexing
             # idx_i = temp_idx % shape_i
             # temp_idx = temp_idx // shape_i
             # offset += idx_i * stride_i

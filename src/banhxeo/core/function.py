@@ -190,9 +190,9 @@ class Matmul(Function):
         return x.matmul(y)
 
     def backward(self, grad_output: LazyBuffer):
-        return grad_output.matmul(self.y.t()) if self.needs_input_grad[
+        return grad_output.matmul(self.y.tranpose()) if self.needs_input_grad[
             0
-        ] else None, self.x.t().matmul(grad_output) if self.needs_input_grad[
+        ] else None, self.x.tranpose().matmul(grad_output) if self.needs_input_grad[
             1
         ] else None
 

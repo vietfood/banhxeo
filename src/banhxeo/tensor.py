@@ -339,7 +339,7 @@ class Tensor:
 
         return Expand.apply(self, shape=shape)
 
-    def _transpose(self):
+    def transpose(self):
         assert len(self.shape) == 2, (
             "Transpose only works with 2 dimension, please use Permute for more than 2 dimensions"
         )
@@ -451,7 +451,8 @@ class Tensor:
 
     def __neg__(self): return self.neg()
 
-    def t(self): return self._transpose()
+    @property
+    def T(self): return self.transpose()
     # fmt: on
 
     # ---------- Static Method ----------

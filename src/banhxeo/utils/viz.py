@@ -154,7 +154,7 @@ def visualize_schedule_cli(schedule: List[LazyBuffer], compact: bool = False):
     DIM = "\033[2m"
 
     print("\n" + "=" * 100)
-    print(f"{BOLD}LazyBuffer Schedule Visualization{RESET}")
+    print(f"{BOLD}[DEBUG] LazyBuffer Schedule Visualization{RESET}")
     print("=" * 100)
     print(f"\nExecution order: {len(schedule)} operations")
     print(

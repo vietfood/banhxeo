@@ -3,6 +3,8 @@ import linecache
 import math
 import time
 
+import triton.language as tl
+
 from banhxeo.backend.torch import TorchInterpreter
 from banhxeo.backend.triton import TritonCodegen
 from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, ReduceOp
@@ -107,12 +109,13 @@ class CUDABackend(Backend):
         if buf.realized is not None:
             return True
 
-        # if we have a VIEW/CONTIGUOUS op, and its parents is NOT realized (it's a compute op), we realized it
         if isinstance(buf.op, LoadOp):
-            if (
-                len(buf.src) != 0  # has parents
-                and buf.src[0].realized is None
-            ):
+            # Data-generating ops must be realized before anything can read from them
+            if buf.op == LoadOp.RAND:
+                return True
+
+            # If we have a VIEW/CONTIGUOUS op, and its parents is NOT realized (it's a compute op), we realized it
+            if len(buf.src) != 0 and buf.src[0].realized is None:
                 return True
 
         return (
@@ -161,9 +164,9 @@ class CUDABackend(Backend):
         src = generator.generate()
 
         if DEBUG >= 1:
-            print(f"--- [DEBUG] GENERATED TRITON KERNEL ({str(output.op).upper()}) ---")
+            print(f"\n[DEBUG] GENERATED TRITON KERNEL ({str(output.op).upper()})")
             print(src)
-            print("-------------------------------")
+            print("\n")
 
         return src, generator
 
@@ -293,7 +296,7 @@ class CUDABackend(Backend):
             stride_x_row=N,
             stride_x_col=1,
             N=N,
-            BLOCK_SIZE=1024,
+            BLOCK_SIZE=tl.constexpr(1024),
         )
 
     def exec(self, output: LazyBuffer):
@@ -306,8 +309,7 @@ class CUDABackend(Backend):
         # Then realize all barriers
         for b in barriers:
             if DEBUG >= 2:
-                print(f"   [DEBUG] Recursion: Executing dependency {b.op}")
-
+                print(f"[DEBUG] Recursion: Executing dependency {b.op}")
             self.exec(b)
 
         # HACK: Right now, MatMul and Reduction has specialized kernel
@@ -315,6 +317,9 @@ class CUDABackend(Backend):
             self.exec_matmul(output)
         elif isinstance(output.op, ReduceOp):
             self.exec_reduce(output)
+        elif output.op == LoadOp.RAND:
+            # HACK: rand should be allocated before exec
+            output.allocate()
         else:
             self.exec_elementwise(output)
 

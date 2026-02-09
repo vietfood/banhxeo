@@ -66,9 +66,7 @@ class TernaryOp(Enum):
     WHERE = auto()
 
 
-# Note: MovementOp is intentionally excluded - it's internal only.
-# Movements become LoadOp.VIEW before reaching backends.
-Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, TernaryOp, ReduceOp]
+Op: TypeAlias = Union[LoadOp, UnaryOp, BinaryOp, TernaryOp, ReduceOp, MovementOp]
 
 
 @dataclass
@@ -85,7 +83,7 @@ class RawBuffer:
         return self.data.detach().to("cpu").numpy()
 
     @staticmethod
-    def create(
+    def allocate(
         op: Op,
         args: Any,
         shape: Optional[Tuple[int, ...]] = None,
@@ -175,7 +173,7 @@ class LazyBuffer:
     def allocate(self):
         if self.realized is not None:
             return
-        self.realized = RawBuffer.create(
+        self.realized = RawBuffer.allocate(
             self.op, self.args, self.view.shape, self.device
         )
 
@@ -223,7 +221,7 @@ class LazyBuffer:
 
         if DEBUG >= 2:
             print(
-                f"Current view {self.view} => MovementOp={str(op)} with new view {new_view}"
+                f"[DEBUG] Current view {self.view} => MovementOp={str(op)} with new view {new_view}"
             )
 
         # if this is already a VIEW, just update its view and keep the same source
@@ -333,7 +331,7 @@ class LazyBuffer:
 
         return new_buf.compute_ops(BinaryOp.MATMUL, other)
 
-    def t(self):
+    def tranpose(self):
         return self.permute((1, 0))
 
     def where(self, input: "LazyBuffer", other: "LazyBuffer"):
