@@ -542,16 +542,12 @@ class KernelOp:
     args: Tuple[Union[str, float, int], ...]  # Inputs (var names or constants)
     
     def __post_init__(self):
-        # Validate arity
-        binary_ops = {OpType.ADD, OpType.SUB, OpType.MUL, OpType.DIV, OpType.MAX, OpType.CMPLT}
-        unary_ops = {OpType.NEG, OpType.EXP, OpType.LOG, OpType.SIN, OpType.SQRT}
-        
-        if self.op in binary_ops:
-            assert len(self.args) == 2, f"{self.op} requires 2 args"
-        elif self.op in unary_ops:
-            assert len(self.args) == 1, f"{self.op} requires 1 arg"
-        elif self.op == OpType.WHERE:
-            assert len(self.args) == 3, "WHERE requires 3 args (cond, true, false)"
+        # HINT: Validate arity here
+        # - Binary ops need 2 args
+        # - Unary ops need 1 arg
+        # - WHERE needs 3 args (condition, true_val, false_val)
+        # YOUR CODE HERE
+        pass
 ```
 
 **Questions to answer in your design:**
@@ -580,31 +576,38 @@ class IRBuilder:
     
     def new_var(self, prefix: str = "v") -> str:
         """Generate a unique variable name."""
-        name = f"{prefix}_{self.var_counter}"
-        self.var_counter += 1
-        return name
+        # HINT: Use self.var_counter to generate unique names like "v_0", "v_1", etc.
+        # Don't forget to increment the counter!
+        # YOUR CODE HERE
+        pass
     
     def emit_load(self, ptr: str, offset: str, mask: Optional[str] = None) -> str:
         """Emit a load and return the result variable name."""
-        name = self.new_var("load")
-        # How do you represent the load?
+        # HINT: Create a new variable name
+        # HINT: Create a KernelOp with OpType.LOAD
+        # HINT: Args should be (ptr, offset, mask) or (ptr, offset) if mask is None
+        # HINT: Append the op to self.ops
+        # HINT: Return the variable name
         # YOUR CODE HERE
-        return name
+        pass
     
     def emit_binary(self, op: OpType, left: str, right: str) -> str:
         """Emit a binary operation and return result variable name."""
-        name = self.new_var("tmp")
-        self.ops.append(KernelOp(op, name, "float32", (left, right)))
-        return name
+        # HINT: Similar to emit_load but for binary ops
+        # HINT: Args are (left, right)
+        # YOUR CODE HERE
+        pass
     
     def emit_unary(self, op: OpType, src: str) -> str:
         """Emit a unary operation and return result variable name."""
-        name = self.new_var("tmp")
-        self.ops.append(KernelOp(op, name, "float32", (src,)))
-        return name
+        # HINT: Similar to emit_binary but only one arg
+        # YOUR CODE HERE
+        pass
     
     def emit_store(self, ptr: str, offset: str, value: str, mask: Optional[str] = None):
         """Emit a store operation."""
+        # HINT: Similar to emit_load but OpType.STORE
+        # HINT: Args are (ptr, offset, value, mask) or (ptr, offset, value)
         # YOUR CODE HERE
         pass
     
@@ -616,34 +619,17 @@ class IRBuilder:
     
     def _visit(self, buf: LazyBuffer) -> str:
         """Visit a LazyBuffer and return its variable name."""
+        # HINT: Check if already visited using self.var_map
         if buf in self.var_map:
             return self.var_map[buf]
         
-        # Handle different op types
-        if isinstance(buf.op, BinaryOp):
-            left = self._visit(buf.src[0])
-            right = self._visit(buf.src[1])
-            op_map = {
-                BinaryOp.ADD: OpType.ADD,
-                BinaryOp.SUB: OpType.SUB,
-                BinaryOp.MUL: OpType.MUL,
-                BinaryOp.DIV: OpType.DIV,
-            }
-            result = self.emit_binary(op_map[buf.op], left, right)
-            
-        elif isinstance(buf.op, UnaryOp):
-            src = self._visit(buf.src[0])
-            op_map = {
-                UnaryOp.EXP: OpType.EXP,
-                UnaryOp.LOG: OpType.LOG,
-                # ... etc
-            }
-            result = self.emit_unary(op_map[buf.op], src)
-            
-        # ... handle other op types
-        
-        self.var_map[buf] = result
-        return result
+        # HINT: Handle different op types
+        # HINT: For BinaryOp - recursively visit left and right, then emit_binary
+        # HINT: For UnaryOp - recursively visit source, then emit_unary
+        # HINT: Use op_map dictionaries to convert LazyBuffer ops to OpType
+        # HINT: Store result in self.var_map[buf] and return it
+        # YOUR CODE HERE
+        pass
 ```
 
 **Test your builder:**
@@ -694,54 +680,28 @@ class TritonRenderer:
     
     def render_op(self, op: KernelOp) -> str:
         """Render a single IR op to Triton code."""
-        if op.op in self.BINARY_OPS:
-            template = self.BINARY_OPS[op.op]
-            return f"    {op.name} = {template.format(a=op.args[0], b=op.args[1])}"
-        
-        elif op.op in self.UNARY_OPS:
-            template = self.UNARY_OPS[op.op]
-            return f"    {op.name} = {template.format(a=op.args[0])}"
-        
-        elif op.op == OpType.LOAD:
-            ptr, offset = op.args[0], op.args[1]
-            mask = op.args[2] if len(op.args) > 2 else "linear_mask"
-            return f"    {op.name} = tl.load({ptr} + {offset}, mask={mask})"
-        
-        elif op.op == OpType.STORE:
-            ptr, offset, value = op.args[0], op.args[1], op.args[2]
-            mask = op.args[3] if len(op.args) > 3 else "linear_mask"
-            return f"    tl.store({ptr} + {offset}, {value}, mask={mask})"
-        
-        elif op.op == OpType.CONST:
-            return f"    {op.name} = {op.args[0]}"
-        
-        elif op.op == OpType.WHERE:
-            cond, true_val, false_val = op.args
-            return f"    {op.name} = tl.where({cond}, {true_val}, {false_val})"
-        
-        else:
-            raise NotImplementedError(f"Unknown op: {op.op}")
+        # HINT: Check op.op type and use appropriate dictionary
+        # HINT: For BINARY_OPS, format with a=op.args[0], b=op.args[1]
+        # HINT: For UNARY_OPS, format with a=op.args[0]
+        # HINT: For LOAD, render as "tl.load(ptr + offset, mask=mask)"
+        # HINT: For STORE, render as "tl.store(ptr + offset, value, mask=mask)"
+        # HINT: For CONST, render as "name = value"
+        # HINT: For WHERE, render as "tl.where(cond, true_val, false_val)"
+        # HINT: Return formatted string like "    {op.name} = {expression}"
+        # YOUR CODE HERE
+        pass
     
     def render(self, ops: List[KernelOp], input_ptrs: List[str], 
                output_ptr: str, N: int) -> str:
         """Generate complete Triton kernel source."""
         
-        # Kernel signature
-        args = ", ".join(input_ptrs + [output_ptr, "N", "BLOCK_SIZE: tl.constexpr"])
-        
-        lines = [
-            "@triton.jit",
-            f"def generated_kernel({args}):",
-            "    pid = tl.program_id(0)",
-            "    offsets = pid * BLOCK_SIZE + tl.arange(0, BLOCK_SIZE)",
-            "    linear_mask = offsets < N",
-        ]
-        
-        # Render each IR op
-        for op in ops:
-            lines.append(self.render_op(op))
-        
-        return "\n".join(lines)
+        # HINT: Build kernel signature with all pointers and BLOCK_SIZE
+        # HINT: Add @triton.jit decorator
+        # HINT: Add boilerplate: pid, offsets, linear_mask
+        # HINT: Loop through ops and call render_op() for each
+        # HINT: Join all lines with newlines
+        # YOUR CODE HERE
+        pass
 ```
 
 **Verification:** Render your IR, compile with `compile_triton_src()`, run on GPU, check correctness.
@@ -761,27 +721,13 @@ def constant_fold(ops: List[KernelOp]) -> List[KernelOp]:
     new_ops: List[KernelOp] = []
     
     for op in ops:
-        if op.op == OpType.CONST:
-            constants[op.name] = op.args[0]
-            new_ops.append(op)
-            continue
-        
-        # Check if all args are constants
-        if all(arg in constants for arg in op.args if isinstance(arg, str)):
-            # Compute the result
-            values = [constants[a] if isinstance(a, str) else a for a in op.args]
-            
-            if op.op == OpType.ADD:
-                result = values[0] + values[1]
-            elif op.op == OpType.MUL:
-                result = values[0] * values[1]
-            # ... etc
-            
-            # Replace with constant
-            constants[op.name] = result
-            new_ops.append(KernelOp(OpType.CONST, op.name, op.dtype, (result,)))
-        else:
-            new_ops.append(op)
+        # HINT: If op is CONST, add to constants dict and keep the op
+        # HINT: Otherwise, check if all string args are in constants
+        # HINT: If yes, compute the result based on op type
+        # HINT: Replace with a CONST op containing the computed result
+        # HINT: If no, keep the original op
+        # YOUR CODE HERE
+        pass
     
     return new_ops
 ```
@@ -791,18 +737,12 @@ def constant_fold(ops: List[KernelOp]) -> List[KernelOp]:
 ```python
 def eliminate_dead_code(ops: List[KernelOp], output_var: str) -> List[KernelOp]:
     """Remove ops whose results are never used."""
-    # Find all used variables (working backwards from output)
-    used = {output_var}
-    
-    for op in reversed(ops):
-        if op.name in used:
-            # This op's inputs are also used
-            for arg in op.args:
-                if isinstance(arg, str):
-                    used.add(arg)
-    
-    # Keep only ops that produce used values
-    return [op for op in ops if op.name in used or op.op == OpType.STORE]
+    # HINT: Start with a set containing just output_var
+    # HINT: Work backwards through ops
+    # HINT: If op.name is in used set, add all its args to used set
+    # HINT: Keep only ops whose names are in used set (or STORE ops)
+    # YOUR CODE HERE
+    pass
 ```
 
 **Test your passes:**
@@ -958,19 +898,16 @@ from banhxeo.core.buffer import BinaryOp, LazyBuffer, LoadOp, ReduceOp
 # Operations that force kernel boundaries
 # Rationale for each:
 BARRIER_OPS = {
-    # Reductions require coordination across threads
-    # Each output element depends on ALL input elements along reduced axis
-    ReduceOp.SUM,
-    ReduceOp.MAX,
-    
-    # Matmul uses specialized tiled kernel with different grid/block strategy
-    # Cannot be fused with elementwise ops
-    BinaryOp.MATMUL,
+    # HINT: Add ReduceOp values (SUM, MAX)
+    # HINT: Add BinaryOp.MATMUL
+    # YOUR CODE HERE
 }
 
 def is_barrier_op(op) -> bool:
     """Check if an operation type forces a kernel boundary."""
-    return op in BARRIER_OPS
+    # HINT: Just check if op is in BARRIER_OPS
+    # YOUR CODE HERE
+    pass
 
 def is_barrier(buf: LazyBuffer) -> bool:
     """
@@ -984,22 +921,12 @@ def is_barrier(buf: LazyBuffer) -> bool:
     2. Buffer is a reduction or matmul (specialized kernel)
     3. Buffer is a VIEW/CONTIGUOUS of an unrealized compute op
     """
-    # Already computed - just need to load
-    if buf.realized is not None:
-        return True
-    
-    # Check operation type
-    if is_barrier_op(buf.op):
-        return True
-    
-    # VIEW/CONTIGUOUS of an unrealized buffer
-    # This means we need to materialize the source first
-    if isinstance(buf.op, LoadOp) and buf.op in (LoadOp.VIEW, LoadOp.CONTIGUOUS):
-        if buf.src and buf.src[0].realized is None:
-            # Source is a compute op that needs to be realized
-            return True
-    
-    return False
+    # HINT: Check if buf.realized is not None
+    # HINT: Check if is_barrier_op(buf.op) returns True
+    # HINT: Check if buf.op is LoadOp.VIEW or LoadOp.CONTIGUOUS
+    #       and has unrealized source
+    # YOUR CODE HERE
+    pass
 
 def get_kernel_groups(output: LazyBuffer) -> list:
     """
@@ -1110,40 +1037,24 @@ def analyze_fusion(output: LazyBuffer) -> List[Set[LazyBuffer]]:
         """
         Assign buf to a group. Returns the group ID for children to use.
         """
-        if buf in visited:
-            return buf_to_group.get(buf, current_group)
-        visited.add(buf)
-        
-        # If this is a barrier, it gets its own group
-        if is_barrier(buf) and buf.realized is None:
-            # Create new group for this barrier
-            new_group = len(groups)
-            groups.append({buf})
-            buf_to_group[buf] = new_group
-            
-            # Process sources - they go into EARLIER groups
-            for src in buf.src:
-                assign_group(src, new_group + 1)  # Earlier = higher number initially
-            
-            return new_group
-        else:
-            # Non-barrier: add to current group
-            if current_group >= len(groups):
-                groups.append(set())
-            groups[current_group].add(buf)
-            buf_to_group[buf] = current_group
-            
-            # Process sources in same group
-            for src in buf.src:
-                assign_group(src, current_group)
-            
-            return current_group
+        # HINT: Check if already visited - if so, return its group
+        # HINT: Mark as visited
+        # HINT: If is_barrier(buf) and not realized:
+        #       - Create new group
+        #       - Add buf to that group
+        #       - Recursively process sources with next group index
+        # HINT: If not a barrier:
+        #       - Ensure current_group exists in groups list
+        #       - Add buf to current group
+        #       - Recursively process sources in same group
+        # HINT: Store buf's group in buf_to_group
+        # YOUR CODE HERE
+        pass
     
-    # Start from output
-    assign_group(output, 0)
-    
-    # Reverse to get execution order (dependencies first)
-    return list(reversed(groups))
+    # HINT: Start from output with group 0
+    # HINT: Reverse groups list to get execution order
+    # YOUR CODE HERE
+    pass
 
 def visualize_fusion(output: LazyBuffer):
     """Print a visualization of fusion decisions."""
@@ -1725,17 +1636,6 @@ Extend `utils/viz.py` with richer visualization.
 ---
 
 ## Appendix B: Debugging Tips
-
-### Environment Variables
-
-```bash
-DEBUG=1 python script.py  # Print generated kernels
-DEBUG=2 python script.py  # + Schedule visualization
-DEBUG=3 python script.py  # + Kernel timing
-DEBUG=4 python script.py  # + Buffer values
-```
-
-### Common Issues
 
 **"Cannot reshape non-contiguous view"**
 - Solution: Add `.contiguous()` before reshape
