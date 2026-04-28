@@ -42,6 +42,9 @@ class View:
         dims_self = len(self.shape)
         dims_target = len(target_shape)
 
+        if dims_target < dims_self:
+            return False
+
         for i in range(min(dims_self, dims_target)):
             dim_s = self.shape[dims_self - 1 - i]
             dim_t = target_shape[dims_target - 1 - i]
@@ -76,7 +79,7 @@ class View:
             else:
                 raise ValueError(f"Impossible broadcast: {dim_s} -> {dim_t}")
 
-        return View(target_shape, tuple(new_strides))
+        return View(target_shape, tuple(new_strides), self.offset)
 
     def permute(self, new_axis: Tuple[int, ...]) -> "View":
         if len(new_axis) != len(self.shape):
@@ -84,7 +87,7 @@ class View:
                 f"Permutation new axis {new_axis} doesn't match with shape {self.shape}"
             )
 
-        if not all([ax < len(self.shape) for ax in new_axis]):
+        if sorted(new_axis) != list(range(len(self.shape))):
             raise ValueError(f"Invalid permute axis {new_axis} for shape {self.shape}")
 
         target_shape = [0] * len(self.shape)
@@ -94,7 +97,7 @@ class View:
             target_shape[i] = self.shape[new_axis[i]]
             target_stride[i] = self.strides[new_axis[i]]
 
-        return View(tuple(target_shape), tuple(target_stride))
+        return View(tuple(target_shape), tuple(target_stride), self.offset)
 
     def slice(self, args: Tuple[Tuple[int, ...], ...]) -> "View":
         """
@@ -151,7 +154,7 @@ class View:
 
         # after the asserts, it's okay to check contiguous
         if self.is_contiguous():
-            return View.create(new_shape)
+            return View.create(new_shape, offset=self.offset)
 
         old_shape, old_strides = self.shape, self.strides
         new_strides = []
