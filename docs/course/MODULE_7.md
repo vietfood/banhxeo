@@ -1,0 +1,48 @@
+## Module 7: Memory Management (Advanced)
+
+### Assignment 7.1: Implement Buffer Pooling ⭐⭐
+
+**Problem:** Every op allocates a new buffer. Wasteful for temporary results.
+
+```python
+# memory.py (new file)
+class BufferPool:
+    def __init__(self):
+        self.free_buffers: Dict[Tuple[Tuple[int,...], str], List[torch.Tensor]] = {}
+    
+    def allocate(self, shape, dtype, device) -> torch.Tensor:
+        """Get a buffer from pool, or allocate new if none available."""
+        # YOUR IMPLEMENTATION
+    
+    def free(self, buffer: torch.Tensor):
+        """Return buffer to pool for reuse."""
+        # YOUR IMPLEMENTATION
+```
+
+**Integration:** Modify `RawBuffer.create()` to use the pool.
+
+**tinygrad reference:**
+- `tinygrad/device.py` → `LRUAllocator`
+- Study how tinygrad tracks buffer lifetimes
+
+---
+
+### Assignment 7.2: Analyze Buffer Lifetimes ⭐⭐⭐
+
+**Task:** Determine when buffers can be reused.
+
+```python
+x = Tensor.rand(1000, 1000)
+y = x + 1        # temp_0 = x + 1
+z = y * 2        # temp_1 = temp_0 * 2, temp_0 can be freed!
+w = z - 1        # temp_2 = temp_1 - 1, temp_1 can be freed!
+w.realize()
+```
+
+**Question:** At each step, which buffers are "live" (still needed)?
+
+**tinygrad reference:**
+- `tinygrad/engine/schedule.py` → `memory_planner()`
+- Study how tinygrad tracks `uop_refcount`
+
+---

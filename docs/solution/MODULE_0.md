@@ -1,4 +1,4 @@
-This is a solution (by me) for a course on banhxeo pipeline, you can use this as a reference when diving into banhxeo (Thanks Claude and Gemini for helping me checking the solution).
+This is a solution (by me) for a course on banhxeo pipeline, you can use this as a reference when diving into banhxeo (Thanks Codex for helping me checking the solution).
 
 ---
 
