@@ -125,6 +125,41 @@ class Tensor:
     def dtype(self) -> DType:
         return self.lazydata.dtype
 
+            # gradient of this Tensor
+            # or basically a reference to another Tensor in graph
+            self.grad: Optional[Tensor] = None
+
+            # NOTE: this can be in three states. False and None: no gradient, True: gradient
+            # None (the default) will be updated to True if it's put in an optimizer
+            self.requires_grad = requires_grad
+
+            # internal variables used for autograd graph construction
+            from banhxeo.core.function import Function
+
+            self._ctx: Optional[Function] = None
+
+    def __repr__(self):
+        return f"<Tensor {self.lazydata!r} on {self.device} with grad {(self.grad.lazydata if self.grad else None)!r}>"
+
+    def __str__(self):
+        if self.lazydata.realized is None:
+            print("[WARNING] Tensor isn't realized yet!")
+            return self.__repr__()
+        return str(self.lazydata.realized.data)
+
+    def __hash__(self):
+        return id(self)
+
+    # ---------- Property ----------
+
+    @property
+    def device(self):
+        return self.lazydata.device
+
+    @property
+    def shape(self):
+        return self.lazydata.shape
+
     # ---------- Binary Ops ----------
 
     def add(self, other) -> "Tensor":
