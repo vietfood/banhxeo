@@ -54,14 +54,24 @@ Deliverables:
   - schedule order
   - barriers
   - generated Triton source
+- Build a Debug Killer bug ledger by running small probes across:
+  - elementwise
+  - chained elementwise
+  - view plus elementwise
+  - slicing
+  - reductions
+  - matmul
+  - simple backward
 
 Study questions:
 
 - Which nodes are user-visible tensors?
 - Which nodes are just movement metadata?
 - Where does a lazy graph become real memory?
+- Which failures block tracing, and which failures belong to later modules?
 
-Rule: no architecture changes in this phase.
+Rule: no architecture changes in this phase. Fix only bugs that block tracing;
+everything else becomes a minimized ledger entry.
 
 ## Phase 1: Fix Views And Indexing First
 
@@ -355,6 +365,7 @@ Week 1:
 
 - finish Module 0 traces
 - write missing notes in `docs/SOLUTION.md`
+- build the Debug Killer bug ledger
 - add minimal tests directory
 
 Week 2:

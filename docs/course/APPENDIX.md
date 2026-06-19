@@ -54,7 +54,14 @@ own code is under.
 
 ## Appendix C: Checklist by Module
 
+### Module 0: Current Pipeline
+- [ ] 0.1 Trace a simple operation
+- [ ] 0.2 Trace a view operation
+- [ ] 0.3 Understand barriers
+- [ ] 0.4 Build the Debug Killer bug ledger
+
 ### Module 1: View & Indexing
+- [ ] 1.0 Test suspicious view assumptions
 - [ ] 1.1 Implement `View.to_index_expr()`
 - [ ] 1.2 Optimize for contiguous case
 - [ ] 1.3 Handle view composition correctly

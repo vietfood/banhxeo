@@ -23,6 +23,25 @@ not scattered across `Tensor.__getitem__`, `TorchInterpreter`, and
 That is why this module is intentionally comprehensive. It is cheaper to be slow
 here than to debug wrong kernels later.
 
+## Suspicious Assumptions To Test
+
+Do not treat this list as known bugs. Treat it as a set of assumptions the code
+must prove.
+
+Before changing view code, write small probes for these questions:
+
+1. Does every reshape produce a valid shape, stride tuple, and offset?
+2. Does broadcasting align dimensions from the right?
+3. Does slicing have one source of truth, or are there multiple implementations?
+4. Do chained views compose offsets and strides correctly?
+5. Do reductions have a consistent rank policy before and after `keepdim`?
+6. Does Triton indexing use the same formula as `View` indexing?
+7. Can constants, views, and realized buffers all participate in the same
+   indexing model?
+
+When a probe fails, add it to `BUG_LEDGER.md` with the smallest repro you can
+find. The point is to discover the failure yourself, then make the fix small.
+
 ## Learning Goals
 
 By the end of this module, you should be able to explain:
