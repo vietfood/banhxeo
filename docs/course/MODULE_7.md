@@ -1,5 +1,18 @@
 ## Module 7: Memory Management (Advanced)
 
+Memory management comes after correctness, scheduling, and IR.
+
+## Why This Module Is Advanced
+
+Buffer reuse is not hard because allocation APIs are hard. It is hard because
+you must know when a buffer is dead.
+
+That depends on scheduling, fusion boundaries, realized buffers, and graph
+ownership. If those are unclear, a buffer pool will create spooky correctness
+bugs: reused memory that still has live readers.
+
+In this module, prefer analysis before implementation.
+
 ### Assignment 7.1: Implement Buffer Pooling ⭐⭐
 
 **Problem:** Every op allocates a new buffer. Wasteful for temporary results.
@@ -25,6 +38,9 @@ class BufferPool:
 - `tinygrad/device.py` → `LRUAllocator`
 - Study how tinygrad tracks buffer lifetimes
 
+**Why this assignment:** Buffer pooling teaches allocation policy. It should be
+small and boring; the real lesson is knowing when it is legal to reuse memory.
+
 ---
 
 ### Assignment 7.2: Analyze Buffer Lifetimes ⭐⭐⭐
@@ -44,5 +60,8 @@ w.realize()
 **tinygrad reference:**
 - `tinygrad/engine/schedule.py` → `memory_planner()`
 - Study how tinygrad tracks `uop_refcount`
+
+**Why this assignment:** Lifetime analysis is where the compiler stops being
+only about codegen and starts managing resources.
 
 ---

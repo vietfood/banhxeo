@@ -8,6 +8,21 @@ not understand views, every later compiler concept will feel haunted.
 
 This module goes slowly on purpose.
 
+## Why This Module Exists
+
+Views are the foundation of the whole compiler.
+
+Every later module assumes that a logical tensor index can be lowered into a
+physical storage offset. Fusion, IR, reductions, matmul layout, gradient rules,
+and memory planning all depend on that mapping being correct.
+
+The main design decision in this module is to put indexing knowledge in `View`,
+not scattered across `Tensor.__getitem__`, `TorchInterpreter`, and
+`TritonCodegen`.
+
+That is why this module is intentionally comprehensive. It is cheaper to be slow
+here than to debug wrong kernels later.
+
 ## Learning Goals
 
 By the end of this module, you should be able to explain:
@@ -357,6 +372,12 @@ Deliverable:
 
 Add notes to `docs/SOLUTION.md` with the exact view values and generated
 indexing code.
+
+Why this assignment:
+
+You should see the current duplication before removing it. Otherwise
+`View.to_index_expr()` will feel like cleanup instead of the central abstraction
+that makes codegen less fragile.
 
 ## Assignment 1.1: Implement `View.to_index_expr()`
 

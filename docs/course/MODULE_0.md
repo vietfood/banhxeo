@@ -2,6 +2,22 @@
 
 Before implementing anything, you need to deeply understand what exists.
 
+## Why This Module Exists
+
+This module prevents fake progress.
+
+banhxeo already has a lazy graph, a scheduler, Triton string codegen, specialized
+kernels, and an autograd path. Some of it is messy. That is useful only if you
+can trace the mess precisely.
+
+Do not fix anything in this module. Your job is to answer:
+
+```text
+When does a symbolic tensor become real memory?
+```
+
+If you cannot answer that, every later refactor will be guessing.
+
 ### Assignment 0.1: Trace a Simple Operation ⭐
 
 **Task:** Trace what happens when you run:
@@ -26,6 +42,10 @@ c = (a + b).realize()
 
 **Deliverable:** Write a document explaining the full flow with line numbers.
 
+**Why this assignment:** Elementwise add is the smallest example that still
+passes through the whole compiler path: Tensor API, Function, LazyBuffer,
+schedule, Triton source, compile, launch.
+
 ---
 
 ### Assignment 0.2: Trace a View Operation ⭐⭐
@@ -49,6 +69,10 @@ z = (y + 1).realize()
 - `triton.py:59-95` → `render_indexing()`
 
 **Insight to discover:** Movement ops don't move data - they change how we *index* into data.
+
+**Why this assignment:** A transpose is the cheapest test of whether you
+understand tensor frameworks. If you think it copies data by default, you have
+not internalized views yet.
 
 ---
 
@@ -75,5 +99,8 @@ z.realize()
 **Question:** Why can't reduction be fused with the following elementwise op?
 
 **Hint:** Think about parallelism. Elementwise ops are embarrassingly parallel (each output independent). Reductions require coordination across threads.
+
+**Why this assignment:** Scheduling is not just topological sort. This example
+forces you to see the first real kernel boundary.
 
 ---

@@ -1,6 +1,6 @@
 [project]
 name = "banhxeo"
-version = "0.2.0"
+version = "0.1.0"
 authors = [{ name = "Le Nguyen", email = "lenguyen18072003@gmail.com" }]
 license = { text = "MIT License" }
 readme = "README.md"
@@ -16,7 +16,7 @@ dependencies = [
     "numpy",
     "polars",
     "pytest",
-    "torch",
+    "torch; sys_platform=='linux'",
     "tqdm",
     "triton; sys_platform=='linux'",
 ]

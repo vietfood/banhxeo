@@ -2,108 +2,133 @@
 
 > "Like a perfect Vietnamese crepe - crispy on the outside, efficient on the inside."
 
-**banhxeo** is a tiny, lazy, autograd engine and tensor compiler. It implements backpropagation and Triton kernel generation from scratch. 
+**banhxeo** is a tiny, lazy tensor compiler. It builds a computation graph, schedules it, and generates Triton kernels from scratch — so you can see how a deep learning framework actually works under the hood.
 
-**It is ~2000 lines of code (with formatting).**
+**It is ~3000 lines of code (with formatting).**
 
 > [!WARNING]
-> **DO NOT USE THIS FOR PRODUCTION.** 
-> This is an educational framework designed to demystify deep learning. It is fragile, aggressively minimalist, and lacks 99% of the safety checks found in PyTorch. If you use this in production, you are on your own.
+> **DO NOT USE THIS FOR PRODUCTION.**
+> This is an educational framework designed to demystify deep learning. It is fragile, aggressively minimalist, and lacks the safety checks found in PyTorch. Autograd is still being stabilized — treat backward passes as experimental.
 
 ## The Philosophy
 
-Modern deep learning frameworks are bloated. Reading PyTorch source code is like trying to understand a compiler by staring at assembly. **banhxeo** strips away the magic:
+This project follows the [tinygrad](https://github.com/tinygrad/tinygrad) school of thought:
 
-1.  **Lazy Evaluation**: `x + y` doesn't compute anything. It builds a graph.
-2.  **Triton Codegen**: The graph is compiled into a single custom GPU kernel.
-3.  **Zero Fluff**: No legacy support, no CPU optimizations (CPU is just a slow interpreter for debugging), no bloat.
+1. **Build your own to understand.** You cannot really understand PyTorch or JAX until you have built the pieces yourself — lazy graphs, views, scheduling, codegen.
+2. **Make it tiny.** Every abstraction must earn its place. If 10 lines can do the job of 100, use 10.
+3. **Every line has meaning.** No legacy baggage, no compatibility shims, no "just in case" code. Read the source; nothing is hidden behind a macro or a code generator you did not write.
+
+What that looks like in practice:
+
+- **Lazy evaluation** — `x + y` does not compute anything. It builds a graph.
+- **Views, not copies** — reshape, transpose, and slice change indexing, not memory.
+- **Triton codegen** — the scheduler walks the graph and emits a custom GPU kernel.
+- **Zero fluff** — no CPU fast paths, no multi-backend matrix. CPU is a slow interpreter for debugging.
 
 ## Quick Start
 
-We use `uv` for dependency management. It's fast and better that `pip`.
+We use `uv` for dependency management.
 
 ```bash
 # Clone
 git clone https://github.com/lenguyen1807/banhxeo
 cd banhxeo
 
-# Install & Sync
+# Install & sync
 uv sync
 source .venv/bin/activate
 ```
 
-### The "Hello World"
+### Hello World (forward pass)
+
+Autograd is not stable yet. Start with the forward path — this is the core of the compiler:
 
 ```python
 from banhxeo import Tensor
 
-# 1. Define tensors (Lazy - no memory allocated for data)
-x = Tensor.eye(3, requires_grad=True)
-y = Tensor([[2.0, 0, -2.0]], requires_grad=True)
+# 1. Define tensors (lazy — no GPU memory allocated yet)
+a = Tensor([1.0, 2.0, 3.0], device="cuda")
+b = Tensor([4.0, 5.0, 6.0], device="cuda")
 
-# 2. Build graph
-z = y.matmul(x).sum()
+# 2. Build the graph
+c = a + b
 
-# 3. Backprop (Implicitly realizes the forward pass first)
-z.backward()
-
-# 4. Check gradients
-print(x.grad.numpy())
-print(y.grad.numpy())
+# 3. Realize — schedule, codegen, compile, launch
+c.realize()
+print(c.numpy())  # [5. 7. 9.]
 ```
 
-### See The Matrix
+Nothing runs until `.realize()`. That single call is the entire pipeline: topological sort → kernel boundaries → Triton source → JIT compile → launch.
 
-Want to see the Triton kernel we just generated? Set `DEBUG=1` (or larger).
+### See the generated kernel
+
+Set `DEBUG=1` (or higher) to inspect what the compiler produces:
 
 ```bash
-DEBUG=1 python examples/mnist_mlp.py
+DEBUG=1 python -c "
+from banhxeo import Tensor
+a = Tensor([1.0, 2.0, 3.0], device='cuda')
+b = Tensor([4.0, 5.0, 6.0], device='cuda')
+(a + b).realize()
+"
 ```
 
-Output:
-```python
-@triton.jit
-def kernel(ptr0, ptr1, ptr2, ...):
-    # Generated Triton Kernel ...
-```
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#debug-levels) for all debug levels.
 
 ## How It Actually Works
 
-The entire core logic fits in your head:
+The compilation pipeline is documented in **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** — pipeline diagrams, file map, debug levels, and a tinygrad comparison for context.
 
-1.  **`Tensor`**: The frontend. Handles operator overloading and autograd state.
-2.  **`LazyBuffer`**: The node in the computation graph. Tracks the operation (`ADD`, `MUL`) and its parents.
-3.  **`View`**: Handles shapes and strides. **banhxeo** supports zero-copy reshapes, permutes, and slices.
-4.  **`TritonCodegen`**: Walks the `LazyBuffer` graph, fuses compatible operations, and emits a Triton kernel string.
-5.  **`Backend`**: Compiles the kernel and executes it on the GPU.
+At a glance:
+
+```
+Tensor.realize()
+  → Backend.exec()        schedule, find kernel barriers, execute
+  → TritonCodegen         walk LazyBuffer graph, emit Triton source
+  → Kernel execution      JIT compile, cache, launch
+```
 
 ## Development
 
-We are currently in the **v0.3 (Autograd)** phase.
+Active development follows the self-guided course in **[docs/course/](docs/course/)**. The course rebuilds enough of a real tensor compiler — views, forward correctness, autograd, scheduling, IR, codegen — that you understand *why* production frameworks are shaped the way they are.
 
-- **[Roadmap & Status](docs/DEVELOPMENT.md)**: See what's working and what's broken.
-- **[Stabilization Checklist](docs/CHECKLIST.md)**: The immediate plan to fix the "fragile" parts.
+**Start here:** [docs/course/INDEX.md](docs/course/INDEX.md)
+
+| Module | Topic | Status |
+| --- | --- | --- |
+| [Module 0](docs/course/MODULE_0.md) | Understand the current pipeline | In progress |
+| [Module 1](docs/course/MODULE_1.md) | Views, strides, and indexing | In progress |
+| [Module 2](docs/course/MODULE_2.md) | Forward correctness vs PyTorch | Upcoming |
+| [Module 3](docs/course/MODULE_3.md) | Autograd | Upcoming |
+| [Module 4](docs/course/MODULE_4.md) | Scheduling and fusion | Upcoming |
+| [Module 5](docs/course/MODULE_5.md) | Basic kernel IR | Upcoming |
+| [Module 6](docs/course/MODULE_6.md) | Specialized kernels (matmul, reduce) | Upcoming |
+| [Module 7](docs/course/MODULE_7.md) | Memory planning | Upcoming |
+| [Module 8](docs/course/MODULE_8.md) | Advanced IR and multi-backend lowering | Upcoming |
+| [Module 9](docs/course/MODULE_9.md) | Compiler optimizations | Upcoming |
+
+End-to-end projects (MNIST MLP, CNN) live in [docs/course/PROJECTS.md](docs/course/PROJECTS.md) — pick one after Modules 0–4 are stable.
 
 ## Running Tests
-
-If you break it, you fix it.
 
 ```bash
 # Run all tests
 uv run pytest tests
 
-# Run specific test
-uv run pytest tests/small_tests/mlp_forward.py
+# Run a specific test file
+uv run pytest tests/test_module_1_views.py
 ```
+
+If you break it, you fix it.
 
 ## Inspiration
 
-- [tinygrad](https://github.com/tinygrad/tinygrad): The spiritual ancestor.
-- [micrograd](https://github.com/karpathy/micrograd): For the autograd basics.
-- [Triton](https://openai.com/research/triton): For making CUDA usable by mortals.
+- [tinygrad](https://github.com/tinygrad/tinygrad) — the spiritual ancestor. Build tiny, understand deeply.
+- [micrograd](https://github.com/karpathy/micrograd) — autograd from first principles.
+- [Triton](https://openai.com/research/triton) — making GPU kernels writable by mortals.
 
 ## License
 
-MIT. 
+MIT.
 
 *Built with curiosity and coffee in Hanoi.* ☕

@@ -21,10 +21,16 @@ Build toward this pipeline:
 ```text
 Tensor API
   -> LazyBuffer graph
+  -> view/indexing semantics
+  -> forward correctness harness
+  -> autograd correctness harness
   -> schedule/fusion groups
-  -> simple kernel IR
-  -> optimization pass
+  -> simple elementwise kernel IR
   -> Triton renderer
+  -> specialized kernels
+  -> memory planning
+  -> advanced IR
+  -> optimization passes
   -> backend execution
 ```
 
@@ -94,9 +100,80 @@ assert x[1:].numpy().tolist() == [[3, 4]]
 assert x.flip(1).numpy().tolist() == [[2, 1], [4, 3]]
 ```
 
-## Phase 2: Add A Tiny Kernel IR
+## Phase 2: Build A Forward Correctness Harness
+
+Do this before autograd and IR. A compiler that preserves wrong behavior is
+still wrong.
+
+Deliverables:
+
+- forward tests against PyTorch for elementwise, movement, reductions, and matmul
+- one helper that can run the same comparison on CPU and CUDA
+- small asymmetric shapes that expose broadcasting and stride bugs
+
+Priority bugs to investigate:
+
+- `Tensor.__getitem__` appears to duplicate view logic that belongs in `View`
+- `visit_UnaryOp` references `op` instead of `buf.op`
+- multi-axis reduce is not implemented
+
+Do not fix all of these in one patch. Turn each into a failing test first.
+
+## Phase 3: Build And Verify Autograd
+
+Do this after forward behavior has a reference. Otherwise gradient failures will
+mix backward bugs with ordinary tensor bugs.
+
+Deliverables:
+
+- trace notes for one scalar loss backward pass
+- gradient comparison tests against PyTorch
+- movement-op gradient tests for reshape, permute, expand, shrink, flip, and pad
+- explicit expected failures for unsupported gradient cases
+
+Priority bugs to investigate:
+
+- broadcast gradient needs careful verification
+- gradient accumulation needs shape checks
+- movement gradients should be inverse view operations where possible
+
+## Phase 4: Make Scheduling Explicit
+
+The current barrier rules are hidden inside `CUDABackend`. Pull them into a small
+module only after you can explain the current recursive execution.
+
+Deliverables:
+
+- `src/banhxeo/backend/scheduling.py`
+- documented `is_barrier(buf)`
+- `analyze_fusion(output)` for debug visibility
+- debug output at `DEBUG >= 2`
+
+Important lesson:
+
+Scheduling is not just topological sort. It is the policy that decides which
+values stay in registers and which values become real buffers.
+
+Keep the first rule set simple:
+
+- realized buffers are boundaries
+- random/data-producing loads are boundaries
+- reduce is a boundary
+- matmul is a boundary
+- view/contiguous of an unrealized compute node is a boundary until you have a
+  better lowering model
+
+Checkpoint examples:
+
+- `(a + b) * 2 - 1` should be one elementwise kernel.
+- `x.sum(axis=1) + 1` should be two kernels.
+- `(a @ b) * 2` should be two kernels.
+
+## Phase 5: Add A Tiny Kernel IR
 
 Do this after Phase 1, not before. Otherwise the IR will encode indexing bugs.
+Also do it after scheduling, because the first IR should represent one fused
+elementwise kernel body, not the whole LazyBuffer graph.
 
 Start deliberately small:
 
@@ -140,69 +217,7 @@ Avoid for now:
 
 Those are good ideas, but not yet.
 
-## Phase 3: Make Scheduling Explicit
-
-The current barrier rules are hidden inside `CUDABackend`. Pull them into a small
-module only after you can explain the current recursive execution.
-
-Deliverables:
-
-- `src/banhxeo/backend/scheduling.py`
-- documented `is_barrier(buf)`
-- `analyze_fusion(output)` for debug visibility
-- debug output at `DEBUG >= 2`
-
-Important lesson:
-
-Scheduling is not just topological sort. It is the policy that decides which
-values stay in registers and which values become real buffers.
-
-Keep the first rule set simple:
-
-- realized buffers are boundaries
-- random/data-producing loads are boundaries
-- reduce is a boundary
-- matmul is a boundary
-- view/contiguous of an unrealized compute node is a boundary until you have a
-  better lowering model
-
-Checkpoint examples:
-
-- `(a + b) * 2 - 1` should be one elementwise kernel.
-- `x.sum(axis=1) + 1` should be two kernels.
-- `(a @ b) * 2` should be two kernels.
-
-## Phase 4: Strengthen Correctness Before Performance
-
-Before chasing faster kernels, build trust.
-
-Deliverables:
-
-- create `tests/`
-- add forward tests against PyTorch for:
-  - elementwise ops
-  - broadcasting
-  - reshape/permute/slice
-  - reductions
-  - matmul
-- add gradient tests against PyTorch for:
-  - add/sub/mul/div
-  - exp/log/sin/sqrt/neg
-  - sum/max/mean
-  - matmul
-  - reshape/permute/expand
-
-Priority bugs to investigate:
-
-- multi-axis reduce is not implemented.
-- broadcast gradient needs careful verification.
-- `Tensor.__getitem__` appears to create a view from `self.lazydata.src`, which
-  is suspicious for base tensors whose `src` is empty.
-- `visit_UnaryOp` references `op` instead of `buf.op`.
-
-Do not fix all of these in one patch. Turn each into a failing test first.
-
-## Phase 5: Specialized Kernels
+## Phase 6: Specialized Kernels
 
 Only after correctness tests exist:
 
@@ -213,6 +228,52 @@ Only after correctness tests exist:
 
 This phase teaches GPU programming rather than framework architecture. Keep that
 distinction clear so the project does not sprawl.
+
+## Phase 7: Memory Planning
+
+Study memory reuse only after scheduling and correctness are stable.
+
+Deliverables:
+
+- lifetime notes for a few scheduled graphs
+- a tiny buffer-pool experiment
+- a clear rule for when a realized temporary can be released or reused
+
+The point is not to beat PyTorch's allocator. The point is to understand that a
+compiler is also responsible for resource planning.
+
+## Phase 8: Advanced IR And Multi-Backend Lowering
+
+Do this only after the basic IR path is less confusing than the old string
+codegen path.
+
+Deliverables:
+
+- design note separating graph IR from kernel IR
+- typed IR values
+- target capability object
+- one toy second renderer
+- MLIR reading checkpoint
+
+This is where production compiler ideas become relevant. MLIR is worth studying
+here, but adopting it before this phase would likely bury the learning under
+infrastructure.
+
+## Phase 9: Compiler Optimizations
+
+Do this after the IR has enough structure to preserve semantics.
+
+Deliverables:
+
+- constant folding
+- dead code elimination
+- common subexpression elimination
+- algebraic simplification
+- layout-aware rewrites
+- tiny cost model for logging
+
+Optimization is program rewriting under constraints. If you cannot state the
+constraint, do not implement the rewrite.
 
 ## What To Learn From Magnetron
 
@@ -282,7 +343,7 @@ Good prompts:
 
 Avoid prompts like:
 
-- "Implement Module 2."
+- "Implement Module 5."
 - "Rewrite the backend."
 - "Make it production-grade."
 
@@ -310,20 +371,20 @@ Week 3:
 
 Week 4:
 
-- create tiny list-based IR
-- render one elementwise kernel through the IR path
-- keep old codegen alive
+- add PyTorch comparison tests for forward behavior
+- trace one backward pass by hand
+- add the first gradient comparison tests
 
 Week 5:
 
+- fix exactly one correctness or autograd bug
 - formalize scheduling rules
 - add fusion logging
-- write examples that prove barrier behavior
 
 Week 6:
 
-- add PyTorch comparison tests
-- fix one autograd correctness bug
-- pick the next phase based on what failed most painfully
+- create tiny list-based IR
+- render one elementwise kernel through the IR path
+- keep old codegen alive
 
 The pain is signal. Follow it, but keep the patches small.

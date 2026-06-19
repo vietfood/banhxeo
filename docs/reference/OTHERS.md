@@ -1,0 +1,3 @@
+- [Tinygrad](https://deepwiki.com/tinygrad/tinygrad)
+- [MLX](https://deepwiki.com/ml-explore/mlx)
+- [TVM](https://deepwiki.com/apache/tvm)
