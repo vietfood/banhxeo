@@ -1,0 +1,6 @@
+[submodule "refs/mini-sglang"]
+	path = refs/mini-sglang
+	url = https://github.com/sgl-project/mini-sglang.git
+[submodule "refs/nano-vllm"]
+	path = refs/nano-vllm
+	url = https://github.com/GeeeekExplorer/nano-vllm.git
